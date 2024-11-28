@@ -15,6 +15,9 @@ const ctx = visualizerCanvas.getContext('2d');
 
 let isPlaying = false;
 let currentSongIndex = 0;
+let audioContext; // Declare AudioContext here
+let analyser;
+let source;
 
 const playlist = [
     { title: 'Meri Dua', artist: 'Akhil', src: 'songs/Meri Dua.mp3', cover: 'images/meri-dua.jpg' },
@@ -28,7 +31,6 @@ const playlist = [
     { title: 'Pyar Ka Safar', artist: 'Akhil', src: 'songs/Pyar Ka Safar.mp3', cover: 'images/song3.jpg' },
     { title: 'Sari Sari Raat', artist: 'Akhil', src: 'songs/Sari Sari Raat.mp3', cover: 'images/song3.jpg' },
     { title: 'Tere Bin', artist: 'Akhil', src: 'songs/Tere Bin.mp3', cover: 'images/song3.jpg' },
-
 ];
 
 function loadSong(index) {
@@ -45,6 +47,11 @@ function playSong() {
     isPlaying = true;
     playBtn.innerHTML = '<i class="fas fa-pause"></i>';
     audio.play();
+
+    // Resume AudioContext after user gesture
+    if (audioContext && audioContext.state === 'suspended') {
+        audioContext.resume();
+    }
 }
 
 function pauseSong() {
@@ -118,40 +125,47 @@ function updatePlaylistUI(index) {
 
 // Visualizer
 function setupVisualizer() {
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    const analyser = audioContext.createAnalyser();
-    const source = audioContext.createMediaElementSource(audio);
-    source.connect(analyser);
-    analyser.connect(audioContext.destination);
+    // Wait for user gesture to create AudioContext
+    document.body.addEventListener('click', () => {
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            analyser = audioContext.createAnalyser();
+            source = audioContext.createMediaElementSource(audio);
+            source.connect(analyser);
+            analyser.connect(audioContext.destination);
 
-    analyser.fftSize = 256;
-    const bufferLength = analyser.frequencyBinCount;
-    const dataArray = new Uint8Array(bufferLength);
+            analyser.fftSize = 256;
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
 
+            function draw() {
+                requestAnimationFrame(draw);
+                analyser.getByteFrequencyData(dataArray);
+
+                ctx.clearRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
+
+                const barWidth = (visualizerCanvas.width / bufferLength) * 2.5;
+                let x = 0;
+
+                dataArray.forEach((value) => {
+                    const barHeight = value / 2;
+                    ctx.fillStyle = `rgb(${barHeight + 150}, 50, 100)`;
+                    ctx.fillRect(x, visualizerCanvas.height - barHeight, barWidth, barHeight);
+                    x += barWidth + 1;
+                });
+            }
+
+            draw();
+        }
+    });
+}
+
+// Resize visualizer dynamically
+window.addEventListener('resize', () => {
     visualizerCanvas.width = visualizerCanvas.offsetWidth;
     visualizerCanvas.height = visualizerCanvas.offsetHeight;
-
-    function draw() {
-        requestAnimationFrame(draw);
-        analyser.getByteFrequencyData(dataArray);
-
-        ctx.clearRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
-
-        const barWidth = (visualizerCanvas.width / bufferLength) * 2.5;
-        let x = 0;
-
-        dataArray.forEach((value) => {
-            const barHeight = value / 2;
-            ctx.fillStyle = `rgb(${barHeight + 150}, 50, 100)`;
-            ctx.fillRect(x, visualizerCanvas.height - barHeight, barWidth, barHeight);
-            x += barWidth + 1;
-        });
-    }
-
-    draw();
-}
+});
 
 loadSong(currentSongIndex);
 createPlaylist();
-
 setupVisualizer();
