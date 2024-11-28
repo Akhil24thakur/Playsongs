@@ -153,4 +153,5 @@ function setupVisualizer() {
 
 loadSong(currentSongIndex);
 createPlaylist();
+
 setupVisualizer();
