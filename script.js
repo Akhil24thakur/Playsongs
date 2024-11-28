@@ -21,16 +21,16 @@ let source;
 
 const playlist = [
     { title: 'Meri Dua', artist: 'Akhil', src: 'songs/Meri Dua.mp3', cover: 'images/meri-dua.jpg' },
-    { title: 'Bittersweet Memories', artist: 'Akhil', src: 'songs/Bittersweet Memories.mp3', cover: 'images/song1.jpg' },
-    { title: 'Dil Di Kahani', artist: 'Akhil', src: 'songs/Dil Di Kahani.mp3', cover: 'images/song2.jpg' },
-    { title: 'Dil Rota hai', artist: 'Akhil', src: 'songs/Dil Rota hai.mp3', cover: 'images/song3.jpg' },
-    { title: 'First Meet', artist: 'Akhil', src: 'songs/First Meet.mp3', cover: 'images/song3.jpg' },
-    { title: 'Nature Touch', artist: 'Akhil', src: 'songs/Nature Touch.mp3', cover: 'images/song3.jpg' },
-    { title: 'Nature', artist: 'Akhil', src: 'songs/Nature.mp3', cover: 'images/song3.jpg' },
-    { title: 'Pehli Mulaqat', artist: 'Akhil', src: 'songs/Pehli Mulaqat.mp3', cover: 'images/song3.jpg' },
-    { title: 'Pyar Ka Safar', artist: 'Akhil', src: 'songs/Pyar Ka Safar.mp3', cover: 'images/song3.jpg' },
-    { title: 'Sari Sari Raat', artist: 'Akhil', src: 'songs/Sari Sari Raat.mp3', cover: 'images/song3.jpg' },
-    { title: 'Tere Bin', artist: 'Akhil', src: 'songs/Tere Bin.mp3', cover: 'images/song3.jpg' },
+    { title: 'Bittersweet Memories', artist: 'Akhil', src: 'songs/Bittersweet Memories.mp3', cover: 'images/Bittersweet Memories.jpeg' },
+    { title: 'Dil Di Kahani', artist: 'Akhil', src: 'songs/Dil Di Kahani.mp3', cover: 'images/Dil Di Kahani.jpeg' },
+    { title: 'Dil Rota hai', artist: 'Akhil', src: 'songs/Dil Rota hai.mp3', cover: 'images/Dil Rota hai.jpeg' },
+    { title: 'First Meet', artist: 'Akhil', src: 'songs/First Meet.mp3', cover: 'images/First Meet.jpeg' },
+    { title: 'Nature Touch', artist: 'Akhil', src: 'songs/Nature Touch.mp3', cover: 'images/Nature Touch.jpeg' },
+    { title: 'Nature', artist: 'Akhil', src: 'songs/Nature.mp3', cover: 'images/nature.jpeg' },
+    { title: 'Pehli Mulaqat', artist: 'Akhil', src: 'songs/Pehli Mulaqat.mp3', cover: 'images/Pheli Mulakat.jpeg' },
+    { title: 'Pyar Ka Safar', artist: 'Akhil', src: 'songs/Pyar Ka Safar.mp3', cover: 'images/pyar ka safat .jpeg' },
+    { title: 'Sari Sari Raat', artist: 'Akhil', src: 'songs/Sari Sari Raat.mp3', cover: 'images/meri-dua.jpg' },
+    { title: 'Tere Bin', artist: 'Akhil', src: 'songs/Tere Bin.mp3', cover: 'images/tera bina.jpeg' },
 ];
 
 function loadSong(index) {
