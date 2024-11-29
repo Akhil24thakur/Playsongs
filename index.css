@@ -106,9 +106,9 @@ body {
 .time-stamps {
   display: flex;
   justify-content: space-between;
-  font-size: 14px;
+  font-size: 10px;
   color: var(--text-color);
-  margin-bottom: 3px;
+  margin-bottom: 0px;
 }
 
 .controls {
@@ -135,7 +135,7 @@ body {
 }
 
 .playlist {
-  margin-top: 30px;
+  margin-top: 0px;
   max-height: 200px;
   overflow-y: auto;
 }
