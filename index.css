@@ -25,7 +25,8 @@ body {
 .container {
   display: flex;
   width: 80%;
-  max-width: 1200px;
+  max-width: 1000px;
+  margin-bottom: 50px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 20px;
   overflow: hidden;
@@ -43,11 +44,12 @@ body {
 
 .player-main {
   text-align: center;
+  
 }
 
 #cover-art {
-  width: 200px;
-  height: 200px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   margin-bottom: 20px;
   box-shadow: 0 0 20px rgba(238, 238, 238, 0.2);
@@ -65,7 +67,7 @@ body {
 
 .song-details h2 {
   margin: 0;
-  font-size: 28px;
+  font-size: 20px;
   color: var(--primary-color);
   text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
 }
@@ -106,12 +108,13 @@ body {
   justify-content: space-between;
   font-size: 14px;
   color: var(--text-color);
+  margin-bottom: 3px;
 }
 
 .controls {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 30px;
 }
 
 .control-btn {
@@ -122,7 +125,7 @@ body {
   cursor: pointer;
   transition: transform 0.2s ease, color 0.2s ease;
   padding: 10px;
-  border-radius: 50%;
+  border-radius: 0%;
 }
 
 .control-btn:hover {
