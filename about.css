@@ -1,0 +1,94 @@
+.about-content {
+    padding: 30px;
+    color: var(--text-color);
+    text-align: center;
+}
+
+.about-content h1 {
+    font-size: 2.5em;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
+.about-content p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.about-content ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.about-content ul li {
+    font-size: 1em;
+    margin-bottom: 10px;
+    padding: 5px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.about-content ul li:hover {
+    transform: translateX(5px);
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* New styles for the feedback section */
+.feedback-section {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.feedback-section h2 {
+    font-size: 1.8em;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+#feedback-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#feedback-form input,
+#feedback-form textarea {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: var(--text-color);
+    font-size: 1em;
+}
+
+#feedback-form input::placeholder,
+#feedback-form textarea::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+#feedback-form textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+#feedback-form button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+#feedback-form button:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
