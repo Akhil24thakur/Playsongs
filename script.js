@@ -12,7 +12,6 @@ const durationEl = document.getElementById('duration');
 const playlistItems = document.getElementById('playlist-items');
 const visualizerCanvas = document.getElementById('visualizer-canvas');           
 const ctx = visualizerCanvas.getContext('3d');
-
 let isPlaying = false;
 let currentSongIndex = 0;
 let audioContext; // Declare AudioContext here
@@ -20,6 +19,7 @@ let analyser;
 let source;
 
 const playlist = [
+    { title: 'Majistic', artist: 'Akhil', src: 'songs/Majistic.mp3', cover: 'images/Majistic.png' },
     { title: 'My Queen', artist: 'Akhil', src: 'songs/My Queen.mp3', cover: 'images/My Queen.jpeg' },
     { title: 'Winters In Shimla', artist: 'Akhil', src: 'songs/Winters  In Shimla.mp3', cover: 'images/Shimla.jpg' },
     { title: 'Meri Dua', artist: 'Akhil', src: 'songs/Meri Dua.mp3', cover: 'images/meri-dua.jpg' },
