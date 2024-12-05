@@ -19,7 +19,7 @@ let analyser;
 let source;
 
 const playlist = [
-    
+    { title: 'One Sided Love', artist: 'Akhil', src: 'songs/One Sided Love.mp3', cover: 'images/One Sided Love.png' },
     { title: 'Majestic', artist: 'Akhil', src: 'songs/Majestic.mp3', cover: 'images/Majestic.png' },
     { title: 'My Queen', artist: 'Akhil', src: 'songs/My Queen.mp3', cover: 'images/My Queen.jpeg' },
     { title: 'Winters In Shimla', artist: 'Akhil', src: 'songs/Winters  In Shimla.mp3', cover: 'images/Shimla.jpg' },
