@@ -25,7 +25,7 @@ const playlist = [
     { title: 'Meri Dua', artist: 'Akhil', src: 'songs/Meri Dua.mp3', cover: 'images/meri-dua.jpg' },
     { title: 'Bittersweet Memories', artist: 'Akhil', src: 'songs/Bittersweet Memories.mp3', cover: 'images/Bittersweet Memories.jpeg' },
     { title: 'Dil Di Kahani', artist: 'Akhil', src: 'songs/Dil Di Kahani.mp3', cover: 'images/Dil Di Kahani.jpeg' },
-    { title: 'Dil Rota hai', artist: 'Akhil', src: 'songs/Dil Rota hai.mp3', cover: 'images/Dil Rota hai.jpeg' },
+ 
     { title: 'First Meet', artist: 'Akhil', src: 'songs/First Meet.mp3', cover: 'images/First Meet.jpeg' },
     { title: 'Nature Touch', artist: 'Akhil', src: 'songs/Nature Touch.mp3', cover: 'images/Nature Touch.jpeg' },
     { title: 'Nature', artist: 'Akhil', src: 'songs/Nature.mp3', cover: 'images/nature.jpeg' },
