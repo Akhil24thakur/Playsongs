@@ -10,8 +10,8 @@ const progressContainer = document.querySelector('.progress-container');
 const currentTimeEl = document.getElementById('current-time');
 const durationEl = document.getElementById('duration');
 const playlistItems = document.getElementById('playlist-items');
-const visualizerCanvas = document.getElementById('visualizer-canvas');
-const ctx = visualizerCanvas.getContext('2d');
+const visualizerCanvas = document.getElementById('visualizer-canvas');           
+const ctx = visualizerCanvas.getContext('3d');
 
 let isPlaying = false;
 let currentSongIndex = 0;
