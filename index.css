@@ -67,7 +67,7 @@ body {
   margin-bottom: 20px;
 }
 
-.song-details h2 {
+.song-details h3 {
   margin: 0;
   font-size: 20px;
   color: var(--primary-color);
@@ -245,3 +245,42 @@ body {
   padding-top: 50px;
 }
 
+
+/* Responsive design */
+@media (max-width: 768px) {
+  header {
+      flex-direction: column;
+      padding: 1rem;
+  }
+
+  .nav {
+      margin-top: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+  }
+
+  .btnlogin-popup {
+      margin-top: 1rem;
+  }
+
+  .contact-hero h1 {
+      font-size: 2.5rem;
+  }
+
+  .contact-hero p {
+      font-size: 1.2rem;
+  }
+
+  .contact-content {
+      flex-direction: column;
+  }
+
+  .map-container {
+      height: 300px;
+  }
+
+  .song-details h3 {
+    font-size: 1rem;
+
+  }
+}
