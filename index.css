@@ -3,20 +3,17 @@
 @import 'tailwindcss/utilities';
 
 :root {
-  --primary-color: #000000;
-  --secondary-color: #3a2d2d;
-  --background-color: #ff0c0c;
-  --text-color: #000000;
-} 
+  --primary-color: #000;
+  --secondary-color: #c62f37d8;
+  --background-color: #c62f37d8;
+  --text-color: #000;
+}
 
 body {
   font-family: 'Arial', sans-serif;
   margin: 0;
   padding: 0;
-  background: radial-gradient(circle, #FF7E5F, #FEB47B); /* Centered gradient with orange and peach */
-  height: 100vh;
-  margin: 0;
-  color: var(--text-color);
+  background: radial-gradient(circle, #e50914, #963539); /* Red gradient */
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -29,7 +26,7 @@ body {
   width: 80%;
   max-width: 1000px;
   margin-bottom: 50px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.1); /* Black background with slight transparency */
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 20px 20px 10px rgba(0, 0, 0, 0.9);
@@ -46,7 +43,6 @@ body {
 
 .player-main {
   text-align: center;
-  
 }
 
 #cover-art {
@@ -204,7 +200,6 @@ body {
   width: 100%;
   height: 100%;
 }
-/* Add these styles at the end of your existing index.css file */
 
 .menu-bar {
   position: fixed;
@@ -240,47 +235,43 @@ body {
   color: var(--primary-color);
 }
 
-/* Adjust the body padding to account for the fixed menu bar */
 body {
   padding-top: 50px;
 }
 
-
-/* Responsive design */
 @media (max-width: 768px) {
   header {
-      flex-direction: column;
-      padding: 1rem;
+    flex-direction: column;
+    padding: 1rem;
   }
 
   .nav {
-      margin-top: 1rem;
-      flex-wrap: wrap;
-      justify-content: center;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   .btnlogin-popup {
-      margin-top: 1rem;
+    margin-top: 1rem;
   }
 
   .contact-hero h1 {
-      font-size: 2.5rem;
+    font-size: 2.5rem;
   }
 
   .contact-hero p {
-      font-size: 1.2rem;
+    font-size: 1.2rem;
   }
 
   .contact-content {
-      flex-direction: column;
+    flex-direction: column;
   }
 
   .map-container {
-      height: 300px;
+    height: 300px;
   }
 
   .song-details h3 {
     font-size: 1rem;
-
   }
 }
