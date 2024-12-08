@@ -19,6 +19,9 @@ let analyser;
 let source;
 
 const playlist = [
+    { title: 'Dooriyan', artist: 'Akhil', src: 'songs/Dooriyan.mp3', cover: 'images/Dooriyan.png' },
+    { title: 'Samjho Na', artist: 'Akhil', src: 'songs/Samjho.mp3', cover: 'images/Samjho.png' },
+    { title: 'Tera Sath', artist: 'Akhil', src: 'songs/TeraSath.mp3', cover: 'images/TeraSath.jpeg' },
     { title: 'One Sided Love', artist: 'Akhil', src: 'songs/One Sided Love.mp3', cover: 'images/One Sided Love.png' },
     { title: 'Majestic', artist: 'Akhil', src: 'songs/Majestic.mp3', cover: 'images/Majestic.png' },
     { title: 'My Queen', artist: 'Akhil', src: 'songs/My Queen.mp3', cover: 'images/My Queen.jpeg' },
