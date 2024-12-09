@@ -1,53 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Music Player</title>
-    <link rel="stylesheet" href="index.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
-    <link rel="icon" href="images/Icon.png" sizes="32x32" type="image/png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loading Logo</title>
+  <style>
+    /* General Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #000; /* Black theme */
+      color: white;
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .logo-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    /* Icon (Music Note) */
+    .icon {
+      display: flex;
+      align-items: flex-end;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .note {
+      width: 60px;
+      height: 60px;
+      background: #e50914; /* Red circle */
+      border-radius: 50%;
+      animation: bounce 2s infinite ease-in-out;
+    }
+
+    .stick {
+      width: 15px;
+      height: 100px;
+      background: #e50914; /* Red stick */
+      position: absolute;
+      bottom: 40px;
+      left: 30px;
+    }
+
+    /* Text */
+    .text {
+      font-size: 4rem;
+      font-weight: bold;
+    }
+
+    .text .highlight {
+      color: #e50914;
+    }
+
+    /* Bounce Animation */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+    animation-timing-function: ease-in;
+  }
+  50% {
+    transform: translateY(-20px);
+    animation-timing-function: ease-out;
+  }
+}
+
+/* FadeIn Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.7); /* Start slightly smaller */
+    animation-timing-function: ease-in;
+  }
+  to {
+    opacity: 1;
+    transform: scale(1); /* Final size */
+    animation-timing-function: ease-out;
+  }
+}
+
+  </style>
 </head>
 <body>
-    <nav class="menu-bar">
-        <ul>
-            <li><a href="index.html" class="active">Home</a></li>
-            <li><a href="about.html">About</a></li>
-        </ul>
-    </nav>
-    <div class="container">
-        <div class="music-player">
-            <div class="player-main">
-                <img id="cover-art" src="/placeholder.svg?height=200&width=200" alt="Album cover">
-                <div class="song-details">
-                    <h3 id="title">Song Title</h3>
-                    <p id="artist">Artist Name</p>
-                </div>
-                <div class="progress-container">
-                    <div class="progress-bar">
-                        <div class="progress"></div>
-                    </div>
-                    <div class="time-stamps">
-                        <span id="current-time">0:00</span>
-                        <span id="duration">0:00</span>
-                    </div>
-                </div>
-                <div class="controls">
-                    <button id="prev" class="control-btn"><i class="fas fa-step-backward"></i></button>
-                    <button id="play" class="control-btn"><i class="fas fa-play"></i></button>
-                    <button id="next" class="control-btn"><i class="fas fa-step-forward"></i></button>
-                </div>
-            </div>      
-                    <canvas id="visualizer-canvas" style="height: 0;"></canvas>
-                <div class="playlist">
-                    <h3>Playlist</h3>
-                    <ul id="playlist-items">
-                        <!-- Playlist items will be dynamically added -->
-                    </ul>
-                </div>
-            </div>
-        </div>
+  <div class="logo-container">
+    <div class="icon">
+      <div class="note"></div>
+      <div class="stick"></div>
     </div>
-    <script src="script.js"></script>
+    <div class="text">
+      <span class="highlight">Akhil</span> Music
+    </div>
+  </div>
+
+  <script>
+    // Redirect to the main page after 3 seconds
+    setTimeout(() => {
+      window.location.href = "MainWebsite.html"; // Redirect to the main content page
+    }, 3000); // 3 seconds delay
+  </script>
 </body>
 </html>
