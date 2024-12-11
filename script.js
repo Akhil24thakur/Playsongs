@@ -37,8 +37,6 @@ const playlist = [
     { title: 'Dil Di Kahani', artist: 'Akhil', src: 'songs/Dil Di Kahani.mp3', cover: 'images/Dil Di Kahani.jpeg' },
     { title: 'First Meet', artist: 'Akhil', src: 'songs/First Meet.mp3', cover: 'images/First Meet.jpeg' },
     { title: 'Nature Touch', artist: 'Akhil', src: 'songs/Nature Touch.mp3', cover: 'images/Nature Touch.jpeg' },
-    { title: 'Nature', artist: 'Akhil', src: 'songs/Nature.mp3', cover: 'images/nature.jpeg' },
-    { title: 'Pehli Mulaqat', artist: 'Akhil', src: 'songs/Pehli Mulaqat.mp3', cover: 'images/Pheli Mulakat.jpeg' },
     { title: 'Pyar Ka Safar', artist: 'Akhil', src: 'songs/Pyar Ka Safar.mp3', cover: 'images/pyar ka safat .jpeg' },
     { title: 'Sari Sari Raat', artist: 'Akhil', src: 'songs/Sari Sari Raat.mp3', cover: 'images/meri-dua.jpg' },
     { title: 'Tere Bin', artist: 'Akhil', src: 'songs/Tere Bin.mp3', cover: 'images/tera bina.jpeg' },
