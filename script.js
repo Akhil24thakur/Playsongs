@@ -23,7 +23,7 @@ const playlist = [
     { title: 'Without You', artist: 'Akhil', src: 'songs/WithOut you.mp3', cover: 'images/WithOut YOU.jpg' },
     { title: 'Because Of You', artist: 'Akhil', src: 'songs/Because of You.mp3', cover: 'images/OF you.png' },
     { title: 'Dont Fight', artist: 'Akhil', src: 'songs/Dont  Fight.mp3', cover: 'images/fight.png' },
-    { title: 'Dream With You', artist: 'Akhil', src: 'songs/My Dreams.mp3', cover: 'images/MY Dreams.webp' },
+    { title: 'Dream With You', artist: 'Akhil', src: 'songs/My Dreams.mp3', cover: 'images/MY Dreams.webp'},
     { title: 'Kahani Suno', artist: 'Akhil', src: 'songs/kahani.mp3', cover: 'images/Kahani.png'  },
     { title: 'Dooriyan', artist: 'Akhil', src: 'songs/Dooriyan.mp3', cover: 'images/Dooriyan.png' },
     { title: 'Samjho Na', artist: 'Akhil', src: 'songs/Samjho.mp3', cover: 'images/Samjho.png' },
