@@ -18,6 +18,7 @@ let audioContext;
 let analyser;
 let source;
 
+
 const playlist = [
     { title: 'She Comes In', artist: 'Akhil', src: 'songs/She comes in.mp3', cover: 'images/she comes In.png' },
     { title: 'Without You', artist: 'Akhil', src: 'songs/WithOut you.mp3', cover: 'images/WithOut YOU.jpg' },
