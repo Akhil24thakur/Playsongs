@@ -20,7 +20,7 @@ let source;
 
 
 const playlist = [
-    { title: 'With You', artist: 'Akhil', src: 'songs/With you.mp3', cover: 'images/WithYou.jpeg' },
+    { title: 'With You ', artist: 'Akhil', src: 'songs/WithYou .mp3', cover: 'images/WithYou.jpeg' },
     { title: 'She Comes In', artist: 'Akhil', src: 'songs/She comes in.mp3', cover: 'images/she comes In.png' },
     { title: 'Without You', artist: 'Akhil', src: 'songs/WithOut you.mp3', cover: 'images/WithOut YOU.jpg' },
     { title: 'Because Of You', artist: 'Akhil', src: 'songs/Because of You.mp3', cover: 'images/OF you.png' },
