@@ -20,7 +20,8 @@ let source;
 
 
 const playlist = [
-    { title: 'Mann Ka Akrosh', artist: 'Akhil', src: 'songs/Mann Ka Akrosh.mp3', cover: 'images/Mann Ka Akrosh.png' },
+    { title: 'Vibes with you', artist: 'Akhil', src: 'songs/Vibes with you.mp3', cover: 'images/Vibes with you.png ' },
+    { title: 'Mann Ka Akrosh', artist: 'Akhil', src: 'songs/Mann Ka Akrosh.mp3', cover: 'images/Mann Ka Akrosh.png  ' },
     { title: 'With You ', artist: 'Akhil', src: 'songs/WithYou .mp3', cover: 'images/WithYou.jpeg' },
     { title: 'She Comes In', artist: 'Akhil', src: 'songs/She comes in.mp3', cover: 'images/she comes In.png' },
     { title: 'Without You', artist: 'Akhil', src: 'songs/WithOut you.mp3', cover: 'images/WithOut YOU.jpg' },
