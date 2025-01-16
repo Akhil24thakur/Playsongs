@@ -53,7 +53,7 @@
 
 .song-details h3 {
   margin: 0;
-  font-size: 30px;
+  font-size: 25px;
   color: var(--primary-color);
   text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
 }
