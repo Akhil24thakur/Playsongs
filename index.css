@@ -83,7 +83,7 @@
 }
 
 .progress {
-  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+  background: linear-gradient(90deg, rgb(255, 119, 0) ,rgb(239, 251, 21), rgb(255, 0, 0));
   height: 100%;
   width: 0;
   transition: width 0.1s linear;
