@@ -18,8 +18,8 @@ body {
   background: rgba(0, 0, 0, 0.1); /* Black background with slight transparency */
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 20px 20px 10px rgba(0, 0, 0, 0.9);
-  backdrop-filter: blur(10px);
+  box-shadow: 15px 15px 10px rgba(0, 0, 0, 0.731);
+  backdrop-filter: blur(20px);
 }
 
 
@@ -69,6 +69,7 @@ body {
 
 .progress-container {
   margin-bottom: 20px;
+ 
 }
 
 .progress-bar {
@@ -149,12 +150,12 @@ body {
 }
 
 #playlist-items li:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  transform: translateX(5px);
+  background-color: rgba(255, 255, 255, 0.217);
+  transform: translateY(10px);
 }
 
 #playlist-items li.playing {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(237, 135, 41, 0.475);
   color: var(--primary-color);
   font-weight: bold;
   transform: translateX(10px);
