@@ -59,9 +59,10 @@
 }
 
 .song-details p {
-  margin: 5px 0 0;
-  font-size: 18px;
-  color: var(--text-color);
+  margin: 3px 0 0;
+  font-size: 10px;
+  color:rgb(255, 245, 130);
+  font-style:italic;
 }
 
 .progress-container {
