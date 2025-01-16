@@ -1,24 +1,12 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
 
-:root {
-  --primary-color: #000;
-  --secondary-color: #c62f37d8;
-  --background-color: #c62f37d8;
-  --text-color: #000;
-}
 
-body {
-  font-family: 'Arial', sans-serif;
-  margin: 0;
-  padding: 0;
-  background: radial-gradient(circle, #e50914, #963539); /* Red gradient */
+  body {
+  background-image: url(images/bg.png);
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
+  overflow: hidden; 
 }
 
 .container {
@@ -65,7 +53,7 @@ body {
 
 .song-details h3 {
   margin: 0;
-  font-size: 20px;
+  font-size: 30px;
   color: var(--primary-color);
   text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
 }
@@ -150,7 +138,7 @@ body {
 }
 
 #playlist-items li {
-  padding: 10px;
+  padding: 5px;
   cursor: pointer;
   transition: background-color 0.2s ease, transform 0.2s ease;
   border-radius: 5px;
@@ -274,4 +262,4 @@ body {
   .song-details h3 {
     font-size: 1rem;
   }
-}
+}                               
