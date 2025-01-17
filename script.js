@@ -77,17 +77,14 @@ function prevSong() {
     loadSong(currentSongIndex);
     playSong();
 }
-
 function nextSong() {
     currentSongIndex = (currentSongIndex + 1) % playlist.length;
     loadSong(currentSongIndex);
     playSong();
 }
-
 playBtn.addEventListener('click', () => {
     isPlaying ? pauseSong() : playSong();
 });
-
 prevBtn.addEventListener('click', prevSong);
 nextBtn.addEventListener('click', nextSong);
 
@@ -134,7 +131,6 @@ function updatePlaylistUI(index) {
         item.classList.toggle('playing', i === index);
     });
 }
-
 // Visualizer
 function setupVisualizer() {
     // Wait for user gesture to create AudioContext
@@ -145,20 +141,15 @@ function setupVisualizer() {
             source = audioContext.createMediaElementSource(audio);
             source.connect(analyser);
             analyser.connect(audioContext.destination);
-
             analyser.fftSize = 256;
             const bufferLength = analyser.frequencyBinCount;
             const dataArray = new Uint8Array(bufferLength);
-
             function draw() {
                 requestAnimationFrame(draw);
                 analyser.getByteFrequencyData(dataArray);
-
                 ctx.clearRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
-
                 const barWidth = (visualizerCanvas.width / bufferLength) * 2.5;
                 let x = 0;
-
                 dataArray.forEach((value) => {
                     const barHeight = value / 2;
                     ctx.fillStyle = `rgb(${barHeight + 150}, 50, 100)`;
