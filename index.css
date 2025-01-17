@@ -56,12 +56,10 @@ body {
 .song-details h3 {
   margin: 0;
   font-size: 25px;
-  color: var(--primary-color);
   text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
 }
 
 .song-details p {
-  margin: 3px 0 0;
   font-size: 10px;
   color:rgb(228, 228, 223);
   font-style:italic;
@@ -97,7 +95,7 @@ body {
   display: flex;
   justify-content: space-between;
   font-size: 10px;
-  color: var(--text-color);
+  color:black;
   margin-bottom: 0px;
 }
 
@@ -267,3 +265,4 @@ body {
     font-size: 1rem;
   }
 }                               
+
