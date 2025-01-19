@@ -56,8 +56,9 @@ body {
 .song-details h3 {
   margin: 0;
   font-size: 25px;
-  text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+  text-shadow: 0 0 15px rgb(255, 255, 255);
 }
+
 
 .song-details p {
   font-size: 10px;
@@ -67,12 +68,16 @@ body {
 
 .progress-container {
   margin-bottom: 20px;
+  
  
 }
 
 .progress-bar {
-  background: rgba(255, 255, 255, 0.3);
+  /* background: rgba(255, 255, 255, 0.3); */
+  background-image: url(images/bg);
+  backdrop-filter: blur(100%);
   height: 8px;
+  border: 1px solid rgba(217, 20, 20, 0.267);
   border-radius: 5px;
   overflow: hidden;
   margin-bottom: 5px;
@@ -107,18 +112,17 @@ body {
 
 .control-btn {
   background: none;
-  border: none;
-  color: var(--text-color);
+  border: white;
+  color: black;
   font-size: 24px;
   cursor: pointer;
   transition: transform 0.2s ease, color 0.2s ease;
   padding: 10px;
-  border-radius: 0%;
+  border-radius: 50%;
 }
 
 .control-btn:hover {
   transform: scale(1.1);
-  color: var(--primary-color);
   background-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -241,10 +245,6 @@ body {
     justify-content: center;
   }
 
-  .btnlogin-popup {
-    margin-top: 1rem;
-  }
-
   .contact-hero h1 {
     font-size: 2.5rem;
   }
@@ -264,5 +264,10 @@ body {
   .song-details h3 {
     font-size: 1rem;
   }
+  .time-stamps {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: black;
+    margin-bottom: 0px;
 }                               
-
