@@ -20,6 +20,7 @@ let source;
 
 
 const playlist = [
+    { title: 'Tera Sath  [Lofi + Slowed Reverse]', artist: 'Akhil', src: 'songs/Tera sath lofi.mp3', cover: 'images/TeraSath.jpeg' },
     { title: 'New City', artist: 'Akhil', src: 'songs/new city.mp3', cover: 'images/ak.png ' },
     { title: 'Vibes with you', artist: 'Akhil', src: 'songs/Vibes With You.mp3', cover: 'images/Vibes with you.png ' },
     { title: 'Mann Ka Akrosh', artist: 'Akhil', src: 'songs/Mann Ka Akrosh.mp3', cover: 'images/Mann Ka Akrosh.png  ' },
