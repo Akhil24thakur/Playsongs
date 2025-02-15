@@ -3,11 +3,11 @@
 body {
   background-image: url(images/pk.webp);
   height: 100vh;
-  display: flex; /* Enables flexbox layout */
-  justify-content: center; /* Aligns content horizontally */
-  align-items: center; /* Aligns content vertically */
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
   overflow: hidden; 
-  margin: 0; /* Removes default margin for proper centering */
+  margin: 0; 
 }
 
 .container {
@@ -15,7 +15,7 @@ body {
   width: 80%;
   max-width: 900px;
   margin-bottom: 50px;
-  background: rgba(0, 0, 0, 0.1); /* Black background with slight transparency */
+  background: rgba(0, 0, 0, 0.1); 
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 15px 15px 10px rgba(0, 0, 0, 0.731);
@@ -90,7 +90,7 @@ body {
 }
 
 .progress {
-  background: linear-gradient(90deg, rgb(255, 119, 0) ,rgb(239, 251, 21), rgb(255, 0, 0));
+  background: linear-gradient(90deg, #f6b338c1 , #f9aa00ab, #bb7b3f);
   height: 100%;
   width: 0;
   transition: width 0.1s linear;
@@ -157,7 +157,7 @@ body {
 }
 
 #playlist-items li.playing {
-  background-color: rgba(237, 135, 41, 0.475);
+  background-color: rgba(255, 162, 177, 0.258);
   color: var(--primary-color);
   font-weight: bold;
   transform: translateX(10px);
