@@ -17,11 +17,9 @@ let currentSongIndex = 0;
 let audioContext; 
 let analyser;
 let source;
-
-
 const playlist = [
     
-    { title: 'Rah Main Kanta', artist: 'Akhil', src: 'songs/Rah.mp3', cover: 'images/simple.png ' },
+    { title: 'Rah Main Kanta', artist: 'Akhil', src: 'songs/rah.mp3', cover: 'images/rah.png ' },
     { title: 'Soul in Simplicity', artist: 'Akhil', src: 'songs/Soul in Simplicity.mp3', cover: 'images/simple.png ' },
     { title: 'Tera Sath  [Lofi + Slowed Reverse]', artist: 'Akhil', src: 'songs/Tera sath lofi.mp3', cover: 'images/TeraSath.jpeg' },
     { title: 'New City', artist: 'Akhil', src: 'songs/new city.mp3', cover: 'images/ak.png ' },
@@ -135,9 +133,8 @@ function updatePlaylistUI(index) {
         item.classList.toggle('playing', i === index);
     });
 }
-// Visualizer
+
 function setupVisualizer() {
-    // Wait for user gesture to create AudioContext
     document.body.addEventListener('click', () => {
         if (!audioContext) {
             audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -167,7 +164,6 @@ function setupVisualizer() {
     });
 }
 
-// Resize visualizer dynamically
 window.addEventListener('resize', () => {
     visualizerCanvas.width = visualizerCanvas.offsetWidth;
     visualizerCanvas.height = visualizerCanvas.offsetHeight;
