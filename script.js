@@ -17,49 +17,6 @@ let currentSongIndex = 0;
 let audioContext;
 let notification;
 
-// Check if browser supports notifications
-if ("Notification" in window) {
-    // Request notification permission
-    Notification.requestPermission();
-}
-
-// Function to show media notification
-function showMediaNotification(song) {
-    // Only show if permission granted
-    if (Notification.permission === "granted") {
-        // Close existing notification if any
-        if (notification) {
-            notification.close();
-        }
-
-        notification = new Notification(song.title, {
-            body: `By ${song.artist}`,
-            icon: song.cover,
-            silent: true,
-            // Add media session actions
-            actions: [
-                { action: 'previous', title: 'Previous' },
-                { action: 'play', title: 'Play/Pause' }, 
-                { action: 'next', title: 'Next' }
-            ]
-        });
-
-        // Handle notification action clicks
-        notification.onclick = function(event) {
-            switch(event.action) {
-                case 'previous':
-                    prevSong();
-                    break;
-                case 'play':
-                    togglePlay();
-                    break;
-                case 'next':
-                    nextSong();
-                    break;
-            }
-        };
-    }
-}
 let analyser;
 let source;
 const playlist = [
@@ -94,6 +51,52 @@ const playlist = [
     { title: 'Tere Bin', artist: 'Akhil', src: 'songs/Tere Bin.mp3', cover: 'images/tera bina.jpeg' },
 ];
 
+async function requestNotificationPermission() {
+    if ('Notification' in window) {
+        const permission = await Notification.requestPermission();
+        return permission === 'granted';
+    }
+    return false;
+}
+
+async function showMusicNotification(song) {
+    if (await requestNotificationPermission()) {
+        if (notification) {
+            notification.close();
+        }
+        
+        notification = new Notification(song.title, {
+            body: `Now Playing: ${song.artist}`,
+            icon: song.cover,
+            badge: song.cover,
+            silent: true,
+            actions: [
+                { action: 'previous', title: 'Previous' },
+                { action: 'play', title: isPlaying ? 'Pause' : 'Play' },
+                { action: 'next', title: 'Next' }
+            ]
+        });
+
+        notification.onclick = function(event) {
+            window.focus();
+        };
+
+        notification.onaction = function(event) {
+            switch(event.action) {
+                case 'previous':
+                    prevSong();
+                    break;
+                case 'play':
+                    isPlaying ? pauseSong() : playSong();
+                    break;
+                case 'next':
+                    nextSong();
+                    break;
+            }
+        };
+    }
+}
+
 function loadSong(index) {
     const song = playlist[index];
     audio.src = song.src;
@@ -101,22 +104,27 @@ function loadSong(index) {
     artist.textContent = song.artist;
     coverArt.src = song.cover;
     updatePlaylistUI(index);
+    showMusicNotification(song);
 }
 
 function playSong() {
     isPlaying = true;
     playBtn.innerHTML = '<i class="fas fa-pause"></i>';
     audio.play();
-    // Resume AudioContext after user gesture
     if (audioContext && audioContext.state === 'suspended') {
         audioContext.resume();
     }
+    const currentSong = playlist[currentSongIndex];
+    showMusicNotification(currentSong);
 }
 
 function pauseSong() {
     isPlaying = false;
     playBtn.innerHTML = '<i class="fas fa-play"></i>';
     audio.pause();
+    if (notification) {
+        notification.close();
+    }
 }
 
 function prevSong() {
@@ -124,11 +132,13 @@ function prevSong() {
     loadSong(currentSongIndex);
     playSong();
 }
+
 function nextSong() {
     currentSongIndex = (currentSongIndex + 1) % playlist.length;
     loadSong(currentSongIndex);
     playSong();
 }
+
 playBtn.addEventListener('click', () => {
     isPlaying ? pauseSong() : playSong();
 });
@@ -213,6 +223,9 @@ window.addEventListener('resize', () => {
     visualizerCanvas.width = visualizerCanvas.offsetWidth;
     visualizerCanvas.height = visualizerCanvas.offsetHeight;
 });
+
+// Request notification permission when the page loads
+requestNotificationPermission();
 
 loadSong(currentSongIndex);
 createPlaylist();
