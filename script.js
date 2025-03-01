@@ -14,7 +14,52 @@ const visualizerCanvas = document.getElementById('visualizer-canvas');
 const ctx = visualizerCanvas.getContext('3d');
 let isPlaying = false;
 let currentSongIndex = 0;
-let audioContext; 
+let audioContext;
+let notification;
+
+// Check if browser supports notifications
+if ("Notification" in window) {
+    // Request notification permission
+    Notification.requestPermission();
+}
+
+// Function to show media notification
+function showMediaNotification(song) {
+    // Only show if permission granted
+    if (Notification.permission === "granted") {
+        // Close existing notification if any
+        if (notification) {
+            notification.close();
+        }
+
+        notification = new Notification(song.title, {
+            body: `By ${song.artist}`,
+            icon: song.cover,
+            silent: true,
+            // Add media session actions
+            actions: [
+                { action: 'previous', title: 'Previous' },
+                { action: 'play', title: 'Play/Pause' }, 
+                { action: 'next', title: 'Next' }
+            ]
+        });
+
+        // Handle notification action clicks
+        notification.onclick = function(event) {
+            switch(event.action) {
+                case 'previous':
+                    prevSong();
+                    break;
+                case 'play':
+                    togglePlay();
+                    break;
+                case 'next':
+                    nextSong();
+                    break;
+            }
+        };
+    }
+}
 let analyser;
 let source;
 const playlist = [
