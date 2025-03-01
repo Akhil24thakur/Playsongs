@@ -74,6 +74,22 @@ body {
   z-index: 1;
 }
 
+@media screen and (max-width: 768px) {
+  .music-player {
+    padding: 15px;
+    height: 500px;
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .music-player {
+    padding: 10px;
+    height: 500px;
+  }
+}
+
 .player-main {
   text-align: center;
   width: 100%;
