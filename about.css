@@ -93,3 +93,85 @@
     transform: translateY(-2px);
 }
 
+/* Mobile Responsive Styles */
+@media screen and (max-width: 768px) {
+    .about-content {
+        margin-top: 30px;
+        padding: 15px;
+    }
+
+    .about-content h1 {
+        font-size: 2em;
+        margin-bottom: 15px;
+    }
+
+    .about-content p {
+        font-size: 1em;
+        line-height: 1.5;
+        margin-bottom: 15px;
+    }
+
+    .about-content ul li {
+        font-size: 0.95em;
+        margin-bottom: 8px;
+    }
+
+    .feedback-section {
+        padding: 15px;
+    }
+
+    .feedback-section h2 {
+        font-size: 1.5em;
+        margin-bottom: 15px;
+    }
+
+    #feedback-form {
+        gap: 12px;
+    }
+
+    #feedback-form input,
+    #feedback-form textarea {
+        padding: 8px;
+        font-size: 0.95em;
+    }
+
+    #feedback-form textarea {
+        min-height: 80px;
+    }
+
+    #feedback-form button {
+        padding: 10px 15px;
+        font-size: 0.95em;
+    }
+}
+
+/* Small Mobile Devices */
+@media screen and (max-width: 480px) {
+    .about-content {
+        margin-top: 20px;
+        padding: 10px;
+    }
+
+    .about-content h1 {
+        font-size: 1.8em;
+    }
+
+    .about-content p {
+        font-size: 0.95em;
+    }
+
+    .feedback-section {
+        padding: 12px;
+    }
+
+    .feedback-section h2 {
+        font-size: 1.3em;
+    }
+
+    #feedback-form input,
+    #feedback-form textarea {
+        padding: 8px;
+        font-size: 0.9em;
+    }
+}
+
