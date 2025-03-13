@@ -21,6 +21,7 @@ let analyser;
 let source;
 const playlist = [
     
+    { title: 'Divided Hearts', artist: 'Akhil', src: 'songs/div.mp3', cover: 'images/div.png' },
     { title: 'Rah Main Kanta', artist: 'Akhil', src: 'songs/rah.mp3', cover: 'images/rah.png ' },
     { title: 'Soul in Simplicity', artist: 'Akhil', src: 'songs/Soul in Simplicity.mp3', cover: 'images/simple.png ' },
     { title: 'Tera Sath  [Lofi + Slowed Reverse]', artist: 'Akhil', src: 'songs/Tera sath lofi.mp3', cover: 'images/TeraSath.jpeg' },
