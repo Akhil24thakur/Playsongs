@@ -20,7 +20,8 @@ let notification;
 let analyser;
 let source;
 const playlist = [
-    
+    { title: 'Ankhan Milata Ho', artist: 'Akhil', src: 'songs/Ankha Milata Ho.mp3', cover: 'images/Ankha Milata Ho.png' },
+    { title: 'Once Lost Now Found', artist: 'Akhil', src: 'songs/Once Lost.mp3', cover: 'images/lost.webp' },
     { title: 'Divided Hearts', artist: 'Akhil', src: 'songs/div.mp3', cover: 'images/div.png' },
     { title: 'Rah Main Kanta', artist: 'Akhil', src: 'songs/rah.mp3', cover: 'images/rah.png ' },
     { title: 'Soul in Simplicity', artist: 'Akhil', src: 'songs/Soul in Simplicity.mp3', cover: 'images/simple.png ' },
