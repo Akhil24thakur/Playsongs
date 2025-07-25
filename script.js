@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Song data array
     const songs = [
-    { title: 'Once Lost Now Found', artist: 'Akhil', src: 'songs/Once Lost.mp3', cover: 'images/lost.webp' },
+   
     { title: 'Divided Hearts', artist: 'Akhil', src: 'songs/div.mp3', cover: 'images/div.png' },
     { title: 'Rah Main Kanta', artist: 'Akhil', src: 'songs/rah.mp3', cover: 'images/rah.png ' },
     { title: 'Soul in Simplicity', artist: 'Akhil', src: 'songs/Soul in Simplicity.mp3', cover: 'images/simple.png ' },
