@@ -3,50 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Akhil Music</title>
+    <title>Music Player</title>
     <link rel="stylesheet" href="index.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
-    <link rel="icon" href="images/Icon.png" sizes="40x40"  type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
-    <nav class="menu-bar">
-        <ul>
-            <li><a href="index.html" class="active">Home</a></li>
-            <li><a href="about.html">About</a></li>
-        </ul>
-    </nav>
+
     <div class="container">
-        <div class="music-player">         
-            <div class="player-main">
-                <img id="cover-art" src="/placeholder.svg?height=200&width=200" alt ="Album cover">
-                <div class="song-details">
-                    <h3 id="title">Song Title</h3>
-                    <p id="artist">Artist Name</p>
-                </div>
-                <div class="progress-container">
-                    <div class="progress-bar">
-                        <div class="progress"></div>
-                    </div>
-                    <div class="time-stamps">
-                        <span id="current-time">0:00</span>
-                        <span id="duration">0:00</span>
-                    </div>
-                </div>
-                <div class="controls">
-                    <button id="prev" class="control-btn"><i class="fas fa-step-backward"></i></button>
-                    <button id="play" class="control-btn"><i class="fas fa-play" ></i></button>
-                    <button id="next" class="control-btn"><i class="fas fa-step-forward"></i></button>
-                </div>
-            </div>      
-                    <canvas id="visualizer-canvas" style="height: 0;"></canvas>
-                    <h3 style="margin-top: 0; color: black; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); font-size: 20px;">Playlist</h3>
-                <div class="playlist">
-                    <ul id="playlist-items">
-                    </ul>
-                </div>
+        <div class="music-player">
+            <h1 class="music-player-title">Now Playing</h1>
+            <img src="images/lost.webp" alt="Song Cover" id="cover-art" class="cover-art">
+
+            <div class="song-details">
+                <h2 id="song-title">Once Lost Now Found</h2>
+                <p id="song-artist">Akhil</p>
             </div>
+
+            <div class="progress-container" id="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <div class="time-container">
+                <span id="current-time">0:00</span>
+                <span id="total-duration">0:00</span>
+            </div>
+
+            <div class="controls">
+                <button id="prev-btn" class="control-btn"><i class="fas fa-backward"></i></button>
+                <button id="play-pause-btn" class="control-btn play-btn"><i class="fas fa-play"></i></button>
+                <button id="next-btn" class="control-btn"><i class="fas fa-forward"></i></button>
+            </div>
+            
+            <audio id="audio-source"></audio>
+        </div>
+
+        <div class="playlist-container">
+            <h1 class="playlist-title">My Playlist</h1>
+            <ul id="playlist" class="playlist">
+                </ul>
         </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
