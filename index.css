@@ -1,21 +1,21 @@
-/* --- Google Fonts & Global Reset --- */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
-
 :root {
-    --bg-color: #121212; /* Very dark charcoal */
-    --card-color: #1e1e1e; /* Slightly lighter card background */
+    --bg-color: rgb(0, 0, 0); /* Dark charcoal with transparency */
+    --card-color: rgba(0, 0, 0, 0.82); /* Slightly lighter card background with transparency */
     --primary-text: #ffffff;
     --secondary-text: #b3b3b3;
-    --accent-color: #1DB954; /* Spotify-like green */
-    --accent-color-hover: #1ed760;
+    --accent-color: #ff0d00;
+    --accent-color-hover: #c4d71e;
     --border-color: #2c2c2c;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* Apply blur to the entire background */
+body {
+    background: var(rgb(0, 0, 0));
+    backdrop-filter: blur(10px); /* Adjust blur strength */
+    -webkit-backdrop-filter: blur(10px); /* For Safari support */
+    font-family: 'Poppins', sans-serif;
 }
+
 
 /* --- Base & Body Styles --- */
 body {
@@ -26,6 +26,7 @@ body {
     min-height: 100vh;
     padding: 20px;
     background-color: var(--bg-color);
+   
     color: var(--primary-text);
 }
 
