@@ -17,6 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const songs = [
 
     { title: 'Stay Away', artist: 'Akhil', src: 'songs/Stay away.mp3', cover: 'images/stay away.png' },
+    { title: 'Choti Choti Batan', artist: 'Akhil', src: 'songs/batan.mp3', cover: 'images/batan.png' },
+    { title: 'Karma', artist: 'Akhil', src: 'songs/karma.mp3', cover: 'images/karma.png' },
+    { title: 'Tere Bina', artist: 'Akhil', src: 'songs/Tere Bina.mp3', cover: 'images/Tere Bina.png' },
     { title: 'Divided Hearts', artist: 'Akhil', src: 'songs/div.mp3', cover: 'images/div.png' },
     { title: 'Rah Main Kanta', artist: 'Akhil', src: 'songs/rah.mp3', cover: 'images/rah.png ' },
     { title: 'Soul in Simplicity', artist: 'Akhil', src: 'songs/Soul in Simplicity.mp3', cover: 'images/simple.png ' },
