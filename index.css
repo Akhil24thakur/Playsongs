@@ -1,6 +1,6 @@
 :root {
-    --bg-color: rgb(0, 0, 0); /* Dark charcoal with transparency */
-    --card-color: rgba(0, 0, 0, 0.82); /* Slightly lighter card background with transparency */
+    --bg-color: rgba(1, 0, 0, 0.869); /* Dark charcoal with transparency */
+    --card-color: rgba(20, 17, 17, 0.942);
     --primary-text: #ffffff;
     --secondary-text: #b3b3b3;
     --accent-color: #ff0d00;
@@ -70,7 +70,7 @@ body {
     border-radius: 8px;
     object-fit: cover;
     margin-bottom: 30px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    box-shadow: 5px 5px 5px  rgba(203, 193, 193, 0.73);
     transition: transform 0.3s ease;
 }
 
