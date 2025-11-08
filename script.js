@@ -17,9 +17,11 @@ const artistName = document.getElementById("artist-name");
 const playlistEl = document.getElementById("playlist");
 const toast = document.getElementById("toast");
 
+
 // ===== Your playlist
 const playlist = [
-     { title: 'Stay Away', artist: 'Akhil', src: 'songs/Stay away.mp3', cover: 'images/stay away.png' },
+    { title: 'Pehli Baatein', artist: 'Akhil', src: 'songs/Pehli Batein.mp3', cover: 'images/Pehli Batein.jpeg' },
+    { title: 'Stay Away', artist: 'Akhil', src: 'songs/Stay away.mp3', cover: 'images/stay away.png' },
     { title: 'Choti Choti Batan', artist: 'Akhil', src: 'songs/batan.mp3', cover: 'images/batan.png' },
     { title: 'Karma', artist: 'Akhil', src: 'songs/karma.mp3', cover: 'images/karma.png' },
     { title: 'Tere Bina', artist: 'Akhil', src: 'songs/Tere Bina.mp3', cover: 'images/Tere Bina.png' },
