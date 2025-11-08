@@ -1,22 +1,25 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // DOM Elements
-    const coverArt = document.getElementById('cover-art');
-    const songTitle = document.getElementById('song-title');
-    const songArtist = document.getElementById('song-artist');
-    const audioSource = document.getElementById('audio-source');
-    const playPauseBtn = document.getElementById('play-pause-btn');
-    const prevBtn = document.getElementById('prev-btn');
-    const nextBtn = document.getElementById('next-btn');
-    const progressContainer = document.getElementById('progress-container');
-    const progressBar = document.getElementById('progress-bar');
-    const currentTimeEl = document.getElementById('current-time');
-    const totalDurationEl = document.getElementById('total-duration');
-    const playlistEl = document.getElementById('playlist');
+// ===== Elements
+const audio = document.getElementById("audio-player");
+const playPauseBtn = document.getElementById("play-pause-btn");
+const playIcon = document.getElementById("play-icon");
+const pauseIcon = document.getElementById("pause-icon");
+const prevBtn = document.getElementById("prev-btn");
+const nextBtn = document.getElementById("next-btn");
 
-    // Song data array
-    const songs = [
+const progressContainer = document.getElementById("progress-container");
+const progressBar = document.getElementById("progress-bar");
+const currentTimeEl = document.getElementById("current-time");
+const durationEl = document.getElementById("duration");
 
-    { title: 'Stay Away', artist: 'Akhil', src: 'songs/Stay away.mp3', cover: 'images/stay away.png' },
+const albumArt = document.getElementById("album-art");
+const songTitle = document.getElementById("song-title");
+const artistName = document.getElementById("artist-name");
+const playlistEl = document.getElementById("playlist");
+const toast = document.getElementById("toast");
+
+// ===== Your playlist
+const playlist = [
+     { title: 'Stay Away', artist: 'Akhil', src: 'songs/Stay away.mp3', cover: 'images/stay away.png' },
     { title: 'Choti Choti Batan', artist: 'Akhil', src: 'songs/batan.mp3', cover: 'images/batan.png' },
     { title: 'Karma', artist: 'Akhil', src: 'songs/karma.mp3', cover: 'images/karma.png' },
     { title: 'Tere Bina', artist: 'Akhil', src: 'songs/Tere Bina.mp3', cover: 'images/Tere Bina.png' },
@@ -51,163 +54,112 @@ document.addEventListener('DOMContentLoaded', () => {
     { title: 'Tere Bin', artist: 'Akhil', src: 'songs/Tere Bin.mp3', cover: 'images/tera bina.jpeg' },
     ];
 
-    // State
-    let currentSongIndex = 0;
-    let isPlaying = false;
 
-    // --- FUNCTIONS ---
+let current = 0;
+let isPlaying = false;
 
-    // Function to load a song
-    function loadSong(song) {
-        songTitle.textContent = song.title;
-        songArtist.textContent = song.artist;
-        audioSource.src = song.src;
-        coverArt.src = song.cover;
-        updatePlaylistUI();
-    }
+// ===== Helpers
+const fmt = s => (!Number.isFinite(s) ? "0:00" : `${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,"0")}`);
 
-    // Function to play song
-    function playSong() {
-        isPlaying = true;
-        audioSource.play();
-        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
-        coverArt.classList.add('playing');
-        showPlayNotification();
-    }
+function toastMsg(msg="", ms=1600){
+  if(!msg) return;
+  toast.textContent = msg;
+  toast.classList.add("show");
+  clearTimeout(toast._t);
+  toast._t = setTimeout(()=>toast.classList.remove("show"), ms);
+}
 
-    // Function to pause song
-    function pauseSong() {
-        isPlaying = false;
-        audioSource.pause();
-        playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
-        coverArt.classList.remove('playing');
-    }
+// ===== Core
+function loadSong(i){
+  current = i;
+  const t = playlist[i];
+  songTitle.textContent = t.title;
+  artistName.textContent = t.artist;
+  albumArt.src = t.cover;
+  albumArt.alt = `${t.title} — ${t.artist}`;
+  audio.src = t.src;
 
-    // Function to play previous song
-    function prevSong() {
-        currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
-        loadSong(songs[currentSongIndex]);
-        playSong();
-    }
+  progressBar.style.width = "0%";
+  currentTimeEl.textContent = "0:00";
+  durationEl.textContent = "0:00";
 
-    // Function to play next song
-    function nextSong() {
-        currentSongIndex = (currentSongIndex + 1) % songs.length;
-        loadSong(songs[currentSongIndex]);
-        playSong();
-    }
+  // highlight
+  [...playlistEl.children].forEach((el, idx)=> el.classList.toggle("active", idx===current));
+}
 
-    // Update progress bar
-    function updateProgress(e) {
-        const { duration, currentTime } = e.srcElement;
-        const progressPercent = (currentTime / duration) * 100;
-        progressBar.style.width = `${progressPercent}%`;
+function playSong(){
+  audio.play().then(()=>{
+    isPlaying = true;
+    playIcon.classList.add("hidden");
+    pauseIcon.classList.remove("hidden");
+  }).catch(()=>toastMsg("Playback failed"));
+}
+function pauseSong(){
+  audio.pause();
+  isPlaying = false;
+  playIcon.classList.remove("hidden");
+  pauseIcon.classList.add("hidden");
+}
 
-        // Update time display
-        totalDurationEl.textContent = formatTime(duration);
-        currentTimeEl.textContent = formatTime(currentTime);
-    }
-    
-    // Set progress bar on click
-    function setProgress(e) {
-        const width = this.clientWidth;
-        const clickX = e.offsetX;
-        const duration = audioSource.duration;
-        audioSource.currentTime = (clickX / width) * duration;
-    }
+function nextIndex(){ return (current + 1) % playlist.length; }
+function prevIndex(){ return (current - 1 + playlist.length) % playlist.length; }
 
-    // Format time (e.g., 0:00)
-    function formatTime(seconds) {
-        if (isNaN(seconds)) return '0:00';
-        const minutes = Math.floor(seconds / 60);
-        const secs = Math.floor(seconds % 60);
-        return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
-    }
+function nextSong(){ loadSong(nextIndex()); playSong(); }
+function prevSong(){ loadSong(prevIndex()); playSong(); }
 
-    // Generate Playlist
-    function generatePlaylist() {
-        songs.forEach((song, index) => {
-            const li = document.createElement('li');
-            li.dataset.index = index;
-            li.innerHTML = `
-                <div class="playlist-item-details">
-                    <h3>${song.title}</h3>
-                    <p>${song.artist}</p>
-                </div>
-            `;
-            playlistEl.appendChild(li);
-        });
-    }
-    
-    // Update active class in playlist
-    function updatePlaylistUI() {
-        const playlistItems = playlistEl.querySelectorAll('li');
-        playlistItems.forEach((item, index) => {
-            if (index === currentSongIndex) {
-                item.classList.add('active');
-            } else {
-                item.classList.remove('active');
-            }
-        });
-    }
+// ===== Events
+playPauseBtn.addEventListener("click", ()=> isPlaying ? pauseSong() : playSong());
+nextBtn.addEventListener("click", nextSong);
+prevBtn.addEventListener("click", prevSong);
 
-    // Handle playlist click
-    function playFromPlaylist(e) {
-        const li = e.target.closest('li');
-        if (li) {
-            const index = parseInt(li.dataset.index, 10);
-            if (index !== currentSongIndex) {
-                currentSongIndex = index;
-                loadSong(songs[currentSongIndex]);
-            }
-            playSong();
-        }
-    }
-    
-    // --- NOTIFICATIONS ---
-    
-    // Request permission for notifications on first interaction
-    function requestNotificationPermission() {
-        if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
-            Notification.requestPermission().then(permission => {
-                if (permission === 'granted') {
-                    console.log('Notification permission granted.');
-                }
-            });
-        }
-    }
-
-    // Show notification when a song starts playing
-    function showPlayNotification() {
-        if ('Notification' in window && Notification.permission === 'granted') {
-            const currentSong = songs[currentSongIndex];
-            const notification = new Notification(currentSong.title, {
-                body: `Now playing: ${currentSong.artist}`,
-                icon: currentSong.cover,
-                silent: true // Prevents the default notification sound
-            });
-        }
-    }
-
-    // --- EVENT LISTENERS ---
-
-    playPauseBtn.addEventListener('click', () => {
-        // Request notification on first play click
-        if(Notification.permission !== 'granted' && Notification.permission !== 'denied') {
-            requestNotificationPermission();
-        }
-        
-        isPlaying ? pauseSong() : playSong();
-    });
-
-    prevBtn.addEventListener('click', prevSong);
-    nextBtn.addEventListener('click', nextSong);
-    audioSource.addEventListener('timeupdate', updateProgress);
-    audioSource.addEventListener('ended', nextSong);
-    progressContainer.addEventListener('click', setProgress);
-    playlistEl.addEventListener('click', playFromPlaylist);
-
-    // --- INITIALIZATION ---
-    generatePlaylist();
-    loadSong(songs[currentSongIndex]);
+// Progress & time
+audio.addEventListener("timeupdate", ()=>{
+  if(!Number.isFinite(audio.duration)) return;
+  const pct = (audio.currentTime / audio.duration) * 100;
+  progressBar.style.width = pct + "%";
+  currentTimeEl.textContent = fmt(audio.currentTime);
+  durationEl.textContent = fmt(audio.duration);
 });
+
+progressContainer.addEventListener("click", e=>{
+  const r = progressContainer.getBoundingClientRect();
+  const ratio = (e.clientX - r.left)/r.width;
+  if (Number.isFinite(audio.duration)) audio.currentTime = ratio*audio.duration;
+});
+
+// Stop at end (no auto-next)
+audio.addEventListener("ended", ()=> pauseSong());
+
+// Keyboard shortcuts
+window.addEventListener("keydown", e=>{
+  const tag = (e.target.tagName||"").toLowerCase();
+  if (tag==="input"||tag==="textarea") return;
+  if (e.code==="Space"){ e.preventDefault(); isPlaying?pauseSong():playSong(); }
+  if (e.key==="ArrowRight"){ audio.currentTime += 5; }
+  if (e.key==="ArrowLeft"){ audio.currentTime -= 5; }
+});
+
+// Build playlist UI
+function trackEl(song, i){
+  const el = document.createElement("div");
+  el.className = "track";
+  el.innerHTML = `
+    <img class="track-cover" src="${song.cover}" alt="${song.title} cover"/>
+    <div class="track-info">
+      <div class="track-title" title="${song.title}">${song.title}</div>
+      <div class="track-artist">${song.artist}</div>
+    </div>`;
+  el.addEventListener("click", ()=>{ loadSong(i); playSong(); });
+  el.tabIndex = 0;
+  return el;
+}
+function buildPlaylist(){
+  playlistEl.innerHTML = "";
+  playlist.forEach((s, i)=> playlistEl.appendChild(trackEl(s, i)));
+}
+
+// Init
+(function init(){
+  buildPlaylist();
+  loadSong(0);
+})();
