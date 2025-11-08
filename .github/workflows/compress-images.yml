@@ -14,21 +14,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Optimize images
-        uses: calibreapp/image-actions@v1.1.0
+      - name: Install Node
+        uses: actions/setup-node@v3
         with:
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
-          # ✅ One input folder for all images
-          inputPaths: "images"
-          # ✅ Output same folder
-          outputPaths: "images"
-          compressOnly: true
+          node-version: 18
 
-          # ✅ Compression settings
-          jpegQuality: "70"
-          pngQuality: "70"
-          webpQuality: "70"
+      - name: Install imagemin CLI tools
+        run: |
+          npm install -g imagemin-cli imagemin-mozjpeg imagemin-pngquant imagemin-webp
 
-          # ✅ Resize large images
-          maxWidth: 800
-          maxHeight: 800
+      - name: Compress images
+        run: |
+          mkdir -p optimized
+          imagemin images/*.{jpg,jpeg,png} --plugin=mozjpeg={quality:70} --plugin=pngquant={quality:[0.6,0.8]} > /dev/null 2>&1 || true
+          cp -r images/* optimized/ || true
+          imagemin images/*.{webp} --plugin=webp={quality:70} > /dev/null 2>&1 || true
+          cp -r optimized/* images/
