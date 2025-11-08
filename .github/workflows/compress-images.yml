@@ -18,12 +18,17 @@ jobs:
         uses: calibreapp/image-actions@v1.1.0
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          jpgPath: "images"
-          pngPath: "images"
-          webpPath: "images"
+          # ✅ One input folder for all images
+          inputPaths: "images"
+          # ✅ Output same folder
+          outputPaths: "images"
+          compressOnly: true
+
+          # ✅ Compression settings
           jpegQuality: "70"
           pngQuality: "70"
           webpQuality: "70"
+
+          # ✅ Resize large images
           maxWidth: 800
           maxHeight: 800
-          compressOnly: true
