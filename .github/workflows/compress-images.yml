@@ -1,0 +1,81 @@
+name: Compress Images
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "images/**"
+
+permissions:
+  contents: write
+
+jobs:
+  compress:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install ImageMagick
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y imagemagick
+
+      # Create output dir
+      - name: Prepare output
+        run: mkdir -p optimized
+
+      # ===== JPG / JPEG =====
+      - name: Resize & compress JPG
+        shell: bash
+        run: |
+          shopt -s nullglob
+          files=(images/*.{jpg,JPG,jpeg,JPEG})
+          if [ ${#files[@]} -gt 0 ]; then
+            mogrify -path optimized -filter Lanczos \
+              -resize 800x800\> -strip -quality 70 \
+              "${files[@]}"
+          fi
+
+      # ===== PNG =====
+      - name: Resize & compress PNG
+        shell: bash
+        run: |
+          shopt -s nullglob
+          files=(images/*.{png,PNG})
+          if [ ${#files[@]} -gt 0 ]; then
+            mogrify -path optimized -filter Lanczos \
+              -resize 800x800\> -strip -define png:compression-level=9 \
+              "${files[@]}"
+          fi
+
+      # ===== WebP =====
+      - name: Resize & compress WebP
+        shell: bash
+        run: |
+          shopt -s nullglob
+          files=(images/*.{webp,WEBP})
+          if [ ${#files[@]} -gt 0 ]; then
+            mogrify -path optimized -filter Lanczos \
+              -resize 800x800\> -strip -quality 70 \
+              "${files[@]}"
+          fi
+
+      - name: Copy back into images/
+        run: |
+          if [ -d optimized ] && [ "$(ls -A optimized || true)" ]; then
+            cp -f optimized/* images/
+          fi
+
+      - name: Commit optimized images (if changed)
+        run: |
+          if [ -n "$(git status --porcelain images)" ]; then
+            git config user.name  "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add images
+            git commit -m "Optimize images (resize ≤800px, q=70)"
+            git push
+          else
+            echo "No image changes to commit."
+          fi
