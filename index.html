@@ -1,50 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Music Player</title>
-    <link rel="stylesheet" href="index.css">
-    <link rel="icon" href="images/fbi.png" type="image/png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Play Music</title>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <div class="bg-frame">
+    <main class="player-shell" role="application" aria-label="Music player">
+      <!-- LEFT: Now playing (static) -->
+      <section class="now-playing" aria-labelledby="now-playing-heading">
 
-    <div class="container">
-        <div class="music-player">
-            <h1 class="music-player-title">Now Playing</h1>
-            <img src="images/lost.webp" alt="Song Cover" id="cover-art" class="cover-art">
 
-            <div class="song-details">
-                <h2 id="song-title">Once Lost Now Found</h2>
-                <p id="song-artist">Akhil</p>
-            </div>
-
-            <div class="progress-container" id="progress-container">
-                <div class="progress-bar" id="progress-bar"></div>
-            </div>
-            <div class="time-container">
-                <span id="current-time">0:00</span>
-                <span id="total-duration">0:00</span>
-            </div>
-
-            <div class="controls">
-                <button id="prev-btn" class="control-btn"><i class="fas fa-backward"></i></button>
-                <button id="play-pause-btn" class="control-btn play-btn"><i class="fas fa-play"></i></button>
-                <button id="next-btn" class="control-btn"><i class="fas fa-forward"></i></button>
-            </div>
-            
-            <audio id="audio-source"></audio>
+        <div class="cover-wrap">
+          <img
+            id="album-art"
+            class="cover"
+            src="https://placehold.co/500x500/0b0b0f/ffffff?text=Music"
+            alt="Album cover"
+          />
         </div>
 
-        <div class="playlist-container">
-            <h1 class="playlist-title">My Playlist</h1>
-            <ul id="playlist" class="playlist">
-                </ul>
+        <div class="track-meta">
+          <h2 id="song-title" class="title">Choose a song</h2>
+          <p id="artist-name" class="artist">from the playlist</p>
         </div>
-    </div>
 
-    <script src="script.js"></script>
+        <!-- Progress -->
+        <div class="progress">
+          <div id="progress-container" class="progress-rail" role="slider"
+               aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
+            <div id="progress-bar" class="progress-bar"></div>
+          </div>
+          <div class="time">
+            <span id="current-time">0:00</span>
+            <span id="duration">0:00</span>
+          </div>
+        </div>
+
+        <!-- Controls (shuffle/repeat removed) -->
+        <div class="controls">
+          <button id="prev-btn" class="icon-btn" title="Previous" aria-label="Previous">⏮</button>
+
+          <button id="play-pause-btn" class="play-btn" title="Play/Pause" aria-label="Play/Pause" aria-pressed="false">
+            <svg id="play-icon" viewBox="0 0 24 24" width="34" height="34" aria-hidden="true">
+              <path d="M8 5v14l11-7L8 5z" fill="currentColor"/>
+            </svg>
+            <svg id="pause-icon" class="hidden" viewBox="0 0 24 24" width="34" height="34" aria-hidden="true">
+              <path d="M7 5h4v14H7zM13 5h4v14h-4z" fill="currentColor"/>
+            </svg>
+          </button>
+
+          <button id="next-btn" class="icon-btn" title="Next" aria-label="Next">⏭</button>
+        </div>
+      </section>
+
+      <!-- RIGHT: Playlist (independent scroll) -->
+      <section class="playlist" aria-labelledby="playlist-heading">
+        <h2 id="playlist-heading" class="playlist-title">Playlist</h2>
+        <div id="playlist" class="playlist-scroll" role="list"></div>
+      </section>
+
+      <audio id="audio-player" preload="metadata"></audio>
+    </main>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
 </body>
 </html>
