@@ -6,7 +6,6 @@ on:
     paths:
       - "images/**"
 
-# allow the job to push commits back
 permissions:
   contents: write
 
@@ -15,44 +14,58 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install Node
+      - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      - name: Install imagemin CLI tools
-        run: |
-          npm install -g imagemin-cli imagemin-mozjpeg imagemin-pngquant imagemin-webp
+      - name: Install sharp-cli
+        run: npm i -g sharp-cli
 
-      - name: Compress JPG/PNG to ./optimized
+      # JPG / JPEG
+      - name: Optimize JPG
         run: |
           mkdir -p optimized
-          # JPG + PNG
-          imagemin images/*.{jpg,JPG,jpeg,JPEG,png,PNG} \
-            --plugin=mozjpeg={quality:70} \
-            --plugin=pngquant={quality:[0.6,0.8]} \
-            --out-dir=optimized || true
-          # WEBP
-          imagemin images/*.{webp,WEBP} \
-            --plugin=webp={quality:70} \
-            --out-dir=optimized || true
+          shopt -s nullglob
+          sharp -i images/*.{jpg,JPG,jpeg,JPEG} \
+            -o optimized/ \
+            --resize 800 800 --fit inside --withoutEnlargement \
+            --quality 70 --progressive
 
-      - name: Copy back into images/
+      # PNG
+      - name: Optimize PNG
+        run: |
+          shopt -s nullglob
+          sharp -i images/*.{png,PNG} \
+            -o optimized/ \
+            --resize 800 800 --fit inside --withoutEnlargement \
+            --quality 70 --pngCompressionLevel 9
+
+      # WebP
+      - name: Optimize WebP
+        run: |
+          shopt -s nullglob
+          sharp -i images/*.{webp,WEBP} \
+            -o optimized/ \
+            --resize 800 800 --fit inside --withoutEnlargement \
+            --quality 70
+
+      - name: Copy back to images/
         run: |
           if [ -d optimized ]; then
             cp -f optimized/* images/ 2>/dev/null || true
           fi
 
-      - name: Commit optimized images (if any)
+      - name: Commit optimized images (if changed)
         run: |
           if [ -n "$(git status --porcelain images)" ]; then
-            git config user.name "github-actions[bot]"
+            git config user.name  "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add images
-            git commit -m "Optimize images"
+            git commit -m "Optimize images via sharp-cli (resize max 800, q=70)"
             git push
           else
             echo "No image changes to commit."
