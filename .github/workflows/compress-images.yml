@@ -23,34 +23,37 @@ jobs:
           node-version: 18
 
       - name: Install sharp-cli
-        run: npm i -g sharp-cli
+        run: npm i -g sharp-cli@^2
 
       # JPG / JPEG
       - name: Optimize JPG
+        shell: bash
         run: |
-          mkdir -p optimized
           shopt -s nullglob
-          sharp -i images/*.{jpg,JPG,jpeg,JPEG} \
+          mkdir -p optimized
+          sharp -i "images/*.{jpg,JPG,jpeg,JPEG}" \
             -o optimized/ \
-            --resize 800 800 --fit inside --withoutEnlargement \
+            --width 800 --height 800 --fit inside --withoutEnlargement \
             --quality 70 --progressive
 
       # PNG
       - name: Optimize PNG
+        shell: bash
         run: |
           shopt -s nullglob
-          sharp -i images/*.{png,PNG} \
+          sharp -i "images/*.{png,PNG}" \
             -o optimized/ \
-            --resize 800 800 --fit inside --withoutEnlargement \
-            --quality 70 --pngCompressionLevel 9
+            --width 800 --height 800 --fit inside --withoutEnlargement \
+            --compressionLevel 9
 
       # WebP
       - name: Optimize WebP
+        shell: bash
         run: |
           shopt -s nullglob
-          sharp -i images/*.{webp,WEBP} \
+          sharp -i "images/*.{webp,WEBP}" \
             -o optimized/ \
-            --resize 800 800 --fit inside --withoutEnlargement \
+            --width 800 --height 800 --fit inside --withoutEnlargement \
             --quality 70
 
       - name: Copy back to images/
@@ -65,7 +68,7 @@ jobs:
             git config user.name  "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add images
-            git commit -m "Optimize images via sharp-cli (resize max 800, q=70)"
+            git commit -m "Optimize images via sharp-cli (max 800px, q=70)"
             git push
           else
             echo "No image changes to commit."
