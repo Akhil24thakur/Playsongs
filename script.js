@@ -154,7 +154,7 @@ function trackEl(song, i){
 
   const yt = song.yt ? normalizeUrl(song.yt) : null;
 
-  el.innerHTML = `
+  el.innerHTML = `   
     <img class="track-cover" src="${safe(song.cover)}" alt="${song.title} cover"/>
 
     <div class="track-info">
