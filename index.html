@@ -14,9 +14,9 @@
 <body>
   <div class="bg-frame">
     <main class="player-shell" role="application" aria-label="Music player">
-      <!-- LEFT: Now playing (static) -->
-      <section class="now-playing" aria-labelledby="now-playing-heading">
 
+      <!-- LEFT SIDE: NOW PLAYING -->
+      <section class="now-playing" aria-labelledby="now-playing-heading">
 
         <div class="cover-wrap">
           <img
@@ -32,7 +32,7 @@
           <p id="artist-name" class="artist">from the playlist</p>
         </div>
 
-        <!-- Progress -->
+        <!-- Progress Bar -->
         <div class="progress">
           <div id="progress-container" class="progress-rail" role="slider"
                aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
@@ -44,7 +44,7 @@
           </div>
         </div>
 
-        <!-- Controls (shuffle/repeat removed) -->
+        <!-- Controls -->
         <div class="controls">
           <button id="prev-btn" class="icon-btn" title="Previous" aria-label="Previous">⏮</button>
 
@@ -59,22 +59,30 @@
 
           <button id="next-btn" class="icon-btn" title="Next" aria-label="Next">⏭</button>
         </div>
+
       </section>
 
 
-      <!-- RIGHT: Playlist (independent scroll) -->
+
+      <!-- RIGHT SIDE: PLAYLIST -->
       <section class="playlist" aria-labelledby="playlist-heading">
+
         <h2 id="playlist-heading" class="playlist-title">Playlist</h2>
+
+        <!-- JS will render songs + YouTube buttons here -->
         <div id="playlist" class="playlist-scroll" role="list"></div>
+
       </section>
 
       <audio id="audio-player" preload="metadata"></audio>
     </main>
   </div>
 
-  
 
+  <!-- Toast -->
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- Your Music Player Logic -->
   <script src="script.js"></script>
 </body>
 </html>
