@@ -224,6 +224,8 @@ body{
 }
 .track-artist{ font-size: 13px; color: var(--muted); }
 
+
+
 /* Toast */
 .toast{
   position: fixed; left:50%; bottom:24px;
@@ -236,3 +238,31 @@ body{
 }
 .toast.show{ opacity: 1; transform: translateX(-50%) translateY(0); }
 
+/* FIX: typo in your original */
+.track{
+  display:flex; align-items:center; gap:12px;
+  padding: 8px 12px;              /* was '5xpx' */
+  border-radius: 14px;
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(148,163,184,.12);
+  cursor: pointer; transition: .15s;
+}
+.track:hover{ background: rgba(255,255,255,.12); }
+.track.active{ background: rgba(129,140,248,.22); }
+
+.track-info{ flex: 1 1 auto; min-width: 0; } /* pushes actions to right */
+.track-title{ white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.track-actions{ display:flex; align-items:center; gap:8px; margin-left:8px; }
+
+/* YouTube icon button */
+.yt-link{
+  display:inline-grid; place-items:center;
+  width:34px; height:34px; border-radius:50%;
+  border:1px solid rgba(148,163,184,.18);
+  background: rgba(255,255,255,.06);
+  color: #ff4d4d;                  /* YouTube red-like */
+  text-decoration:none;
+  flex: 0 0 auto;                  /* don’t shrink */
+}
+.yt-link:hover{ background: rgba(255,255,255,.12); }
