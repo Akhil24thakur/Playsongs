@@ -156,30 +156,37 @@ function trackEl(song, i){
 
   el.innerHTML = `
     <img class="track-cover" src="${safe(song.cover)}" alt="${song.title} cover"/>
+
     <div class="track-info">
       <div class="title-row">
+
         <div class="track-title" title="${song.title}">${song.title}</div>
+
         ${yt ? `
           <a class="yt-btn" href="${yt}" target="_blank" rel="noopener"
              title="Watch on YouTube" aria-label="Watch ${song.title} on YouTube">
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
-              <path d="M23.5 6.2a4 4 0 0 0-2.8-2.8C18.9 3 12 3 12 3s-6.9 0-8.7.4A4 4 0 0 0 .5 6.2 41 41 0 0 0 0 12a41 41 0 0 0 .5 5.8 4 4 0 0 0 2.8 2.8C5.1 21 12 21 12 21s6.9 0 8.7-.4a4 4 0 0 0 2.8-2.8A41 41 0 0 0 24 12a41 41 0 0 0-.5-5.8zM9.8 15.5V8.5L15.6 12l-5.8 3.5z" fill="currentColor"/>
+              <path d="M23.5 6.2a4 4 0 0 0-2.8-2.8C18.9 3 12 3 12 3s-6.9 0-8.7.4A4 4 0 0 0 .5 6.2 41 41 0 0 0 0 12a41 41 0 0 0 .5 5.8 4 4 0 0 0 2.8 2.8C5.1 21 12 21 12 21s6.9 0 8.7-.4a4 4 0 0 0 2.8-2.8A41 41 0 0 0 24 12a41 41 0 0 0-.5-5.8zM9.8 15.5V8.5L15.6 12l-5.8 3.5z" fill="red"/>
             </svg>
-          </a>` : ``}
+          </a>
+        ` : ``}
+
       </div>
+
       <div class="track-artist">${song.artist}</div>
     </div>
   `;
 
-  // clicking the row plays the song
+  // clicking row plays the song
   el.addEventListener("click", ()=>{ loadSong(i); playSong(); });
 
-  // prevent row click when pressing the YT link
+  // Clicking YT button shouldn't trigger play
   const link = el.querySelector(".yt-btn");
   if (link) link.addEventListener("click", ev => ev.stopPropagation());
 
   return el;
 }
+
 
 function buildPlaylist(){
   playlistEl.innerHTML = "";
