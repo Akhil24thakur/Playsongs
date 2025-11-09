@@ -20,10 +20,10 @@ const toast = document.getElementById("toast");
 
 // ===== Your playlist
 const playlist = [
-    { title: 'Pehli Baatein', artist: 'Akhil', src: 'songs/Pehli Batein.mp3', cover: 'images/Pehli Batein.jpeg' },
-    { title: 'Stay Away', artist: 'Akhil', src: 'songs/Stay away.mp3', cover: 'images/stay away.png' },
-    { title: 'Choti Choti Batan', artist: 'Akhil', src: 'songs/batan.mp3', cover: 'images/batan.png' },
-    { title: 'Karma', artist: 'Akhil', src: 'songs/karma.mp3', cover: 'images/karma.png' },
+    { title: 'Pehli Baatein', artist: 'Akhil', src: 'songs/Pehli Batein.mp3', cover: 'images/Pehli Batein.jpeg', yt: 'https://youtu.be/79MeFOlyRKQ?si=wUbv_QD5OzVzRh3T' },
+    { title: 'Stay Away', artist: 'Akhil', src: 'songs/Stay away.mp3', cover: 'images/stay away.png', yt: 'https://youtu.be/4Sj-LVwj36c?si=znRffitAOKsDC_lu'  },
+    { title: 'Choti Choti Batan', artist: 'Akhil', src: 'songs/batan.mp3', cover: 'images/batan.png', yt: 'https://youtu.be/1mzrxYSFEEE?si=znEbpekloil8bt8G'  },
+    { title: 'Karma', artist: 'Akhil', src: 'songs/karma.mp3', cover: 'images/karma.png', yt: 'https://youtu.be/8K8DRNDKdbQ?si=8qnDRs5Ac2v6Z5lV'  },
     { title: 'Tere Bina', artist: 'Akhil', src: 'songs/Tere Bina.mp3', cover: 'images/Tere Bina.png' },
     { title: 'Divided Hearts', artist: 'Akhil', src: 'songs/div.mp3', cover: 'images/div.png' },
     { title: 'Rah Main Kanta', artist: 'Akhil', src: 'songs/rah.mp3', cover: 'images/rah.png ' },
@@ -84,6 +84,12 @@ function loadSong(i){
   progressBar.style.width = "0%";
   currentTimeEl.textContent = "0:00";
   durationEl.textContent = "0:00";
+
+
+
+
+
+
 
   // highlight
   [...playlistEl.children].forEach((el, idx)=> el.classList.toggle("active", idx===current));
@@ -158,6 +164,35 @@ function trackEl(song, i){
 function buildPlaylist(){
   playlistEl.innerHTML = "";
   playlist.forEach((s, i)=> playlistEl.appendChild(trackEl(s, i)));
+}
+
+
+function trackEl(song, i){
+  const el = document.createElement("div");
+  el.className = "track";
+  el.innerHTML = `
+    <img class="track-cover" src="${song.cover}" alt="${song.title} cover"/>
+    <div class="track-info">
+      <div class="track-title" title="${song.title}">${song.title}</div>
+      <div class="track-artist">${song.artist}</div>
+    </div>
+    <div class="track-actions">
+      ${song.yt ? `
+        <a class="yt-link" href="${song.yt}" target="_blank" rel="noopener"
+           title="Watch on YouTube" aria-label="Watch ${song.title} on YouTube">
+          <!-- YouTube logo (SVG) -->
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+            <path d="M23.5 6.2a4 4 0 0 0-2.8-2.8C18.9 3 12 3 12 3s-6.9 0-8.7.4A4 4 0 0 0 .5 6.2 41 41 0 0 0 0 12a41 41 0 0 0 .5 5.8 4 4 0 0 0 2.8 2.8C5.1 21 12 21 12 21s6.9 0 8.7-.4a4 4 0 0 0 2.8-2.8A41 41 0 0 0 24 12a41 41 0 0 0-.5-5.8zM9.8 15.5V8.5L15.6 12l-5.8 3.5z" fill="currentColor"/>
+          </svg>
+        </a>` : ``}
+    </div>`;
+  el.addEventListener("click", ()=>{ loadSong(i); playSong(); });
+  el.tabIndex = 0;
+
+  // Don’t trigger play when clicking the YT button
+  const link = el.querySelector(".yt-link");
+  if (link) link.addEventListener("click", ev => ev.stopPropagation());
+  return el;
 }
 
 // Init
