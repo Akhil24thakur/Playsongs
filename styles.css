@@ -10,6 +10,7 @@
   --ring: rgba(129,140,248,.35);
 
   --frame-pad: clamp(12px, 3vw, 24px);
+  --progress-max: clamp(220px, 78%, 520px);
 
   /* Album sizes */
   --cover-size-mobile: 200px;
@@ -110,22 +111,51 @@ body{
 }
 .artist{ color: var(--muted); font-size: 14px; }
 
-/* Progress & time */
-.progress{ display:flex; flex-direction:column; gap:8px; }
-.progress-rail{
-  position: relative; height: 12px; border-radius: 9999px;
-  background: rgba(255,255,255,.08); cursor: pointer; outline: none;
+/* ===== Progress width fix ===== */
+:root{
+  /* tweak this one value to control size */
+  --progress-max: clamp(220px, 78%, 520px);
 }
-.progress-rail:focus-visible{ box-shadow: 0 0 0 6px var(--ring); }
+
+.progress{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: var(--progress-max);  /* <- reduced width */
+  margin: 0 auto;                  /* <- centered */
+}
+
+/* make the rail fill the reduced progress width */
+.progress-rail{
+  width: 100%;
+  height: 10px;                    /* optional: slimmer */
+  border-radius: 9999px;
+  background: rgba(255,255,255,.08);
+  cursor: pointer;
+  outline: none;
+}
+
+/* the filled part still stretches inside the rail */
 .progress-bar{
-  position:absolute; left:0; top:0; height:100%; width:0%;
+  position: relative;
+  height: 100%;
+  width: 0%;
+  border-radius: inherit;
   background: linear-gradient(90deg, var(--primary), var(--accent));
-  border-radius: inherit; box-shadow: 0 0 20px rgba(129,140,248,.35);
+  box-shadow: 0 0 20px rgba(129,140,248,.35);
   transition: width .12s linear;
 }
+
+/* timestamps match the same width and stay centered under bar */
 .time{
-  display:flex; justify-content:space-between;
-  font-size:12px; color:var(--muted); font-variant-numeric: tabular-nums;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin: 0 auto;                  /* inherit centering */
 }
 
 /* Controls */
