@@ -208,15 +208,14 @@ body{
   border-radius: 10px;
 }
 
-/* The scrollable box itself */
+
 .playlist-scroll{
   flex: 1 1 auto;
-  min-height: 0;                     /* must be 0 for scroll */
+  min-height: 0;                     
   overflow-y: auto;
-  overscroll-behavior: contain;      /* prevent page scroll */
-  -webkit-overflow-scrolling: touch; /* smooth on iOS */
-  scroll-behavior: smooth;           /* smooth programmatic scroll */
-
+  overscroll-behavior: contain;      
+  -webkit-overflow-scrolling: touch; 
+  scroll-behavior: smooth;           
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -271,33 +270,61 @@ body{
   color: #fff; opacity: 0; pointer-events: none;
   transition: .2s; font-size: 13px;
 }
-.toast.show{ opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.show{ 
+  opacity: 1; 
+  transform: translateX(-50%) translateY(0); 
+  }
 
 /* FIX: typo in your original */
 .track{
-  display:flex; align-items:center; gap:12px;
+  display:flex; 
+  align-items:center; 
+  gap:12px;
   padding: 8px 12px;              /* was '5xpx' */
   border-radius: 14px;
   background: rgba(255,255,255,.05);
   border: 1px solid rgba(148,163,184,.12);
-  cursor: pointer; transition: .15s;
+  cursor: pointer; 
+  transition: .15s;
 }
-.track:hover{ background: rgba(255,255,255,.12); }
-.track.active{ background: rgba(129,140,248,.22); }
+.track:hover{ 
+  background: rgba(255,255,255,.12); 
+}
+.track.active{ 
+  background: rgba(129,140,248,.22); 
+}
 
-.track-info{ flex: 1 1 auto; min-width: 0; } /* pushes actions to right */
-.track-title{ white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.track-info{ 
+  flex: 1 1 auto; 
+  min-width: 0; 
+} 
 
-.track-actions{ display:flex; align-items:center; gap:8px; margin-left:8px; }
+.track-title{ 
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+}
 
-/* YouTube icon button */
+.track-actions{ 
+  display:flex; 
+  align-items:center; 
+  gap:8px; 
+  margin-left:8px; 
+}
+
+
 .yt-link{
-  display:inline-grid; place-items:center;
-  width:34px; height:34px; border-radius:50%;
+  display:inline-grid; 
+  place-items:center;
+  width:34px; 
+  height:34px; 
+  border-radius:50%;
   border:1px solid rgba(148,163,184,.18);
   background: rgba(255,255,255,.06);
-  color: #ff4d4d;                  /* YouTube red-like */
+  color: #ff4d4d;                  
   text-decoration:none;
-  flex: 0 0 auto;                  /* don’t shrink */
+  flex: 0 0 auto;                  
 }
-.yt-link:hover{ background: rgba(255,255,255,.12); }
+.yt-link:hover{ 
+  background: rgba(255,255,255,.12); 
+}
