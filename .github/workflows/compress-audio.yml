@@ -1,0 +1,50 @@
+name: Compress Audio Files
+
+on:
+  workflow_dispatch:        # allow manual run
+  push:
+    paths:
+      - "songs/**"          # run when anything in songs/ changes
+
+permissions:
+  contents: write
+
+jobs:
+  compress:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install FFmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
+      - name: Compress MP3s to 192 kbps
+        shell: bash
+        run: |
+          shopt -s nullglob
+          mkdir -p optimized
+          for f in songs/*.mp3; do
+            base="$(basename "$f" .mp3)"
+            echo "→ Compressing $f → optimized/${base}.mp3"
+            ffmpeg -y -i "$f" -vn -ar 44100 -ac 2 -b:a 192k "optimized/${base}.mp3"
+          done
+
+      - name: Copy back to songs/
+        run: |
+          if [ -d optimized ] && [ "$(ls -A optimized || true)" ]; then
+            cp -f optimized/* songs/
+          fi
+
+      - name: Commit optimized audio (if changed)
+        run: |
+          if [ -n "$(git status --porcelain songs)" ]; then
+            git config user.name  "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add songs
+            git commit -m "Optimize audio (MP3 192 kbps)"
+            git push
+          else
+            echo "No changes."
+          fi
