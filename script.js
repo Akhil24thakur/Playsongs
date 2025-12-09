@@ -55,9 +55,9 @@ const playlist = [
 ];
 
 let current = 0;
-let isPlaying = false;
+let isPlaying = false;     
+// ===== Helpers     '
 
-// ===== Helpers
 const fmt = s => (!Number.isFinite(s) ? "0:00" : `${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,"0")}`);
 
 // normalize links (fix cases like 'hhttps://')
