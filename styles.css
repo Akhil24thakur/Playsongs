@@ -1,14 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
 
 :root {
-  --bg-main: #050507;
+  --bg-main: #f24949;
   --bg-surface: #0d0d12;
   --bg-elevated: #16161e;
   
-  --primary: #c084fc; /* Electric Purple */
+  --primary: #aa55ff; /* Electric Purple */
   --secondary: #22d3ee; /* Neon Cyan */
-  --text-main: #f8fafc;
-  --text-dim: #94a3b8;
+  --text-main: #54a0ec;
+  --text-dim: #ccd1d7;
   --border-glow: rgba(192, 132, 252, 0.15);
   
   --radius-lg: 32px;
