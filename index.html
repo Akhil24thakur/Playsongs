@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AKHIL — Official Music</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+      <div class="logo-wrap">
+        <span class="logo-name">AKHIL</span>
+        <span class="logo-tag">Music</span>
+      </div>
+      <nav>
+        <a href="#songs">Songs</a>
+        <a href="#about">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-bg"></div>
+    <div class="hero-grain"></div>
+    <div class="hero-content">
+      <p class="eyebrow">Now Streaming</p>
+      <h1 class="hero-title">Music That<br /><em>Touches</em><br />The Soul</h1>
+      <p class="hero-sub">Official tracks by Akhil — Music that speaks straight to the heart.</p>
+      <button class="btn-primary" id="playAllBtn">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        Play All Songs
+      </button>
+    </div>
+    <div class="hero-visual">
+      <div class="vinyl-wrap">
+        <div class="vinyl-glow"></div>
+        <div class="vinyl" id="heroVinyl">
+          <div class="vinyl-label">
+            <span>AKHIL</span>
+            <small>Music</small>
+          </div>
+          <div class="vinyl-hole"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SONGS SECTION -->
+  <section class="songs-section" id="songs">
+    <div class="container">
+
+      <!-- NOW PLAYING PANEL — populated by JS -->
+      <div class="now-strip" id="nowStrip">
+        <div class="now-top">
+          <div class="now-cover">
+            <img id="nowCoverImg" src="" alt="" />
+          </div>
+          <div class="now-meta">
+            <div class="now-label">▶ Now Playing</div>
+            <div class="now-title" id="nowTitle">—</div>
+            <div class="now-artist" id="nowArtist">—</div>
+          </div>
+          <div class="now-controls">
+            <button class="nc-btn" id="prevBtn" title="Previous">
+              <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
+            </button>
+            <button class="nc-btn big" id="mainPlayBtn" title="Play/Pause">
+              <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <svg class="icon-pause" viewBox="0 0 24 24"><path d="M6 19h4V5H6zm8-14v14h4V5z"/></svg>
+            </button>
+            <button class="nc-btn" id="nextBtn" title="Next">
+              <svg viewBox="0 0 24 24"><path d="m6 18 8.5-6L6 6v12zm2-8.14 4.96 3.14L8 16.14V9.86zM16 6h2v12h-2z"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="progress-area">
+          <span class="time" id="timeCur">0:00</span>
+          <div class="prog-track" id="progTrack">
+            <div class="prog-fill" id="progFill"></div>
+            <div class="prog-dot" id="progDot"></div>
+          </div>
+          <span class="time" id="timeTot">0:00</span>
+        </div>
+        <div class="vol-row">
+          <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+          <input type="range" class="vol" id="volSlider" min="0" max="1" step="0.01" value="0.85" />
+        </div>
+      </div>
+
+      <!-- TRACK LIST — injected by JS -->
+      <div class="sec-head">
+        <h2 class="sec-title">All Tracks</h2>
+        <div class="gold-line"></div>
+      </div>
+      <div class="tracks-list" id="tracksList"></div>
+
+    </div>
+  </section>
+  <!-- ABOUT -->
+  <section class="about-section" id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-text">
+          <h2>About Akhil</h2>
+          <p>Akhil is a celebrated Punjabi singer whose music effortlessly blends soulful melodies with deeply relatable lyrics. Known for his smooth vocal range and emotional delivery, he has captured millions of hearts across the globe.</p>
+          <p>His songs explore themes of love, heartbreak, and the beauty of human connection — making every listen feel personal and real.</p>
+          <!-- Stats injected by JS -->
+          <div class="about-stats" id="aboutStats"></div>
+        </div>
+        <div class="about-visual">
+          <div class="artist-card">
+            <div class="artist-avatar">A</div>
+            <div class="artist-name">Akhil</div>
+            <div class="artist-genre">· R&B · Soul</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 Akhil. All rights reserved. Made with ♪ for music lovers.</p>
+  </footer>
+
+  <!-- FIXED PLAYER BAR -->
+  <div class="player-bar" id="playerBar">
+    <div class="pb-prog"><div class="pb-prog-fill" id="pbProgFill"></div></div>
+    <div class="pb-cover">
+      <img id="pbCoverImg" src="" alt="" />
+    </div>
+    <!-- 🔥 THIS WILL SCROLL -->
+        <div class="tracks-scroll">
+          <div class="tracks-list" id="tracksList"></div>
+        </div>
+    <div class="pb-info">
+      <div class="pb-title" id="pbTitle">—</div>
+      <div class="pb-artist" id="pbArtist">—</div>
+    </div>
+    <div class="pb-controls">
+      <button class="pb-btn" id="pbPrev">
+        <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
+      </button>
+      <button class="pb-btn main" id="pbPlay">
+        <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        <svg class="icon-pause" viewBox="0 0 24 24"><path d="M6 19h4V5H6zm8-14v14h4V5z"/></svg>
+      </button>
+      <button class="pb-btn" id="pbNext">
+        <svg viewBox="0 0 24 24"><path d="m6 18 8.5-6L6 6v12zm2-8.14 4.96 3.14L8 16.14V9.86zM16 6h2v12h-2z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- AUDIO ENGINE -->
+  <audio id="audio"></audio>
+
+  <!-- ALL LOGIC LIVES IN app.js -->
+  <script src="app.js"></script>
+
+</body>
+</html>
