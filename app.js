@@ -4,6 +4,24 @@
    ======================================================= */
 
 const playlist = [
+
+
+  {
+    title: 'Tum Hi Toh Ho',
+    artist: 'Akhil',
+    src: 'songs/Tum Hi Toh Ho.mp3',
+    cover: 'images/Tum Hi Toh Ho.png',
+    color: '#8B4513'
+  },
+  
+  {
+    title: 'Tu Hi Hai Wajah',
+    artist: 'Akhil',
+    src: 'songs/Tu Hi Hai Wajah.mp3',
+    cover: 'images/Tu Hi Hai Wajah.png',
+    color: '#8B4513'
+  },
+  
      {
     title: 'Silent Love',
     artist: 'Akhil',
