@@ -4,6 +4,21 @@
    ======================================================= */
 
 const playlist = [
+     {
+    title: 'Silent Love',
+    artist: 'Akhil',
+    src: 'songs/Silent Love.mp3',
+    cover: 'images/Silent Love.png',
+    color: '#8B4513'
+  },
+  
+   {
+    title: 'Summer Evening',
+    artist: 'Akhil',
+    src: 'songs/summer.mp3',
+    cover: 'images/summer.png',
+    color: '#8B4513'
+  },
   {
     title: 'Lost Love',
     artist: 'Akhil',
