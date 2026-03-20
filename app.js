@@ -448,6 +448,18 @@ function prefetchDuration(src, index) {
 
   audio.load();
 }
+
+function applyMarquee(element) {
+  if (element.scrollWidth > element.clientWidth) {
+    element.classList.add('marquee');
+  } else {
+    element.classList.remove('marquee');
+  }
+}
+
+// After loading song
+applyMarquee(document.getElementById("nowTitle"));
+applyMarquee(document.getElementById("nowArtist"));
 /* -------------------------------------------------------
    PRE-FETCH DURATION
 ------------------------------------------------------- */
