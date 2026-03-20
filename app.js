@@ -7,246 +7,246 @@ const playlist = [
   {
     title: 'Lost Love',
     artist: 'Akhil',
-    src: '/songs/Lost Love.mp3',
-    cover: '/images/Lost Love.png',
+    src: 'songs/Lost Love.mp3',
+    cover: 'images/Lost Love.png',
     color: '#8B4513'
   },
   {
     title: 'Phela Batein',
     artist: 'Akhil',
-    src: '/songs/batan.mp3',
-    cover: '/images/batan.png',
+    src: 'songs/batan.mp3',
+    cover: 'images/batan.png',
     color: '#2F4F8F'
   },
   {
     title: 'Stay Away',
     artist: 'Akhil',
-    src: '/songs/Stay away.mp3',
-    cover: '/images/stay away.png',
+    src: 'songs/Stay away.mp3',
+    cover: 'images/stay away.png',
     color: '#4A4A6A'
   },
   {
     title: 'Choti Choti Batan',
     artist: 'Akhil',
-    src: '/songs/batan.mp3',
-    cover: '/images/batan.png',
+    src: 'songs/batan.mp3',
+    cover: 'images/batan.png',
     color: '#6A5ACD'
   },
   {
     title: 'Karma',
     artist: 'Akhil',
-    src: '/songs/karma.mp3',
-    cover: '/images/karma.png',
+    src: 'songs/karma.mp3',
+    cover: 'images/karma.png',
     color: '#FF5733'
   },
   {
     title: 'Tere Bina',
     artist: 'Akhil',
-    src: '/songs/Tere Bina.mp3',
-    cover: '/images/Tere Bina.png',
+    src: 'songs/Tere Bina.mp3',
+    cover: 'images/Tere Bina.png',
     color: '#C70039'
   },
   {
     title: 'Divided Hearts',
     artist: 'Akhil',
-    src: '/songs/div.mp3',
-    cover: '/images/div.png',
+    src: 'songs/div.mp3',
+    cover: 'images/div.png',
     color: '#900C3F'
   },
   {
     title: 'Rah Main Kanta',
     artist: 'Akhil',
-    src: '/songs/rah.mp3',
-    cover: '/images/rah.png',
+    src: 'songs/rah.mp3',
+    cover: 'images/rah.png',
     color: '#581845'
   },
   {
     title: 'Soul in Simplicity',
     artist: 'Akhil',
-    src: '/songs/Soul in Simplicity.mp3',
-    cover: '/images/simple.png',
+    src: 'songs/Soul in Simplicity.mp3',
+    cover: 'images/simple.png',
     color: '#2ECC71'
   },
   {
     title: 'Tera Sath [Lofi + Slowed Reverse]',
     artist: 'Akhil',
-    src: '/songs/Tera sath lofi.mp3',
-    cover: '/images/TeraSath.jpeg',
+    src: 'songs/Tera sath lofi.mp3',
+    cover: 'images/TeraSath.jpeg',
     color: '#3498DB'
   },
   {
     title: 'New City',
     artist: 'Akhil',
-    src: '/songs/new city.mp3',
-    cover: '/images/ak.png',
+    src: 'songs/new city.mp3',
+    cover: 'images/ak.png',
     color: '#1ABC9C'
   },
   {
     title: 'Vibes with you',
     artist: 'Akhil',
-    src: '/songs/Vibes With You.mp3',
-    cover: '/images/Vibes with you.png',
+    src: 'songs/Vibes With You.mp3',
+    cover: 'images/Vibes with you.png',
     color: '#9B59B6'
   },
   {
     title: 'Mann Ka Akrosh',
     artist: 'Akhil',
-    src: '/songs/Mann Ka Akrosh.mp3',
-    cover: '/images/Mann Ka Akrosh.png',
+    src: 'songs/Mann Ka Akrosh.mp3',
+    cover: 'images/Mann Ka Akrosh.png',
     color: '#E74C3C'
   },
   {
     title: 'With You',
     artist: 'Akhil',
-    src: '/songs/WithYou.mp3',
-    cover: '/images/WithYou.jpeg',
+    src: 'songs/WithYou.mp3',
+    cover: 'images/WithYou.jpeg',
     color: '#F39C12'
   },
   {
     title: 'She Comes In',
     artist: 'Akhil',
-    src: '/songs/She comes in.mp3',
-    cover: '/images/she comes In.png',
+    src: 'songs/She comes in.mp3',
+    cover: 'images/she comes In.png',
     color: '#D35400'
   },
   {
     title: 'Without You',
     artist: 'Akhil',
-    src: '/songs/WithOut you.mp3',
-    cover: '/images/WithOut YOU.jpg',
+    src: 'songs/WithOut you.mp3',
+    cover: 'images/WithOut YOU.jpg',
     color: '#7F8C8D'
   },
   {
     title: 'Because Of You',
     artist: 'Akhil',
-    src: '/songs/Because of You.mp3',
-    cover: '/images/OF you.png',
+    src: 'songs/Because of You.mp3',
+    cover: 'images/OF you.png',
     color: '#16A085'
   },
   {
     title: 'Dont Fight',
     artist: 'Akhil',
-    src: '/songs/Dont Fight.mp3',
-    cover: '/images/fight.png',
+    src: 'songs/Dont Fight.mp3',
+    cover: 'images/fight.png',
     color: '#34495E'
   },
   {
     title: 'Dream With You',
     artist: 'Akhil',
-    src: '/songs/My Dreams.mp3',
-    cover: '/images/MY Dreams.webp',
+    src: 'songs/My Dreams.mp3',
+    cover: 'images/MY Dreams.webp',
     color: '#27AE60'
   },
   {
     title: 'Kahani Suno',
     artist: 'Akhil',
-    src: '/songs/kahani.mp3',
-    cover: '/images/Kahani.png',
+    src: 'songs/kahani.mp3',
+    cover: 'images/Kahani.png',
     color: '#8E44AD'
   },
   {
     title: 'Dooriyan',
     artist: 'Akhil',
-    src: '/songs/Dooriyan.mp3',
-    cover: '/images/Dooriyan.png',
+    src: 'songs/Dooriyan.mp3',
+    cover: 'images/Dooriyan.png',
     color: '#2C3E50'
   },
   {
     title: 'Samjho Na',
     artist: 'Akhil',
-    src: '/songs/Samjho.mp3',
-    cover: '/images/Samjho.png',
+    src: 'songs/Samjho.mp3',
+    cover: 'images/Samjho.png',
     color: '#E67E22'
   },
   {
     title: 'Tera Sath',
     artist: 'Akhil',
-    src: '/songs/TeraSath.mp3',
-    cover: '/images/TeraSath.jpeg',
+    src: 'songs/TeraSath.mp3',
+    cover: 'images/TeraSath.jpeg',
     color: '#2980B9'
   },
   {
     title: 'One Sided Love',
     artist: 'Akhil',
-    src: '/songs/One Sided Love.mp3',
-    cover: '/images/One Sided Love.png',
+    src: 'songs/One Sided Love.mp3',
+    cover: 'images/One Sided Love.png',
     color: '#C0392B'
   },
   {
     title: 'Majestic',
     artist: 'Akhil',
-    src: '/songs/Majestic.mp3',
-    cover: '/images/Majestic.png',
+    src: 'songs/Majestic.mp3',
+    cover: 'images/Majestic.png',
     color: '#F1C40F'
   },
   {
     title: 'My Queen',
     artist: 'Akhil',
-    src: '/songs/My Queen.mp3',
-    cover: '/images/My Queen.jpeg',
+    src: 'songs/My Queen.mp3',
+    cover: 'images/My Queen.jpeg',
     color: '#E84393'
   },
   {
     title: 'Winters In Shimla',
     artist: 'Akhil',
-    src: '/songs/Winters In Shimla.mp3',
-    cover: '/images/Shimla.jpg',
+    src: 'songs/Winters In Shimla.mp3',
+    cover: 'images/Shimla.jpg',
     color: '#00CEC9'
   },
   {
     title: 'Meri Dua',
     artist: 'Akhil',
-    src: '/songs/Meri Dua.mp3',
-    cover: '/images/meri-dua.jpg',
+    src: 'songs/Meri Dua.mp3',
+    cover: 'images/meri-dua.jpg',
     color: '#6C5CE7'
   },
   {
     title: 'Bittersweet Memories',
     artist: 'Akhil',
-    src: '/songs/Bittersweet Memories.mp3',
-    cover: '/images/Bittersweet Memories.jpeg',
+    src: 'songs/Bittersweet Memories.mp3',
+    cover: 'images/Bittersweet Memories.jpeg',
     color: '#FD79A8'
   },
   {
     title: 'Dil Di Kahani',
     artist: 'Akhil',
-    src: '/songs/Dil Di Kahani.mp3',
-    cover: '/images/Dil Di Kahani.jpeg',
+    src: 'songs/Dil Di Kahani.mp3',
+    cover: 'images/Dil Di Kahani.jpeg',
     color: '#00B894'
   },
   {
     title: 'First Meet',
     artist: 'Akhil',
-    src: '/songs/First Meet.mp3',
-    cover: '/images/First Meet.jpeg',
+    src: 'songs/First Meet.mp3',
+    cover: 'images/First Meet.jpeg',
     color: '#0984E3'
   },
   {
     title: 'Nature Touch',
     artist: 'Akhil',
-    src: '/songs/Nature Touch.mp3',
-    cover: '/images/Nature Touch.jpeg',
+    src: 'songs/Nature Touch.mp3',
+    cover: 'images/Nature Touch.jpeg',
     color: '#55EFC4'
   },
   {
     title: 'Pyar Ka Safar',
     artist: 'Akhil',
-    src: '/songs/Pyar Ka Safar.mp3',
-    cover: '/images/pyar ka safat.jpeg',
+    src: 'songs/Pyar Ka Safar.mp3',
+    cover: 'images/pyar ka safat.jpeg',
     color: '#FAB1A0'
   },
   {
     title: 'Sari Sari Raat',
     artist: 'Akhil',
-    src: '/songs/Sari Sari Raat.mp3',
-    cover: '/images/meri-dua.jpg',
+    src: 'songs/Sari Sari Raat.mp3',
+    cover: 'images/meri-dua.jpg',
     color: '#FFEAA7'
   },
   {
     title: 'Tere Bin',
     artist: 'Akhil',
-    src: '/songs/Tere Bin.mp3',
-    cover: '/images/tera bina.jpeg',
+    src: 'songs/Tere Bin.mp3',
+    cover: 'images/tera bina.jpeg',
     color: '#636E72'
   }
 ];
