@@ -1,7 +1,3 @@
-/* =======================================================
-   app.js — Single source of truth for playlist + all logic
-   To add/remove songs: edit the `playlist` array only.
-   ======================================================= */
 
 const playlist = [
   {
