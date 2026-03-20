@@ -4,8 +4,58 @@
    ======================================================= */
 
 const playlist = [
+  {
+    title: 'Jhanjron Ka Joda',
+    artist: 'Akhil',
+    src: 'songs/Jhanjron Ka Joda.mp3',
+    cover: 'images/Jhanjron Ka Joda.png',
+    color: '#8B4513'
+  },
+  {
+    title: 'Ek Nazar',
+    artist: 'Akhil',
+    src: 'songs/Ek Nazar.mp3',
+    cover: 'images/Ek Nazar.png',
+    color: '#8B4513'
+  },
 
+  {
+    title: 'Before Death',
+    artist: 'Akhil',
+    src: 'songs/Before Death.mp3',
+    cover: 'images/Before Death.png',
+    color: '#8B4513'
+  },
+{
+    title: 'You Are The Reason',
+    artist: 'Akhil',
+    src: 'songs/You Are The Reason.mp3',
+    cover: 'images/You Are The Reason.png',
+    color: '#8B4513'
+  },
+  {
+    title: 'Love Song | इतना गहरा',
+    artist: 'Akhil',
+    src: 'songs/Love Song  इतना गहरा.mp3',
+    cover: 'images/Love Song  इतना गहरा.png',
+    color: '#8B4513'
+  },
+    {
+    title: 'Coffee Talks',
+    artist: 'Akhil',
+    src: 'songs/Coffee Talks.mp3',
+    cover: 'images/Coffee Talks.png',
+    color: '#8B4513'
+  },
 
+  {
+    title: 'Beenaam Sa Ishq',
+    artist: 'Akhil',
+    src: 'songs/Beenaam Sa Ishq.mp3',
+    cover: 'images/Beenaam Sa Ishq.png',
+    color: '#8B4513'
+  },
+  
   {
     title: 'Tum Hi Toh Ho',
     artist: 'Akhil',

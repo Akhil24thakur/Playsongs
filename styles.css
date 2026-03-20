@@ -393,15 +393,17 @@ input[type=range].vol::-moz-range-thumb {
   background: var(--card); border: 1px solid rgba(201,168,76,0.12);
   border-radius: 20px; padding: 40px; text-align: center; max-width: 280px;
 }
-.artist-avatar {
-  width: 120px; height: 120px; border-radius: 50%;
-  margin: 0 auto 20px;
+.artist-avatar img {
+  width: 220px; height: 220px; 
+  border-radius: 50%;
+  margin: 0 auto 4px;
   background: linear-gradient(135deg, var(--gold), #6a4810);
   display: flex; align-items: center; justify-content: center;
   font-family: 'Playfair Display', serif;
   font-size: 3rem; color: var(--dark); font-weight: 700;
   box-shadow: 0 0 40px rgba(201,168,76,0.25);
 }
+
 .artist-name { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--text); margin-bottom: 6px; }
 .artist-genre { font-size: 0.78rem; color: var(--gold); letter-spacing: 0.2em; text-transform: uppercase; }
 
