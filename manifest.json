@@ -1,19 +1,18 @@
 {
-  "name": "Akhil Music Player",
-  "short_name": "Akhil Music",
+  "name": "Akhil Music",
+  "short_name": "Music",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0f0f0f",
+  "background_color": "#000000",
   "theme_color": "#d4af37",
-  "orientation": "portrait",
   "icons": [
     {
-      "src": "images/icon-192.png",
+      "src": "icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "images/icon-512.png",
+      "src": "icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }

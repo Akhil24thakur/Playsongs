@@ -588,3 +588,15 @@ footer p { font-size: 0.78rem; color: var(--muted); }
   0% { transform: translateX(0); }
   100% { transform: translateX(-100%); }
 }
+.install-btn {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  background: #d4af37;
+  color: black;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 20px;
+  font-weight: bold;
+  box-shadow: 0 0 15px rgba(212,175,55,0.5);
+}

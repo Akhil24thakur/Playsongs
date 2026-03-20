@@ -371,7 +371,7 @@ const tracksList  = document.getElementById('tracksList');
 
 // About stats
 const aboutStats  = document.getElementById('aboutStats');
-
+navigator.serviceWorker.register('/service-worker.js');
 /* -------------------------------------------------------
    BUILD TRACK LIST  — reads from `playlist` array
 ------------------------------------------------------- */
@@ -497,6 +497,34 @@ function buildStats() {
     </div>
   `;
 }
+
+// ===== EXISTING CODE ABOVE =====
+
+// Service Worker Registration
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/service-worker.js');
+}
+
+
+// ===== ADD INSTALL BUTTON CODE BELOW THIS =====
+
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+
+  const installBtn = document.createElement('button');
+  installBtn.innerText = "Install App";
+  installBtn.className = "install-btn";
+
+  installBtn.onclick = async () => {
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+  };
+
+  document.body.appendChild(installBtn);
+});
 
 /* -------------------------------------------------------
    LOAD & PLAY
