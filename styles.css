@@ -2,15 +2,15 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --gold:   #c9a84c;
-  --gold2:  #e8c97a;
-  --dark:   #0a0806;
-  --dark2:  #141008;
-  --dark3:  #1e1810;
-  --card:   #181208;
-  --text:   #f0e8d8;
-  --muted:  #7a7060;
-  --ph:     76px;       /* player bar height */
+  --gold:   #c0392b;
+  --gold2:  #e74c3c;
+  --dark:   #0b0b0c;
+  --dark2:  #141416;
+  --dark3:  #1f1f22;
+  --card:   #18181b;
+  --text:   #f5eaea;
+  --muted:  #9a8c8c;
+  --ph:     76px;
   --radius: 12px;
 }
 
@@ -233,7 +233,7 @@ nav a:hover { color: var(--gold); }
   font-size: 1.4rem;
   font-weight: 700;
 
-  background: linear-gradient(90deg, #d4af37, #fff3b0, #d4af37);
+--dark:   #0b0b0c;
   /* -webkit-background-clip: text; */
   -webkit-text-fill-color: transparent;
 
@@ -244,8 +244,10 @@ nav a:hover { color: var(--gold); }
 
 
 .now-title {
-  background-size: 200% auto;
-  animation: shine 4s linear infinite;
+  color: #ffffff;           /* pure white text */
+  background: none;         /* remove gradient */
+  -webkit-text-fill-color: unset; /* fix for gradient text */
+  animation: none;          /* optional: remove shine */
 }
 
 @keyframes shine {
