@@ -601,14 +601,13 @@ footer p { font-size: 0.78rem; color: var(--muted); }
   position: fixed;
   bottom: 80px;
   right: 20px;
-  background: #d4af37;
+  background: #d43737;
   color: black;
   border: none;
   padding: 10px 15px;
   border-radius: 20px;
   font-weight: bold;
-  box-shadow: 0 0 15px rgba(212,175,55,0.5);
-}
+  
 
 .icon{
   border: 50%;
