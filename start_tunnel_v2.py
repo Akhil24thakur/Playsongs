@@ -6,7 +6,7 @@ try:
     # Open a HTTP tunnel on the default port 5500
     public_url = ngrok.connect(5500).public_url
     
-    # Write to file
+    # Write to file 
     with open("tunnel_url.txt", "w") as f:
         f.write(public_url)
         

@@ -1,6 +1,13 @@
 
 const playlist = [
   {
+    title: 'Ek Baat Reh Gayi Thi',
+    artist: 'Akhil',
+    src: 'songs/Ek Baat Reh Gayi Thi.mp3',
+    cover: 'images/Ek Baat Reh Gayi Thi.png',
+    color: '#8B4513'
+  },
+  {
     title: 'Jhanjron Ka Joda',
     artist: 'Akhil',
     src: 'songs/Jhanjron Ka Joda.mp3',
