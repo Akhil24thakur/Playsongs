@@ -717,7 +717,7 @@ function loadSong(song){
   nowArtist.textContent = song.artist;
 
 
-  // ADD THIS PART (important)
+  // update notification info
   if ('mediaSession' in navigator){
 
     navigator.mediaSession.metadata = new MediaMetadata({
@@ -727,18 +727,21 @@ function loadSong(song){
       artist: song.artist,
 
       album: "Akhil Music",
-      
+
       artwork: [
+
         {
           src: song.cover,
           sizes: "512x512",
           type: "image/png"
         },
+
         {
           src: song.cover,
           sizes: "192x192",
           type: "image/png"
         }
+
       ]
 
     });
@@ -748,12 +751,20 @@ function loadSong(song){
 }
 if ('mediaSession' in navigator){
 
-  navigator.mediaSession.setActionHandler('play', () => audio.play());
+  navigator.mediaSession.setActionHandler('play', function(){
+    audio.play();
+  });
 
-  navigator.mediaSession.setActionHandler('pause', () => audio.pause());
+  navigator.mediaSession.setActionHandler('pause', function(){
+    audio.pause();
+  });
 
-  navigator.mediaSession.setActionHandler('previoustrack', prevSong);
+  navigator.mediaSession.setActionHandler('previoustrack', function(){
+    prevSong();
+  });
 
-  navigator.mediaSession.setActionHandler('nexttrack', nextSong);
+  navigator.mediaSession.setActionHandler('nexttrack', function(){
+    nextSong();
+  });
 
 }
