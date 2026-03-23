@@ -690,62 +690,7 @@ function fmt(s) {
   if (isNaN(s) || s == null) return '0:00';
   return `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 }
-function loadSong(index){
 
-  const song = songs[index];
-
-  title.textContent = song.title;
-  artist.textContent = song.artist;
-  cover.src = song.cover;
-
-  audio.src = song.src;
-
-
-  // MEDIA SESSION METADATA
-  if ('mediaSession' in navigator){
-
-    navigator.mediaSession.metadata = new MediaMetadata({
-
-      title: song.title,
-
-      artist: song.artist,
-
-      album: "Akhil Music",
-
-      artwork: [
-
-        {
-          src: song.cover,
-          sizes: "512x512",
-          type: "image/png"
-        }
-
-      ]
-
-    });
-
-  }
-
-}
-if ('mediaSession' in navigator){
-
-  navigator.mediaSession.setActionHandler('play', () => {
-    audio.play();
-  });
-
-  navigator.mediaSession.setActionHandler('pause', () => {
-    audio.pause();
-  });
-
-  navigator.mediaSession.setActionHandler('previoustrack', () => {
-    prevSong();
-  });
-
-  navigator.mediaSession.setActionHandler('nexttrack', () => {
-    nextSong();
-  });
-
-}
 /* -------------------------------------------------------
    INIT — runs once on page load
 ------------------------------------------------------- */
@@ -760,3 +705,55 @@ function updateVolumeUI() {
 
 vol.addEventListener("input", updateVolumeUI);
 updateVolumeUI();
+
+function loadSong(song){
+
+  audio.src = song.src;
+
+  cover.src = song.cover;
+
+  nowTitle.textContent = song.title;
+
+  nowArtist.textContent = song.artist;
+
+
+  // ADD THIS PART (important)
+  if ('mediaSession' in navigator){
+
+    navigator.mediaSession.metadata = new MediaMetadata({
+
+      title: song.title,
+
+      artist: song.artist,
+
+      album: "Akhil Music",
+      
+      artwork: [
+        {
+          src: song.cover,
+          sizes: "512x512",
+          type: "image/png"
+        },
+        {
+          src: song.cover,
+          sizes: "192x192",
+          type: "image/png"
+        }
+      ]
+
+    });
+
+  }
+
+}
+if ('mediaSession' in navigator){
+
+  navigator.mediaSession.setActionHandler('play', () => audio.play());
+
+  navigator.mediaSession.setActionHandler('pause', () => audio.pause());
+
+  navigator.mediaSession.setActionHandler('previoustrack', prevSong);
+
+  navigator.mediaSession.setActionHandler('nexttrack', nextSong);
+
+}
