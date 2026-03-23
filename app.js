@@ -15,7 +15,7 @@ const playlist = [
     color: '#8B4513'
   },
   {
-    title: 'Ek Nazar',
+    title: 'Ek Nazar',   
     artist: 'Akhil',
     src: 'songs/Ek Nazar.mp3',
     cover: 'images/Ek Nazar.png',
@@ -690,7 +690,62 @@ function fmt(s) {
   if (isNaN(s) || s == null) return '0:00';
   return `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 }
+function loadSong(index){
 
+  const song = songs[index];
+
+  title.textContent = song.title;
+  artist.textContent = song.artist;
+  cover.src = song.cover;
+
+  audio.src = song.src;
+
+
+  // MEDIA SESSION METADATA
+  if ('mediaSession' in navigator){
+
+    navigator.mediaSession.metadata = new MediaMetadata({
+
+      title: song.title,
+
+      artist: song.artist,
+
+      album: "Akhil Music",
+
+      artwork: [
+
+        {
+          src: song.cover,
+          sizes: "512x512",
+          type: "image/png"
+        }
+
+      ]
+
+    });
+
+  }
+
+}
+if ('mediaSession' in navigator){
+
+  navigator.mediaSession.setActionHandler('play', () => {
+    audio.play();
+  });
+
+  navigator.mediaSession.setActionHandler('pause', () => {
+    audio.pause();
+  });
+
+  navigator.mediaSession.setActionHandler('previoustrack', () => {
+    prevSong();
+  });
+
+  navigator.mediaSession.setActionHandler('nexttrack', () => {
+    nextSong();
+  });
+
+}
 /* -------------------------------------------------------
    INIT — runs once on page load
 ------------------------------------------------------- */
