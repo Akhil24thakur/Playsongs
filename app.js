@@ -1,5 +1,13 @@
 
 const playlist = [
+
+  {
+    title: 'Kitab Likhunga',
+    artist: 'Akhil',
+    src: 'songs/Kitab Likhunga.mp3',
+    cover: 'images/Kitab Likhunga.png',
+    color: '#8B4513'
+  },
   {
     title: 'Ek Baat Reh Gayi Thi',
     artist: 'Akhil',
