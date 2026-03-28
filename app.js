@@ -533,26 +533,24 @@ function loadPlay(index) {
   cur = index;
 
   const t = playlist[cur];
-
-
-  // SET AUDIO SOURCE FIRST (important)
-  audio.src = t.src;
 // Notification bar song info
 audio.src = t.src;
 
 if ('mediaSession' in navigator) {
+
   navigator.mediaSession.metadata = new MediaMetadata({
     title: t.title,
     artist: t.artist,
     album: "Akhil Music",
+
     artwork: [
-      {
-        src: t.cover,
-        sizes: "512x512",
-        type: "image/*"
-      }
-    ]
+      { src: t.cover, sizes: "512x512", type: "image/png" },
+      { src: t.cover, sizes: "512x512", type: "image/jpeg" },
+      
+    ] 
+
   });
+
 }
 
   
