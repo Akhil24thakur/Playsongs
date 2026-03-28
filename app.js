@@ -227,7 +227,7 @@ const playlist = [
     title: 'Dream With You',
     artist: 'Akhil',
     src: 'songs/My Dreams.mp3',
-    cover: 'images/MY Dreams.webp',
+    cover: 'images/MY Dreams.png',
     color: '#27AE60'
   },
   {
@@ -530,30 +530,45 @@ function loadPlay(index) {
 
   if ('mediaSession' in navigator){
 
-    navigator.mediaSession.metadata = new MediaMetadata({
+    if ('mediaSession' in navigator){
 
-      title: t.title,
+  navigator.mediaSession.metadata = null;
 
-      artist: t.artist,
+  navigator.mediaSession.metadata = new MediaMetadata({
 
-      album: "Akhil Music",
+    title: t.title,
+
+    artist: t.artist,
+
+    album: "Akhil Music",
 
     artwork: [
 
-     {
-       src: t.cover + "?v=" + cur,
-       sizes: "512x512",
-       type: "image/png"
+      {
+        src: t.cover,
+        sizes: "512x512",
+        type: "image/png"
       },
 
       {
-        src: t.cover + "?v=" + cur,
+        src: t.cover,
         sizes: "192x192",
         type: "image/png"
-     }
+      }
 
     ]
-    });
+
+  });
+
+  navigator.mediaSession.setActionHandler('play', () => audio.play());
+
+  navigator.mediaSession.setActionHandler('pause', () => audio.pause());
+
+  navigator.mediaSession.setActionHandler('nexttrack', () => loadPlay(cur + 1));
+
+  navigator.mediaSession.setActionHandler('previoustrack', () => loadPlay(cur - 1));
+
+}
 
 
     navigator.mediaSession.setActionHandler('play', () => audio.play());

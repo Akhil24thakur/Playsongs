@@ -1,4 +1,11 @@
-[
+[ 
+   {
+    "title": "Kitab Likhunga",
+    "artist": "Akhil",
+    "src": "songs/Kitab Likhunga.mp3",
+    "cover": "images/Kitab Likhunga.png",
+    "color": "#8B4513"
+  },
   {
     "title": "Ek Baat Reh Gayi Thi",
     "artist": "Akhil",
@@ -213,7 +220,7 @@
   "title": "Dream With You",
   "artist": "Akhil",
   "src": "songs/My Dreams.mp3",
-  "cover": "images/MY Dreams.webp",
+  "cover": "images/MY Dreams.png",
   "color": "#27AE60"
 },
 {
