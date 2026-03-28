@@ -538,6 +538,21 @@ function loadPlay(index) {
 
   // SET AUDIO SOURCE FIRST (important)
   audio.src = t.src;
+// Notification bar song info
+if ('mediaSession' in navigator) {
+
+  navigator.mediaSession.metadata = new MediaMetadata({
+    title: t.title,
+    artist: t.artist,
+    album: 'Akhil Music',
+    artwork: [
+      { src: t.cover, sizes: '96x96', type: 'image/png' },
+      { src: t.cover, sizes: '192x192', type: 'image/png' },
+      { src: t.cover, sizes: '512x512', type: 'image/png' }
+    ]
+  });
+
+}
 
   
   // KEEP your existing UI updates below
@@ -567,46 +582,11 @@ function loadPlay(index) {
   });
 
 
-  audio.play().then(() => {
-
-  setPlayState(true);
-
-  if ('mediaSession' in navigator){
-
-    navigator.mediaSession.metadata = new MediaMetadata({
-
-      title: t.title,
-
-      artist: t.artist,
-
-      album: "Akhil Music",
-
-      artwork: [
-
-        {
-          src: t.cover,
-          sizes: "512x512",
-          type: "image/png"
-        },
-
-        {
-          src: t.cover,
-          sizes: "192x192",
-          type: "image/png"
-        }
-
-      ]
-
-    });
-
-  }
-
-}).catch(() => setPlayState(false));
+  audio.play()
+    .then(() => setPlayState(true))
+    .catch(() => setPlayState(false));
 
 }
-
-
-
   
 
 /* -------------------------------------------------------
