@@ -1,4 +1,4 @@
-
+let currentSongIndex = 0;
 const playlist = [
 
   {
@@ -714,7 +714,13 @@ function updateVolumeUI() {
 vol.addEventListener("input", updateVolumeUI);
 updateVolumeUI();
 
-function loadSong(song){
+
+// Try to make notification controle bar
+function loadSong(index){
+
+  currentSongIndex = index;
+
+  const song = songs[index];
 
   audio.src = song.src;
 
@@ -725,7 +731,7 @@ function loadSong(song){
   nowArtist.textContent = song.artist;
 
 
-  // update notification info
+  // MEDIA NOTIFICATION INFO
   if ('mediaSession' in navigator){
 
     navigator.mediaSession.metadata = new MediaMetadata({
@@ -740,13 +746,19 @@ function loadSong(song){
 
         {
           src: song.cover,
-          sizes: "512x512",
+          sizes: "96x96",
           type: "image/png"
         },
 
         {
           src: song.cover,
           sizes: "192x192",
+          type: "image/png"
+        },
+
+        {
+          src: song.cover,
+          sizes: "512x512",
           type: "image/png"
         }
 
@@ -757,22 +769,42 @@ function loadSong(song){
   }
 
 }
+function nextSong(){
+
+  currentSongIndex++;
+
+  if(currentSongIndex >= songs.length){
+
+    currentSongIndex = 0;
+
+  }
+
+  loadSong(currentSongIndex);
+
+  audio.play();
+
+}
+function prevSong(){
+
+  currentSongIndex--;
+
+  if(currentSongIndex < 0){
+
+    currentSongIndex = songs.length - 1;
+
+  }
+
+  loadSong(currentSongIndex);
+
+  audio.play();
+
+}
 if ('mediaSession' in navigator){
 
-  navigator.mediaSession.setActionHandler('play', function(){
-    audio.play();
-  });
+  navigator.mediaSession.setActionHandler('play', () => audio.play());
 
-  navigator.mediaSession.setActionHandler('pause', function(){
-    audio.pause();
-  });
+  navigator.mediaSession.setActionHandler('pause', () => audio.pause());
 
-  navigator.mediaSession.setActionHandler('previoustrack', function(){
-    prevSong();
-  });
-
-  navigator.mediaSession.setActionHandler('nexttrack', function(){
-    nextSong();
-  });
+  
 
 }
