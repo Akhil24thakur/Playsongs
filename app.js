@@ -546,9 +546,9 @@ if ('mediaSession' in navigator) {
     artist: t.artist,
     album: 'Akhil Music',
     artwork: [
-      { src: t.cover, sizes: '96x96', type: 'image/png' },
-      { src: t.cover, sizes: '192x192', type: 'image/png' },
-      { src: t.cover, sizes: '512x512', type: 'image/png' }
+      { src: t.cover + "?v=" + Date.now(), sizes: '512x512', type: 'image/png' },
+      { src: t.cover + "?v=" + Date.now(), sizes: '512x512', type: 'image/jpeg' },
+      { src: t.cover + "?v=" + Date.now(), sizes: '512x512', type: 'image/jpg' }
     ]
   });
 
