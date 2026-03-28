@@ -399,7 +399,6 @@ if ('mediaSession' in navigator){
   navigator.mediaSession.setActionHandler('previoustrack', () => loadPlay(cur - 1));
 
 }
-navigator.serviceWorker.register('/service-worker.js');
 /* -------------------------------------------------------
    BUILD TRACK LIST  — reads from `playlist` array
 ------------------------------------------------------- */
@@ -539,17 +538,23 @@ function loadPlay(index) {
   // SET AUDIO SOURCE FIRST (important)
   audio.src = t.src;
 // Notification bar song info
+audio.src = t.src;
+
 if ('mediaSession' in navigator) {
 
   navigator.mediaSession.metadata = new MediaMetadata({
     title: t.title,
     artist: t.artist,
-    album: 'Akhil Music',
+    album: "Akhil Music Player",
+
     artwork: [
-      { src: t.cover + "?v=" + Date.now(), sizes: '512x512', type: 'image/png' },
-      { src: t.cover + "?v=" + Date.now(), sizes: '512x512', type: 'image/jpeg' },
-      { src: t.cover + "?v=" + Date.now(), sizes: '512x512', type: 'image/jpg' }
+      {
+        src: t.cover,
+        sizes: "512x512",
+        type: "image/*"
+      }
     ]
+
   });
 
 }
