@@ -1,3 +1,4 @@
+
 const playlist = [
 
   {
@@ -385,6 +386,19 @@ const tracksList  = document.getElementById('tracksList');
 
 // About stats
 const aboutStats  = document.getElementById('aboutStats');
+/* MEDIA SESSION BUTTON CONTROLS */
+
+if ('mediaSession' in navigator){
+
+  navigator.mediaSession.setActionHandler('play', () => audio.play());
+
+  navigator.mediaSession.setActionHandler('pause', () => audio.pause());
+
+  navigator.mediaSession.setActionHandler('nexttrack', () => loadPlay(cur + 1));
+
+  navigator.mediaSession.setActionHandler('previoustrack', () => loadPlay(cur - 1));
+
+}
 navigator.serviceWorker.register('/service-worker.js');
 /* -------------------------------------------------------
    BUILD TRACK LIST  — reads from `playlist` array
@@ -528,11 +542,9 @@ function loadPlay(index) {
 
   /* MEDIA SESSION NOTIFICATION */
 
-  if ('mediaSession' in navigator){
+  /* MEDIA SESSION METADATA */
 
-    if ('mediaSession' in navigator){
-
-  navigator.mediaSession.metadata = null;
+if ('mediaSession' in navigator){
 
   navigator.mediaSession.metadata = new MediaMetadata({
 
@@ -560,26 +572,8 @@ function loadPlay(index) {
 
   });
 
-  navigator.mediaSession.setActionHandler('play', () => audio.play());
-
-  navigator.mediaSession.setActionHandler('pause', () => audio.pause());
-
-  navigator.mediaSession.setActionHandler('nexttrack', () => loadPlay(cur + 1));
-
-  navigator.mediaSession.setActionHandler('previoustrack', () => loadPlay(cur - 1));
-
 }
 
-
-    navigator.mediaSession.setActionHandler('play', () => audio.play());
-
-    navigator.mediaSession.setActionHandler('pause', () => audio.pause());
-
-    navigator.mediaSession.setActionHandler('nexttrack', () => loadPlay(cur + 1));
-
-    navigator.mediaSession.setActionHandler('previoustrack', () => loadPlay(cur - 1));
-
-  }
 
 
   // KEEP your existing UI updates below
