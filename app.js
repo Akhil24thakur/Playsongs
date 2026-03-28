@@ -541,12 +541,10 @@ function loadPlay(index) {
 audio.src = t.src;
 
 if ('mediaSession' in navigator) {
-
   navigator.mediaSession.metadata = new MediaMetadata({
     title: t.title,
     artist: t.artist,
-    album: "Akhil Music Player",
-
+    album: "Akhil Music",
     artwork: [
       {
         src: t.cover,
@@ -554,9 +552,7 @@ if ('mediaSession' in navigator) {
         type: "image/*"
       }
     ]
-
   });
-
 }
 
   
