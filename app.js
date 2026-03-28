@@ -1,4 +1,3 @@
-let currentSongIndex = 0;
 const playlist = [
 
   {
@@ -435,35 +434,6 @@ function buildTrackList() {
     prefetchDuration(track.src, i);
   });
 }
-
-function prefetchDuration(src, index) {
-  const audio = new Audio();
-
-  audio.preload = "metadata";
-
-  audio.onloadedmetadata = () => {
-    const el = document.getElementById(`dur-${index}`);
-
-    if (el && !isNaN(audio.duration)) {
-      el.textContent = formatTime(audio.duration);
-    } else if (el) {
-      el.textContent = "--:--";
-    }
-
-    audio.src = "";
-  };
-
-  audio.onerror = () => {
-    const el = document.getElementById(`dur-${index}`);
-    if (el) el.textContent = "--:--";
-  };
-
-  // 🔥 FIX: encode path (handles spaces)
-  audio.src = encodeURI(src);
-
-  audio.load();
-}
-
 function applyMarquee(element) {
   if (element.scrollWidth > element.clientWidth) {
     element.classList.add('marquee');
@@ -472,9 +442,6 @@ function applyMarquee(element) {
   }
 }
 
-// After loading song
-applyMarquee(document.getElementById("nowTitle"));
-applyMarquee(document.getElementById("nowArtist"));
 /* -------------------------------------------------------
    PRE-FETCH DURATION
 ------------------------------------------------------- */
@@ -545,41 +512,87 @@ window.addEventListener('beforeinstallprompt', (e) => {
    LOAD & PLAY
 ------------------------------------------------------- */
 function loadPlay(index) {
+
   // Wrap around
-  if (index < 0)                index = playlist.length - 1;
+  if (index < 0) index = playlist.length - 1;
   if (index >= playlist.length) index = 0;
 
   cur = index;
+
   const t = playlist[cur];
 
-  // Set audio source
-  audio.src    = t.src;
+
+  // SET AUDIO SOURCE FIRST (important)
+  audio.src = t.src;
+
+
+  /* MEDIA SESSION NOTIFICATION */
+
+  if ('mediaSession' in navigator){
+
+    navigator.mediaSession.metadata = new MediaMetadata({
+
+      title: t.title,
+
+      artist: t.artist,
+
+      album: "Akhil Music",
+
+      artwork: [
+        {
+          src: t.cover,
+          sizes: "512x512",
+          type: "image/png"
+        }
+      ]
+
+    });
+
+
+    navigator.mediaSession.setActionHandler('play', () => audio.play());
+
+    navigator.mediaSession.setActionHandler('pause', () => audio.pause());
+
+    navigator.mediaSession.setActionHandler('nexttrack', () => loadPlay(cur + 1));
+
+    navigator.mediaSession.setActionHandler('previoustrack', () => loadPlay(cur - 1));
+
+  }
+
+
+  // KEEP your existing UI updates below
   audio.volume = parseFloat(volSlider.value);
 
-  // Update Now Playing strip
   nowStrip.classList.add('visible');
-  nowCoverImg.src             = t.cover;
-  nowCoverImg.style.display   = 'block';
-  nowTitle.textContent        = t.title;
-  nowArtist.textContent       = t.artist;
 
-  // Update fixed player bar
+  nowCoverImg.src = t.cover;
+
+  nowTitle.textContent = t.title;
+
+  nowArtist.textContent = t.artist;
+
   playerBar.classList.add('show');
-  pbCoverImg.src              = t.cover;
-  pbCoverImg.style.display    = 'block';
-  pbTitle.textContent         = t.title;
-  pbArtist.textContent        = t.artist;
 
-  // Highlight active row
+  pbCoverImg.src = t.cover;
+
+  pbTitle.textContent = t.title;
+
+  pbArtist.textContent = t.artist;
+
+
   document.querySelectorAll('.track-item').forEach((row, i) => {
+
     row.classList.toggle('active', i === cur);
+
   });
 
-  // Play
+
   audio.play()
-    .then(()  => setPlayState(true))
+    .then(() => setPlayState(true))
     .catch(() => setPlayState(false));
+
 }
+  
 
 /* -------------------------------------------------------
    SET PLAY / PAUSE STATE
@@ -714,97 +727,3 @@ function updateVolumeUI() {
 vol.addEventListener("input", updateVolumeUI);
 updateVolumeUI();
 
-
-// Try to make notification controle bar
-function loadSong(index){
-
-  currentSongIndex = index;
-
-  const song = songs[index];
-
-  audio.src = song.src;
-
-  cover.src = song.cover;
-
-  nowTitle.textContent = song.title;
-
-  nowArtist.textContent = song.artist;
-
-
-  // MEDIA NOTIFICATION INFO
-  if ('mediaSession' in navigator){
-
-    navigator.mediaSession.metadata = new MediaMetadata({
-
-      title: song.title,
-
-      artist: song.artist,
-
-      album: "Akhil Music",
-
-      artwork: [
-
-        {
-          src: song.cover,
-          sizes: "96x96",
-          type: "image/png"
-        },
-
-        {
-          src: song.cover,
-          sizes: "192x192",
-          type: "image/png"
-        },
-
-        {
-          src: song.cover,
-          sizes: "512x512",
-          type: "image/png"
-        }
-
-      ]
-
-    });
-
-  }
-
-}
-function nextSong(){
-
-  currentSongIndex++;
-
-  if(currentSongIndex >= songs.length){
-
-    currentSongIndex = 0;
-
-  }
-
-  loadSong(currentSongIndex);
-
-  audio.play();
-
-}
-function prevSong(){
-
-  currentSongIndex--;
-
-  if(currentSongIndex < 0){
-
-    currentSongIndex = songs.length - 1;
-
-  }
-
-  loadSong(currentSongIndex);
-
-  audio.play();
-
-}
-if ('mediaSession' in navigator){
-
-  navigator.mediaSession.setActionHandler('play', () => audio.play());
-
-  navigator.mediaSession.setActionHandler('pause', () => audio.pause());
-
-  
-
-}
