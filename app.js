@@ -538,14 +538,21 @@ function loadPlay(index) {
 
       album: "Akhil Music",
 
-      artwork: [
-        {
-          src: t.cover,
-          sizes: "512x512",
-          type: "image/png"
-        }
-      ]
+    artwork: [
 
+     {
+       src: t.cover + "?v=" + cur,
+       sizes: "512x512",
+       type: "image/png"
+      },
+
+      {
+        src: t.cover + "?v=" + cur,
+        sizes: "192x192",
+        type: "image/png"
+     }
+
+    ]
     });
 
 
