@@ -496,7 +496,7 @@ function buildStats() {
 
 // Service Worker Registration
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js');
+ navigator.serviceWorker.register('./service-worker.js');
 }
 
 
@@ -523,18 +523,60 @@ window.addEventListener('beforeinstallprompt', (e) => {
 /* -------------------------------------------------------
    LOAD & PLAY
 ------------------------------------------------------- */
-if ('mediaSession' in navigator){
+function loadPlay(index) {
 
-  navigator.mediaSession.setActionHandler('play', () => audio.play());
+  if (index < 0) index = playlist.length - 1;
+  if (index >= playlist.length) index = 0;
 
-  navigator.mediaSession.setActionHandler('pause', () => audio.pause());
+  cur = index;
 
-  navigator.mediaSession.setActionHandler('nexttrack', () => loadPlay(cur + 1));
+  const t = playlist[cur];
 
-  navigator.mediaSession.setActionHandler('previoustrack', () => loadPlay(cur - 1));
+  audio.src = t.src;
+  audio.volume = parseFloat(volSlider.value);
 
+  nowStrip.classList.add('visible');
+
+  nowCoverImg.src = t.cover;
+  nowTitle.textContent = t.title;
+  nowArtist.textContent = t.artist;
+
+  playerBar.classList.add('show');
+
+  pbCoverImg.src = t.cover;
+  pbTitle.textContent = t.title;
+  pbArtist.textContent = t.artist;
+
+  document.querySelectorAll('.track-item').forEach((row, i) => {
+    row.classList.toggle('active', i === cur);
+  });
+
+  const coverURL = new URL(t.cover, window.location.href).href;
+
+  if ('mediaSession' in navigator) {
+
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: t.title,
+      artist: t.artist,
+      album: "Akhil Music",
+      artwork: [
+        {
+          src: coverURL,
+          sizes: "512x512",
+          type: "image/png"
+        }
+      ]
+    });
+
+    navigator.mediaSession.playbackState = "playing";
+  }
+
+  audio.play()
+    .then(() => setPlayState(true))
+    .catch(() => setPlayState(false));
 }
-/* -------------------------------------------------------
+
+ /* -------------------------------------------------------
    SET PLAY / PAUSE STATE
 ------------------------------------------------------- */
 function setPlayState(isPlaying) {
