@@ -1,4 +1,3 @@
-
 const playlist = [
 
   {
@@ -497,7 +496,7 @@ function buildStats() {
 
 // Service Worker Registration
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/service-worker.js');
+  navigator.serviceWorker.register('./service-worker.js');
 }
 
 
@@ -524,69 +523,17 @@ window.addEventListener('beforeinstallprompt', (e) => {
 /* -------------------------------------------------------
    LOAD & PLAY
 ------------------------------------------------------- */
-function loadPlay(index) {
+if ('mediaSession' in navigator){
 
-  // Wrap around
-  if (index < 0) index = playlist.length - 1;
-  if (index >= playlist.length) index = 0;
+  navigator.mediaSession.setActionHandler('play', () => audio.play());
 
-  cur = index;
+  navigator.mediaSession.setActionHandler('pause', () => audio.pause());
 
- const t = playlist[cur];
+  navigator.mediaSession.setActionHandler('nexttrack', () => loadPlay(cur + 1));
 
-audio.src = t.src;
-
-if ('mediaSession' in navigator) {
-
-  navigator.mediaSession.metadata = new MediaMetadata({
-    title: t.title,
-    artist: t.artist,
-    album: "Akhil Music",
-
-    artwork: [
-      { src: t.cover, sizes: "512x512", type: "image/png" },
-      { src: t.cover, sizes: "512x512", type: "image/jpeg" }
-    ]
-  });
-
-  navigator.mediaSession.playbackState = "playing";
-}
-
-  
-  // KEEP your existing UI updates below
-  audio.volume = parseFloat(volSlider.value);
-
-  nowStrip.classList.add('visible');
-
-  nowCoverImg.src = t.cover;
-
-  nowTitle.textContent = t.title;
-
-  nowArtist.textContent = t.artist;
-
-  playerBar.classList.add('show');
-
-  pbCoverImg.src = t.cover;
-
-  pbTitle.textContent = t.title;
-
-  pbArtist.textContent = t.artist;
-
-
-  document.querySelectorAll('.track-item').forEach((row, i) => {
-
-    row.classList.toggle('active', i === cur);
-
-  });
-
-
-  audio.play()
-    .then(() => setPlayState(true))
-    .catch(() => setPlayState(false));
+  navigator.mediaSession.setActionHandler('previoustrack', () => loadPlay(cur - 1));
 
 }
-  
-
 /* -------------------------------------------------------
    SET PLAY / PAUSE STATE
 ------------------------------------------------------- */
