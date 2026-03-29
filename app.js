@@ -571,12 +571,13 @@ function loadPlay(index) {
     { src: coverURL, sizes: "512x512", type: "image/png" }
 
    ]
+   
 
   });
 
   navigator.mediaSession.setPositionState({
 
-   duration: audio.duration || 0,
+   duration: audio.duration || 999,
    playbackRate: 1,
    position: audio.currentTime || 0
 
