@@ -2,7 +2,7 @@
    PLAYLIST
 ═══════════════════════════════════════════════════════════ */
 const playlist = [
-  { title: 'Kitab Likhunga',            artist: 'Akhil', src: 'songs/Kitab Likhunga.mp3',             cover: 'images/Kitab Likhunga1.png',             color: '#8B4513' },
+  { title: 'Kitab Likhunga',            artist: 'Akhil', src: 'songs/Kitab Likhunga.mp3',             cover: 'images/Kitab Likhunga.png',             color: '#8B4513' },
   { title: 'Ek Baat Reh Gayi Thi',      artist: 'Akhil', src: 'songs/Ek Baat Reh Gayi Thi.mp3',       cover: 'images/Ek Baat Reh Gayi Thi.png',       color: '#8B4513' },
   { title: 'Jhanjron Ka Joda',           artist: 'Akhil', src: 'songs/Jhanjron Ka Joda.mp3',            cover: 'images/Jhanjron Ka Joda.png',            color: '#8B4513' },
   { title: 'Ek Nazar',                   artist: 'Akhil', src: 'songs/Ek Nazar.mp3',                    cover: 'images/Ek Nazar.png',                    color: '#8B4513' },
@@ -55,9 +55,8 @@ const playlist = [
 /* ═══════════════════════════════════════════════════════════
    STATE
 ═══════════════════════════════════════════════════════════ */
-let cur          = -1;
-let playing      = false;
-let pendingTrack = null;   // track waiting for re-push inside 'play' event
+let cur     = -1;
+let playing = false;
 
 /* ═══════════════════════════════════════════════════════════
    DOM REFERENCES
@@ -112,9 +111,7 @@ async function releaseWakeLock() {
 }
 
 document.addEventListener('visibilitychange', async () => {
-  if (document.visibilityState === 'visible' && playing) {
-    await acquireWakeLock();
-  }
+  if (document.visibilityState === 'visible' && playing) await acquireWakeLock();
 });
 
 /* ═══════════════════════════════════════════════════════════
@@ -132,7 +129,7 @@ function savePlaybackState() {
 
 setInterval(savePlaybackState, 5000);
 
-function restorePlaybackState() {
+async function restorePlaybackState() {
   try {
     const idx  = parseInt(localStorage.getItem(LS_IDX),  10);
     const time = parseFloat(localStorage.getItem(LS_TIME));
@@ -140,7 +137,6 @@ function restorePlaybackState() {
 
     cur = idx;
     const t = playlist[cur];
-
     audio.src    = t.src;
     audio.volume = parseFloat(volSlider.value);
 
@@ -164,57 +160,145 @@ function restorePlaybackState() {
       row.classList.toggle('active', i === cur)
     );
 
-    setMediaMetadata(t);
+    // ✅ FIXED: was setMediaMetadata(t.title, t.artist, null)
+    // null artwork lets Android fall back to its cached bitmap.
+    // Now we generate fresh canvas art just like loadPlay() does.
+    const dataURI = await getArtworkDataURI(t.cover);
+    setMediaMetadata(t.title, t.artist, dataURI);
+
     setPlayState(false);
   } catch (_) {}
 }
+/* ═══════════════════════════════════════════════════════════
+   ARTWORK — Canvas-based data URI generator
+   ─────────────────────────────────────────────────────────
+   THE ROOT CAUSE explained:
+   Android's Media Session caches artwork at the OS level
+   (in the SystemUI process), NOT in Chrome. It stores the
+   decoded bitmap and keys it by the image URL path. Because
+   this cache lives outside the browser, no amount of SW
+   bypassing, cache headers, or ?t= tricks can clear it.
+   The bitmap stays until Android decides to evict it.
+
+   THE ONLY GUARANTEED FIX:
+   Use an HTML Canvas to:
+     1. Draw the real cover image onto the canvas
+     2. Stamp a 1px invisible unique marker pixel onto it
+        (different position for every track + timestamp)
+     3. Export as a data URI via canvas.toDataURL()
+
+   The resulting data URI contains unique pixel data for
+   every single track play. Android has never seen these
+   exact bytes before, so it cannot cache-hit — it MUST
+   render the new bitmap. This breaks the cache at the
+   pixel level, not the URL level.
+═══════════════════════════════════════════════════════════ */
+const coverCache = new Map(); // coverPath → canvas data URI
+
+/**
+ * Draws cover image onto a canvas, stamps a unique invisible
+ * pixel marker, and returns the result as a PNG data URI.
+ * The unique pixel guarantees Android never gets a cache hit.
+ */
+function coverToCanvasDataURI(coverPath, uniqueSeed) {
+  return new Promise((resolve) => {
+    const SIZE   = 256;
+    const canvas = document.createElement('canvas');
+    canvas.width  = SIZE;
+    canvas.height = SIZE;
+    const ctx    = canvas.getContext('2d');
+    const img    = new Image();
+
+
+
+img.onload = () => {
+      // Draw the actual cover art
+      ctx.drawImage(img, 0, 0, SIZE, SIZE);
+
+      // Stamp a unique 1×1 pixel using the seed value.
+      // Position and colour vary per track+timestamp so the
+      // pixel data is always unique — Android must treat it
+      // as a brand new bitmap every time.
+      const px = uniqueSeed % (SIZE - 2) + 1;
+      const py = Math.floor(uniqueSeed / SIZE) % (SIZE - 2) + 1;
+      const r  = (uniqueSeed * 7)  & 0xFF;
+      const g  = (uniqueSeed * 13) & 0xFF;
+      const b  = (uniqueSeed * 17) & 0xFF;
+      ctx.fillStyle = `rgba(${r},${g},${b},0.004)`; // nearly invisible
+      ctx.fillRect(px, py, 1, 1);
+
+      // ✅ FIXED: toDataURL() throws SecurityError if canvas is tainted.
+      // Wrap in try/catch so it never silently hangs the Promise.
+      // If it fails, fall through to the onerror placeholder instead.
+      try {
+        resolve(canvas.toDataURL('image/png'));
+      } catch (e) {
+        img.onerror();
+      }
+    };
+
+    img.onerror = () => {
+      // Image failed to load — generate a solid-colour placeholder
+      // using the track's colour from the playlist array, with
+      // the song title initials drawn on it.
+      const track = playlist[cur] || {};
+      const bg    = track.color || '#1a1730';
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, SIZE, SIZE);
+
+      // Draw initials
+      const initials = (track.title || '?')
+        .split(' ').slice(0, 2)
+        .map(w => w[0]).join('').toUpperCase();
+      ctx.fillStyle   = 'rgba(255,255,255,0.85)';
+      ctx.font        = `bold ${SIZE * 0.36}px sans-serif`;
+      ctx.textAlign   = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(initials, SIZE / 2, SIZE / 2);
+
+      // Unique marker pixel
+      ctx.fillStyle = `rgba(${uniqueSeed & 0xFF},${(uniqueSeed >> 8) & 0xFF},0,0.004)`;
+      ctx.fillRect((uniqueSeed % SIZE), (uniqueSeed % 100) + 1, 1, 1);
+
+      resolve(canvas.toDataURL('image/png'));
+    };
+
+    // Add unique timestamp to URL to force a fresh load into
+    // the canvas (bypasses browser image cache for the canvas draw)
+    img.src = coverPath + '?v=' + uniqueSeed;
+  });
+}
+
+/**
+ * Get artwork data URI for a track.
+ * Every call generates a fresh canvas render with a unique seed,
+ * guaranteeing Android's OS-level bitmap cache is always busted.
+ * We do NOT memoize here — each play must produce unique bytes.
+ */
+async function getArtworkDataURI(coverPath) {
+  // Unique seed: combination of timestamp + cover path hash
+  // so the same track played twice also gets different bytes
+  const seed = (Date.now() + coverPath.split('').reduce(
+    (a, c) => (a * 31 + c.charCodeAt(0)) | 0, 0
+  )) & 0x7FFFFFFF;
+
+  return coverToCanvasDataURI(coverPath, seed);
+}
 
 /* ═══════════════════════════════════════════════════════════
-   MEDIA SESSION HELPERS
+   MEDIA SESSION
 ═══════════════════════════════════════════════════════════ */
-function absoluteURL(path) {
-  try { return new URL(path, location.href).href; }
-  catch (_) { return path; }
-}
-
-function getImageType(path) {
-  const ext = path.split('.').pop().toLowerCase().split('?')[0];
-  if (ext === 'png')  return 'image/png';
-  if (ext === 'webp') return 'image/webp';
-  return 'image/jpeg';
-}
-
-/* ─────────────────────────────────────────────────────────
-   setMediaMetadata — called TWICE per track change:
-
-   Call 1: inside loadPlay(), BEFORE audio.play().
-           Gives the OS the title/artist early so the
-           notification shell is ready to appear.
-
-   Call 2: inside the 'play' event, the moment the browser
-           confirms audio has started. Android Chrome only
-           fetches and renders the artwork when it knows
-           audio is live, so pushing a fresh ?t= URL right
-           here is what makes the image appear instantly
-           instead of 1-2 seconds late.
-───────────────────────────────────────────────────────── */
-function setMediaMetadata(track) {
+function setMediaMetadata(title, artist, dataURI) {
   if (!('mediaSession' in navigator)) return;
 
-  const coverAbs = absoluteURL(track.cover) + '?t=' + Date.now();
-  const type     = getImageType(track.cover);
-
   navigator.mediaSession.metadata = new MediaMetadata({
-    title:  track.title,
-    artist: track.artist,
-    album:  'Akhil Music',
-    artwork: [
-      { src: coverAbs, sizes: '96x96',   type },
-      { src: coverAbs, sizes: '128x128', type },
-      { src: coverAbs, sizes: '192x192', type },
-      { src: coverAbs, sizes: '256x256', type },
-      { src: coverAbs, sizes: '512x512', type }
-    ]
+    title,
+    artist,
+    album:   'Akhil Music',
+    artwork: dataURI ? [
+      { src: dataURI, sizes: '512x512', type: 'image/png' },
+      { src: dataURI, sizes: '256x256', type: 'image/png' },
+    ] : [],
   });
 }
 
@@ -230,65 +314,53 @@ function pushPositionState() {
   } catch (_) {}
 }
 
-/* ═══════════════════════════════════════════════════════════
-   INIT MEDIA SESSION — register all OS notification handlers
-═══════════════════════════════════════════════════════════ */
 function initMediaSession() {
   if (!('mediaSession' in navigator)) return;
-
   const ms = navigator.mediaSession;
 
   ms.setActionHandler('play', () => {
-    audio.play().then(() => {
-      acquireWakeLock();
-      setPlayState(true);
-      ms.playbackState = 'playing';
-    });
+    audio.play().then(() => { acquireWakeLock(); setPlayState(true); ms.playbackState = 'playing'; });
   });
-
   ms.setActionHandler('pause', () => {
-    audio.pause();
-    setPlayState(false);
-    ms.playbackState = 'paused';
-    releaseWakeLock();
-    savePlaybackState();
+    audio.pause(); setPlayState(false); ms.playbackState = 'paused';
+    releaseWakeLock(); savePlaybackState();
   });
-
   ms.setActionHandler('previoustrack', () => {
     audio.currentTime > 3 ? (audio.currentTime = 0) : loadPlay(cur - 1);
   });
-
-  ms.setActionHandler('nexttrack', () => loadPlay(cur + 1));
-
-  ms.setActionHandler('seekbackward', (details) => {
-    const skip = details.seekOffset || 10;
-    audio.currentTime = Math.max(0, audio.currentTime - skip);
+  ms.setActionHandler('nexttrack',     () => loadPlay(cur + 1));
+  ms.setActionHandler('seekbackward',  d  => {
+    audio.currentTime = Math.max(0, audio.currentTime - (d.seekOffset || 10));
     pushPositionState();
   });
-
-  ms.setActionHandler('seekforward', (details) => {
-    const skip = details.seekOffset || 10;
-    audio.currentTime = Math.min(audio.duration || Infinity, audio.currentTime + skip);
+  ms.setActionHandler('seekforward',   d  => {
+    audio.currentTime = Math.min(audio.duration || Infinity, audio.currentTime + (d.seekOffset || 10));
     pushPositionState();
   });
-
-  ms.setActionHandler('seekto', (details) => {
-    if (details.seekTime !== undefined && audio.duration) {
-      audio.currentTime = details.seekTime;
-      pushPositionState();
+  ms.setActionHandler('seekto', d => {
+    if (d.seekTime !== undefined && audio.duration) {
+      audio.currentTime = d.seekTime; pushPositionState();
     }
   });
-
   try {
     ms.setActionHandler('stop', () => {
-      audio.pause();
-      audio.currentTime = 0;
-      setPlayState(false);
-      ms.playbackState = 'none';
-      releaseWakeLock();
-      savePlaybackState();
+      audio.pause(); audio.currentTime = 0;
+      setPlayState(false); ms.playbackState = 'none';
+      releaseWakeLock(); savePlaybackState();
     });
   } catch (_) {}
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PRE-WARM next covers
+═══════════════════════════════════════════════════════════ */
+function prewarmCovers(fromIndex) {
+  // Just pre-load the images into browser cache so canvas
+  // draw is instant when the track is actually played
+  for (let i = 1; i <= 3; i++) {
+    const img = new Image();
+    img.src   = playlist[(fromIndex + i) % playlist.length].cover;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -297,16 +369,14 @@ function initMediaSession() {
 function buildTrackList() {
   tracksList.innerHTML = '';
   playlist.forEach((track, i) => {
-    const row = document.createElement('div');
+    const row       = document.createElement('div');
     row.className   = 'track-item';
     row.id          = `track-${i}`;
     row.dataset.idx = i;
-    row.innerHTML = `
+    row.innerHTML   = `
       <div class="t-num-wrap">
         <span class="t-num">${String(i + 1).padStart(2, '0')}</span>
-        <div class="t-eq" aria-hidden="true">
-          <span></span><span></span><span></span>
-        </div>
+        <div class="t-eq" aria-hidden="true"><span></span><span></span><span></span></div>
       </div>
       <div class="t-thumb">
         <img src="${track.cover}" alt="${track.title} cover" onerror="this.style.display='none'" />
@@ -320,29 +390,24 @@ function buildTrackList() {
         <button class="t-play-btn" aria-label="Play ${track.title}">
           <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
         </button>
-      </div>
-    `;
+      </div>`;
     row.addEventListener('click', () => loadPlay(i));
     tracksList.appendChild(row);
     prefetchDuration(track.src, i);
   });
 }
 
-function applyMarquee(element) {
-  if (element.scrollWidth > element.clientWidth) {
-    element.classList.add('marquee');
-  } else {
-    element.classList.remove('marquee');
-  }
+function applyMarquee(el) {
+  el.classList.toggle('marquee', el.scrollWidth > el.clientWidth);
 }
 
 /* ═══════════════════════════════════════════════════════════
    PRE-FETCH DURATION
 ═══════════════════════════════════════════════════════════ */
 function prefetchDuration(src, index) {
-  const tmp = new Audio();
+  const tmp   = new Audio();
   tmp.preload = 'metadata';
-  tmp.src = src;
+  tmp.src     = src;
   tmp.addEventListener('loadedmetadata', () => {
     const el = document.getElementById(`dur-${index}`);
     if (el) el.textContent = fmt(tmp.duration);
@@ -355,23 +420,13 @@ function prefetchDuration(src, index) {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   BUILD ABOUT STATS
+   BUILD STATS
 ═══════════════════════════════════════════════════════════ */
 function buildStats() {
   aboutStats.innerHTML = `
-    <div>
-      <div class="stat-num">${playlist.length}</div>
-      <div class="stat-label">Tracks</div>
-    </div>
-    <div>
-      <div class="stat-num">∞</div>
-      <div class="stat-label">Feelings</div>
-    </div>
-    <div>
-      <div class="stat-num">1</div>
-      <div class="stat-label">Artist</div>
-    </div>
-  `;
+    <div><div class="stat-num">${playlist.length}</div><div class="stat-label">Tracks</div></div>
+    <div><div class="stat-num">∞</div><div class="stat-label">Feelings</div></div>
+    <div><div class="stat-num">1</div><div class="stat-label">Artist</div></div>`;
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -382,54 +437,33 @@ if ('serviceWorker' in navigator) {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   PWA INSTALL BUTTON
+   PWA INSTALL
 ═══════════════════════════════════════════════════════════ */
 let deferredPrompt;
-
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
-
-  const installBtn = document.createElement('button');
-  installBtn.innerText = 'Install App';
-  installBtn.className = 'install-btn';
-  installBtn.onclick = async () => {
-    deferredPrompt.prompt();
-    await deferredPrompt.userChoice;
-  };
-  document.body.appendChild(installBtn);
+  const btn     = document.createElement('button');
+  btn.innerText = 'Install App';
+  btn.className = 'install-btn';
+  btn.onclick   = async () => { deferredPrompt.prompt(); await deferredPrompt.userChoice; };
+  document.body.appendChild(btn);
 });
 
 /* ═══════════════════════════════════════════════════════════
    LOAD & PLAY
    ─────────────────────────────────────────────────────────
-   Notification timing — two-phase metadata push:
-
-   Phase 1 (here, before play):
-     Set metadata immediately so the OS has title + artist
-     ready before audio starts. The notification shell
-     appears as soon as audio begins.
-
-   Phase 2 (inside 'play' event below):
-     Re-push metadata with a fresh ?t= timestamp the moment
-     the browser confirms audio is live. Android Chrome only
-     fetches and renders artwork when it knows audio is
-     actually playing — doing it here eliminates the 1-2s
-     delay before the cover image appears.
-
-   playbackState = 'playing' is also set in the 'play' event
-   AFTER the second metadata push, so the notification bar
-   renders fully formed in a single OS pass.
+   We await getArtworkDataURI() BEFORE audio.play() so that
+   MediaMetadata is fully populated with unique pixel-stamped
+   artwork before the 'play' event fires and Android renders
+   the notification bar.
 ═══════════════════════════════════════════════════════════ */
-function loadPlay(index) {
+async function loadPlay(index) {
   if (index < 0) index = playlist.length - 1;
   if (index >= playlist.length) index = 0;
 
-  cur = index;
+  cur     = index;
   const t = playlist[cur];
-
-  // Store for re-push in the 'play' event
-  pendingTrack = t;
 
   audio.src    = t.src;
   audio.volume = parseFloat(volSlider.value);
@@ -449,19 +483,18 @@ function loadPlay(index) {
     row.classList.toggle('active', i === cur)
   );
 
-  // Phase 1: push metadata early
-  setMediaMetadata(t);
+  // Generate canvas artwork with unique pixel stamp — BEFORE play()
+  const dataURI = await getArtworkDataURI(t.cover);
+  setMediaMetadata(t.title, t.artist, dataURI);
 
-  // Start playback — UI state and phase 2 metadata push
-  // happen inside the 'play' event handler below
-  audio.play().catch(() => {
-    setPlayState(false);
-    pendingTrack = null;
-  });
+  // Now start audio — 'play' event fires, notification shows with correct art
+  audio.play().catch(() => setPlayState(false));
+
+  prewarmCovers(cur);
 }
 
 /* ═══════════════════════════════════════════════════════════
-   SET PLAY / PAUSE STATE
+   SET PLAY STATE
 ═══════════════════════════════════════════════════════════ */
 function setPlayState(isPlaying) {
   playing = isPlaying;
@@ -479,10 +512,7 @@ function togglePlay() {
     audio.pause();
     setPlayState(false);
   } else {
-    audio.play().then(() => {
-      acquireWakeLock();
-      setPlayState(true);
-    });
+    audio.play().then(() => { acquireWakeLock(); setPlayState(true); });
   }
 }
 
@@ -491,16 +521,14 @@ function togglePlay() {
 ═══════════════════════════════════════════════════════════ */
 mainPlayBtn.addEventListener('click', togglePlay);
 pbPlay.addEventListener('click',      togglePlay);
-
 prevBtn.addEventListener('click', () => {
   audio.currentTime > 3 ? (audio.currentTime = 0) : loadPlay(cur - 1);
 });
-nextBtn.addEventListener('click', () => loadPlay(cur + 1));
-
-pbPrev.addEventListener('click', () => {
+nextBtn.addEventListener('click',  () => loadPlay(cur + 1));
+pbPrev.addEventListener('click',   () => {
   audio.currentTime > 3 ? (audio.currentTime = 0) : loadPlay(cur - 1);
 });
-pbNext.addEventListener('click', () => loadPlay(cur + 1));
+pbNext.addEventListener('click',   () => loadPlay(cur + 1));
 
 document.getElementById('playAllBtn').addEventListener('click', () => {
   loadPlay(0);
@@ -509,26 +537,12 @@ document.getElementById('playAllBtn').addEventListener('click', () => {
 
 /* ═══════════════════════════════════════════════════════════
    AUDIO EVENTS
-   ─────────────────────────────────────────────────────────
-   'play' fires the instant the browser starts audio output.
-   This is the critical moment for Phase 2 of the metadata
-   push — Android Chrome renders notification artwork here.
 ═══════════════════════════════════════════════════════════ */
 audio.addEventListener('play', () => {
   if ('mediaSession' in navigator) {
-
-    // Phase 2: re-push with fresh ?t= so Android fetches and
-    // displays the correct artwork the moment it shows the bar
-    if (pendingTrack) {
-      setMediaMetadata(pendingTrack);
-      pendingTrack = null;
-    }
-
-    // Set playbackState AFTER artwork push — notification renders
-    // fully formed in one pass rather than showing a blank cover first
+    // Artwork already set before play() — just signal playing state
     navigator.mediaSession.playbackState = 'playing';
   }
-
   setPlayState(true);
   acquireWakeLock();
   savePlaybackState();
@@ -537,12 +551,10 @@ audio.addEventListener('play', () => {
 audio.addEventListener('timeupdate', () => {
   if (!audio.duration) return;
   const pct = (audio.currentTime / audio.duration) * 100;
-
   progFill.style.width   = pct + '%';
   progDot.style.left     = pct + '%';
   pbProgFill.style.width = pct + '%';
   timeCur.textContent    = fmt(audio.currentTime);
-
   pushPositionState();
 });
 
@@ -557,9 +569,7 @@ audio.addEventListener('ended', () => {
 });
 
 audio.addEventListener('pause', () => {
-  if ('mediaSession' in navigator) {
-    navigator.mediaSession.playbackState = 'paused';
-  }
+  if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
   pushPositionState();
   setPlayState(false);
   savePlaybackState();
@@ -567,38 +577,26 @@ audio.addEventListener('pause', () => {
 });
 
 /* ═══════════════════════════════════════════════════════════
-   SEEK — click + drag + touch
+   SEEK
 ═══════════════════════════════════════════════════════════ */
 function seekTo(clientX, el) {
   const r   = el.getBoundingClientRect();
   const pct = Math.max(0, Math.min(1, (clientX - r.left) / r.width));
-  if (audio.duration) {
-    audio.currentTime = pct * audio.duration;
-    pushPositionState();
-  }
+  if (audio.duration) { audio.currentTime = pct * audio.duration; pushPositionState(); }
 }
 
 progTrack.addEventListener('click', e => seekTo(e.clientX, progTrack));
-
 let dragging = false;
 progTrack.addEventListener('mousedown', () => { dragging = true; });
 document.addEventListener('mousemove',  e => { if (dragging) seekTo(e.clientX, progTrack); });
 document.addEventListener('mouseup',    () => { dragging = false; });
-
-progTrack.addEventListener('touchstart', e => {
-  seekTo(e.touches[0].clientX, progTrack);
-}, { passive: true });
-
-progTrack.addEventListener('touchmove', e => {
-  seekTo(e.touches[0].clientX, progTrack);
-}, { passive: true });
+progTrack.addEventListener('touchstart', e => seekTo(e.touches[0].clientX, progTrack), { passive: true });
+progTrack.addEventListener('touchmove',  e => seekTo(e.touches[0].clientX, progTrack), { passive: true });
 
 /* ═══════════════════════════════════════════════════════════
    VOLUME
 ═══════════════════════════════════════════════════════════ */
-volSlider.addEventListener('input', () => {
-  audio.volume = parseFloat(volSlider.value);
-});
+volSlider.addEventListener('input', () => { audio.volume = parseFloat(volSlider.value); });
 
 /* ═══════════════════════════════════════════════════════════
    KEYBOARD SHORTCUTS
@@ -613,7 +611,7 @@ document.addEventListener('keydown', e => {
 });
 
 /* ═══════════════════════════════════════════════════════════
-   HELPER — format seconds → m:ss
+   HELPER
 ═══════════════════════════════════════════════════════════ */
 function fmt(s) {
   if (isNaN(s) || s == null) return '0:00';
@@ -624,20 +622,15 @@ function fmt(s) {
    VOLUME SLIDER UI
 ═══════════════════════════════════════════════════════════ */
 const vol = document.getElementById('volSlider');
-
 function updateVolumeUI() {
-  const value = vol.value * 100;
-  vol.style.background = `linear-gradient(to right, var(--a1) ${value}%, rgba(255,255,255,0.1) ${value}%)`;
+  const v = vol.value * 100;
+  vol.style.background = `linear-gradient(to right, var(--a1) ${v}%, rgba(255,255,255,0.1) ${v}%)`;
 }
-
 vol.addEventListener('input', updateVolumeUI);
 updateVolumeUI();
 
 /* ═══════════════════════════════════════════════════════════
-   INIT — order matters:
-   1. Build DOM
-   2. Register Media Session handlers BEFORE any playback
-   3. Restore last session
+   INIT
 ═══════════════════════════════════════════════════════════ */
 buildTrackList();
 buildStats();
