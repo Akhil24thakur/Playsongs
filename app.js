@@ -171,19 +171,6 @@ function restorePlaybackState() {
 
 /* ═══════════════════════════════════════════════════════════
    ANDROID NOTIFICATION BAR — Media Session API
-   ─────────────────────────────────────────────────────────
-   Android Chrome automatically shows a media notification
-   with controls whenever:
-     1. Audio is playing from the page
-     2. navigator.mediaSession.metadata is set
-     3. Action handlers are registered
-
-   The notification shows:
-     • Album art (cover image)         ← setMediaMetadata()
-     • Song title & artist
-     • ⏮  ⏸/▶  ⏭  buttons
-     • Progress bar / scrubber         ← setPositionState()
-     • ± 10 s seek buttons (Android 13+)
 ═══════════════════════════════════════════════════════════ */
 
 // Resolve relative image path to absolute URL.
@@ -193,12 +180,26 @@ function absoluteURL(path) {
   catch (_) { return path; }
 }
 
+// Detect correct MIME type from file extension.
+// Sending the wrong type can cause Android to ignore the artwork update.
+function getImageType(path) {
+  const ext = path.split('.').pop().toLowerCase().split('?')[0];
+  if (ext === 'png')  return 'image/png';
+  if (ext === 'webp') return 'image/webp';
+  return 'image/jpeg'; // covers jpg, jpeg, and unknown
+}
+
 // Set track metadata on the OS notification.
 // Called every time a new song loads — updates cover, title, artist.
+// The ?t= cache-buster is critical: Android Chrome caches artwork by URL.
+// Without it, the same local path returns the first song's image every time.
 function setMediaMetadata(track) {
   if (!('mediaSession' in navigator)) return;
 
-  const coverAbs = absoluteURL(track.cover);
+  // Append a unique timestamp so Android treats every track change
+  // as a brand-new image URL and actually fetches + displays it.
+  const coverAbs = absoluteURL(track.cover) + '?t=' + Date.now();
+  const type     = getImageType(track.cover);
 
   // Provide multiple sizes — Android picks the best fit for
   // notification shade, lock screen, and Wear OS
@@ -207,11 +208,11 @@ function setMediaMetadata(track) {
     artist: track.artist,
     album:  'Akhil Music',
     artwork: [
-      { src: coverAbs, sizes: '96x96',   type: 'image/jpeg' },
-      { src: coverAbs, sizes: '128x128', type: 'image/jpeg' },
-      { src: coverAbs, sizes: '192x192', type: 'image/jpeg' },
-      { src: coverAbs, sizes: '256x256', type: 'image/jpeg' },
-      { src: coverAbs, sizes: '512x512', type: 'image/jpeg' }
+      { src: coverAbs, sizes: '96x96',   type },
+      { src: coverAbs, sizes: '128x128', type },
+      { src: coverAbs, sizes: '192x192', type },
+      { src: coverAbs, sizes: '256x256', type },
+      { src: coverAbs, sizes: '512x512', type }
     ]
   });
 }
@@ -438,7 +439,9 @@ function loadPlay(index) {
 
   /* Update Android notification metadata IMMEDIATELY — cover
      image and title change as soon as you tap a track, even
-     before audio starts buffering                            */
+     before audio starts buffering.
+     setMediaMetadata now appends ?t=Date.now() so Android
+     never shows a stale cached image from a previous track. */
   setMediaMetadata(t);
   if ('mediaSession' in navigator) {
     navigator.mediaSession.playbackState = 'playing';
@@ -514,7 +517,6 @@ audio.addEventListener('timeupdate', () => {
   timeCur.textContent    = fmt(audio.currentTime);
 
   // Keep notification progress bar moving in real-time.
-  // Browser throttles this to ~4 Hz internally — safe to call every timeupdate.
   pushPositionState();
 });
 
