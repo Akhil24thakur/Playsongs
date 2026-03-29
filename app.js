@@ -551,29 +551,38 @@ function loadPlay(index) {
     row.classList.toggle('active', i === cur);
   });
 
-  const coverURL = new URL(t.cover, window.location.href).href;
+  // PLAY FIRST
+  audio.play().then(() => {
 
-  if ('mediaSession' in navigator) {
+    setPlayState(true);
 
-    navigator.mediaSession.metadata = new MediaMetadata({
-      title: t.title,
-      artist: t.artist,
-      album: "Akhil Music",
-      artwork: [
-        {
-          src: coverURL,
-          sizes: "512x512",
-          type: "image/png"
-        }
-      ]
-    });
+    if ('mediaSession' in navigator) {
 
-    navigator.mediaSession.playbackState = "playing";
-  }
+      const coverURL = new URL(t.cover, window.location.href).href;
 
-  audio.play()
-    .then(() => setPlayState(true))
-    .catch(() => setPlayState(false));
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: t.title,
+        artist: t.artist,
+        album: "Akhil Music",
+        artwork: [
+          {
+            src: coverURL,
+            sizes: "512x512",
+            type: "image/png"
+          }
+        ]
+      });
+
+      navigator.mediaSession.playbackState = "playing";
+    }
+
+  }).catch(err => {
+
+    console.log(err);
+    setPlayState(false);
+
+  });
+
 }
 
  /* -------------------------------------------------------
