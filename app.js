@@ -532,8 +532,8 @@ function loadPlay(index) {
 
   cur = index;
 
-  const t = playlist[cur];
-// Notification bar song info
+ const t = playlist[cur];
+
 audio.src = t.src;
 
 if ('mediaSession' in navigator) {
@@ -545,12 +545,11 @@ if ('mediaSession' in navigator) {
 
     artwork: [
       { src: t.cover, sizes: "512x512", type: "image/png" },
-      { src: t.cover, sizes: "512x512", type: "image/jpeg" },
-      
-    ] 
-
+      { src: t.cover, sizes: "512x512", type: "image/jpeg" }
+    ]
   });
 
+  navigator.mediaSession.playbackState = "playing";
 }
 
   
@@ -656,6 +655,17 @@ audio.addEventListener('loadedmetadata', () => {
 });
 
 audio.addEventListener('ended', () => loadPlay(cur + 1));
+audio.addEventListener('play', () => {
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.playbackState = "playing";
+  }
+});
+
+audio.addEventListener('pause', () => {
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.playbackState = "paused";
+  }
+});
 
 /* -------------------------------------------------------
    SEEK — click + drag + touch
