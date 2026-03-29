@@ -551,19 +551,17 @@ function loadPlay(index) {
     row.classList.toggle('active', i === cur);
   });
 
-  // PLAY FIRST
+  const coverURL = new URL(t.cover, location.href).href;
+
   audio.play().then(() => {
 
-    setPlayState(true);
-
     if ('mediaSession' in navigator) {
-
-      const coverURL = new URL(t.cover, window.location.href).href;
 
       navigator.mediaSession.metadata = new MediaMetadata({
         title: t.title,
         artist: t.artist,
         album: "Akhil Music",
+
         artwork: [
           {
             src: coverURL,
@@ -574,17 +572,14 @@ function loadPlay(index) {
       });
 
       navigator.mediaSession.playbackState = "playing";
+
     }
 
-  }).catch(err => {
-
-    console.log(err);
-    setPlayState(false);
+    setPlayState(true);
 
   });
 
 }
-
  /* -------------------------------------------------------
    SET PLAY / PAUSE STATE
 ------------------------------------------------------- */
