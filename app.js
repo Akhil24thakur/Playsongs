@@ -352,7 +352,10 @@ let playing = false;
 /* -------------------------------------------------------
    DOM REFERENCES
 ------------------------------------------------------- */
-const audio       = document.getElementById('audio');
+const audio = document.getElementById('audio');
+
+audio.setAttribute("playsinline", "");
+audio.setAttribute("webkit-playsinline", "");
 const heroVinyl   = document.getElementById('heroVinyl');
 
 // Now Playing strip
@@ -553,32 +556,35 @@ function loadPlay(index) {
 
   const coverURL = new URL(t.cover, location.href).href;
 
-  audio.play().then(() => {
+audio.play().then(() => {
 
-    if ('mediaSession' in navigator) {
+ if ('mediaSession' in navigator) {
 
-      navigator.mediaSession.metadata = new MediaMetadata({
-        title: t.title,
-        artist: t.artist,
-        album: "Akhil Music",
+  navigator.mediaSession.metadata = new MediaMetadata({
 
-        artwork: [
-          {
-            src: coverURL,
-            sizes: "512x512",
-            type: "image/png"
-          }
-        ]
-      });
+   title: t.title,
+   artist: t.artist,
+   album: "Akhil Music",
 
-      navigator.mediaSession.playbackState = "playing";
+   artwork: [
 
-    }
+    { src: coverURL, sizes: "96x96", type: "image/png" },
 
-    setPlayState(true);
+    { src: coverURL, sizes: "192x192", type: "image/png" },
+
+    { src: coverURL, sizes: "512x512", type: "image/png" }
+
+   ]
 
   });
 
+  navigator.mediaSession.playbackState = "playing";
+
+ }
+
+ setPlayState(true);
+
+});
 }
  /* -------------------------------------------------------
    SET PLAY / PAUSE STATE
