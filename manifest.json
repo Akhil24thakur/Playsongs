@@ -1,6 +1,7 @@
 {
   "name": "Akhil Music",
   "short_name": "Music",
+
   "start_url": ".",
 
   "scope": ".",
@@ -10,6 +11,7 @@
   "background_color": "#000000",
 
   "theme_color": "#000000",
+
   "icons": [
     {
       "src": "images/ak01.png",
