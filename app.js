@@ -554,9 +554,7 @@ function loadPlay(index) {
     row.classList.toggle('active', i === cur);
   });
 
-  const coverURL = new URL(t.cover, location.href).href;
-
-audio.play().then(() => {
+  audio.play().then(() => {
 
  if ('mediaSession' in navigator) {
 
@@ -569,12 +567,18 @@ audio.play().then(() => {
    artwork: [
 
     { src: coverURL, sizes: "96x96", type: "image/png" },
-
     { src: coverURL, sizes: "192x192", type: "image/png" },
-
     { src: coverURL, sizes: "512x512", type: "image/png" }
 
    ]
+
+  });
+
+  navigator.mediaSession.setPositionState({
+
+   duration: audio.duration || 0,
+   playbackRate: 1,
+   position: audio.currentTime || 0
 
   });
 
