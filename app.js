@@ -343,6 +343,7 @@ const playlist = [
     color: '#636E72'
   }
 ];
+
 /* -------------------------------------------------------
    STATE
 ------------------------------------------------------- */
@@ -388,19 +389,139 @@ const tracksList  = document.getElementById('tracksList');
 
 // About stats
 const aboutStats  = document.getElementById('aboutStats');
-/* MEDIA SESSION BUTTON CONTROLS */
 
-if ('mediaSession' in navigator){
+/* -------------------------------------------------------
+   ★ NEW: PERSISTENT BACKGROUND PLAYBACK — Wake Lock
+   Prevents the OS from killing audio when screen is off
+------------------------------------------------------- */
+let wakeLock = null;
 
-  navigator.mediaSession.setActionHandler('play', () => audio.play());
-
-  navigator.mediaSession.setActionHandler('pause', () => audio.pause());
-
-  navigator.mediaSession.setActionHandler('nexttrack', () => loadPlay(cur + 1));
-
-  navigator.mediaSession.setActionHandler('previoustrack', () => loadPlay(cur - 1));
-
+async function acquireWakeLock() {
+  if (!('wakeLock' in navigator)) return;
+  try {
+    wakeLock = await navigator.wakeLock.request('screen');
+  } catch (_) { /* silently ignore — not critical */ }
 }
+
+async function releaseWakeLock() {
+  if (!wakeLock) return;
+  try { await wakeLock.release(); } catch (_) {}
+  wakeLock = null;
+}
+
+// Re-acquire after tab becomes visible again (OS may have released it)
+document.addEventListener('visibilitychange', async () => {
+  if (document.visibilityState === 'visible' && playing) {
+    await acquireWakeLock();
+  }
+});
+
+/* -------------------------------------------------------
+   ★ NEW: AUTO-RESUME — save & restore playback state
+------------------------------------------------------- */
+const LS_KEY_IDX  = 'akhil_cur';
+const LS_KEY_TIME = 'akhil_time';
+
+function savePlaybackState() {
+  try {
+    localStorage.setItem(LS_KEY_IDX,  cur);
+    localStorage.setItem(LS_KEY_TIME, audio.currentTime);
+  } catch (_) {}
+}
+
+// Save every 5 s so we don't hammer storage
+setInterval(savePlaybackState, 5000);
+
+function restorePlaybackState() {
+  try {
+    const savedIdx  = parseInt(localStorage.getItem(LS_KEY_IDX),  10);
+    const savedTime = parseFloat(localStorage.getItem(LS_KEY_TIME));
+    if (isNaN(savedIdx) || savedIdx < 0 || savedIdx >= playlist.length) return;
+
+    cur = savedIdx;
+    const t = playlist[cur];
+
+    audio.src    = t.src;
+    audio.volume = parseFloat(volSlider.value);
+
+    // Restore seek position once metadata is ready
+    audio.addEventListener('loadedmetadata', () => {
+      if (!isNaN(savedTime) && savedTime > 5) {
+        audio.currentTime = savedTime;
+      }
+      timeTot.textContent = fmt(audio.duration);
+    }, { once: true });
+
+    // Update UI — paused state, ready to resume on first tap
+    nowStrip.classList.add('visible');
+    nowCoverImg.src       = t.cover;
+    nowTitle.textContent  = t.title;
+    nowArtist.textContent = t.artist;
+
+    playerBar.classList.add('show');
+    pbCoverImg.src       = t.cover;
+    pbTitle.textContent  = t.title;
+    pbArtist.textContent = t.artist;
+
+    document.querySelectorAll('.track-item').forEach((row, i) => {
+      row.classList.toggle('active', i === cur);
+    });
+
+    setPlayState(false);   // show paused (not auto-playing — browsers block that)
+  } catch (_) {}
+}
+
+/* -------------------------------------------------------
+   MEDIA SESSION — button controls
+------------------------------------------------------- */
+if ('mediaSession' in navigator) {
+  navigator.mediaSession.setActionHandler('play',          () => audio.play());
+  navigator.mediaSession.setActionHandler('pause',         () => audio.pause());
+  navigator.mediaSession.setActionHandler('nexttrack',     () => loadPlay(cur + 1));
+  navigator.mediaSession.setActionHandler('previoustrack', () => loadPlay(cur - 1));
+  navigator.mediaSession.setActionHandler('seekto',        e  => {
+    if (e.seekTime !== undefined && audio.duration) {
+      audio.currentTime = e.seekTime;
+    }
+  });
+}
+
+/* -------------------------------------------------------
+   ★ UPGRADED: updateMediaSession — sets metadata + position
+   Called both on new track load AND on every timeupdate
+   so the notification scrubber / progress bar stays live
+------------------------------------------------------- */
+function updateMediaSession(trackObj) {
+  if (!('mediaSession' in navigator)) return;
+
+  if (trackObj) {
+    // Absolute URL needed for artwork on Android / lock screen
+    const coverURL = new URL(trackObj.cover, location.href).href;
+
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title:  trackObj.title,
+      artist: trackObj.artist,
+      album:  'Akhil Music',
+      artwork: [
+        { src: coverURL, sizes: '96x96',   type: 'image/png' },
+        { src: coverURL, sizes: '192x192', type: 'image/png' },
+        { src: coverURL, sizes: '512x512', type: 'image/png' }
+      ]
+    });
+  }
+
+  // ★ Progress bar in OS notification — needs valid duration
+  if (audio.duration && !isNaN(audio.duration)) {
+    try {
+      navigator.mediaSession.setPositionState({
+        duration:     audio.duration,
+        playbackRate: audio.playbackRate || 1,
+        position:     Math.min(audio.currentTime, audio.duration)
+      });
+    } catch (_) {}
+  }
+}
+
 /* -------------------------------------------------------
    BUILD TRACK LIST  — reads from `playlist` array
 ------------------------------------------------------- */
@@ -445,10 +566,10 @@ function buildTrackList() {
     row.addEventListener('click', () => loadPlay(i));
     tracksList.appendChild(row);
 
-    // Pre-fetch duration without playing
     prefetchDuration(track.src, i);
   });
 }
+
 function applyMarquee(element) {
   if (element.scrollWidth > element.clientWidth) {
     element.classList.add('marquee');
@@ -467,7 +588,7 @@ function prefetchDuration(src, index) {
   tmp.addEventListener('loadedmetadata', () => {
     const el = document.getElementById(`dur-${index}`);
     if (el) el.textContent = fmt(tmp.duration);
-    tmp.src = '';        // release
+    tmp.src = '';
   });
   tmp.addEventListener('error', () => {
     const el = document.getElementById(`dur-${index}`);
@@ -476,7 +597,7 @@ function prefetchDuration(src, index) {
 }
 
 /* -------------------------------------------------------
-   BUILD ABOUT STATS  — auto-counts playlist length
+   BUILD ABOUT STATS
 ------------------------------------------------------- */
 function buildStats() {
   aboutStats.innerHTML = `
@@ -495,16 +616,16 @@ function buildStats() {
   `;
 }
 
-// ===== EXISTING CODE ABOVE =====
-
-// Service Worker Registration
+/* -------------------------------------------------------
+   Service Worker
+------------------------------------------------------- */
 if ('serviceWorker' in navigator) {
- navigator.serviceWorker.register('./service-worker.js');
+  navigator.serviceWorker.register('./service-worker.js');
 }
 
-
-// ===== ADD INSTALL BUTTON CODE BELOW THIS =====
-
+/* -------------------------------------------------------
+   PWA Install Button
+------------------------------------------------------- */
 let deferredPrompt;
 
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -527,27 +648,23 @@ window.addEventListener('beforeinstallprompt', (e) => {
    LOAD & PLAY
 ------------------------------------------------------- */
 function loadPlay(index) {
-
   if (index < 0) index = playlist.length - 1;
   if (index >= playlist.length) index = 0;
 
   cur = index;
-
   const t = playlist[cur];
 
-  audio.src = t.src;
+  audio.src    = t.src;
   audio.volume = parseFloat(volSlider.value);
 
   nowStrip.classList.add('visible');
-
-  nowCoverImg.src = t.cover;
-  nowTitle.textContent = t.title;
+  nowCoverImg.src       = t.cover;
+  nowTitle.textContent  = t.title;
   nowArtist.textContent = t.artist;
 
   playerBar.classList.add('show');
-
-  pbCoverImg.src = t.cover;
-  pbTitle.textContent = t.title;
+  pbCoverImg.src       = t.cover;
+  pbTitle.textContent  = t.title;
   pbArtist.textContent = t.artist;
 
   document.querySelectorAll('.track-item').forEach((row, i) => {
@@ -555,55 +672,24 @@ function loadPlay(index) {
   });
 
   audio.play().then(() => {
-
- if ('mediaSession' in navigator) {
-
-  navigator.mediaSession.metadata = new MediaMetadata({
-
-   title: t.title,
-   artist: t.artist,
-   album: "Akhil Music",
-
-   artwork: [
-
-    { src: coverURL, sizes: "96x96", type: "image/png" },
-    { src: coverURL, sizes: "192x192", type: "image/png" },
-    { src: coverURL, sizes: "512x512", type: "image/png" }
-
-   ]
-   
-
+    updateMediaSession(t);                  // ★ set metadata + position
+    navigator.mediaSession && (navigator.mediaSession.playbackState = 'playing');
+    acquireWakeLock();                      // ★ keep audio alive in background
+    setPlayState(true);
+    savePlaybackState();                    // ★ save immediately on new track
+  }).catch(() => {
+    // Autoplay blocked — stay paused but track is loaded
+    setPlayState(false);
   });
-
-  navigator.mediaSession.setPositionState({
-
-   duration: audio.duration || 999,
-   playbackRate: 1,
-   position: audio.currentTime || 0
-
-  });
-
-  navigator.mediaSession.playbackState = "playing";
-
- }
-
- setPlayState(true);
-
-});
 }
- /* -------------------------------------------------------
+
+/* -------------------------------------------------------
    SET PLAY / PAUSE STATE
 ------------------------------------------------------- */
 function setPlayState(isPlaying) {
   playing = isPlaying;
-
-  // Now Playing button
   mainPlayBtn.classList.toggle('playing', isPlaying);
-
-  // Player bar button
   pbPlay.classList.toggle('playing', isPlaying);
-
-  // Vinyl spin
   heroVinyl.classList.toggle('spinning', isPlaying);
 }
 
@@ -616,7 +702,10 @@ function togglePlay() {
     audio.pause();
     setPlayState(false);
   } else {
-    audio.play().then(() => setPlayState(true));
+    audio.play().then(() => {
+      acquireWakeLock();                    // ★ re-acquire on resume
+      setPlayState(true);
+    });
   }
 }
 
@@ -642,40 +731,51 @@ document.getElementById('playAllBtn').addEventListener('click', () => {
 });
 
 /* -------------------------------------------------------
-   AUDIO EVENTS — progress, duration, autoplay next
+   AUDIO EVENTS
 ------------------------------------------------------- */
 audio.addEventListener('timeupdate', () => {
   if (!audio.duration) return;
   const pct = (audio.currentTime / audio.duration) * 100;
 
-  progFill.style.width  = pct + '%';
-  progDot.style.left    = pct + '%';
+  progFill.style.width   = pct + '%';
+  progDot.style.left     = pct + '%';
   pbProgFill.style.width = pct + '%';
-  timeCur.textContent   = fmt(audio.currentTime);
+  timeCur.textContent    = fmt(audio.currentTime);
+
+  // ★ Keep notification progress bar in sync (throttled by browser ~4 Hz)
+  updateMediaSession(null);
 });
 
 audio.addEventListener('loadedmetadata', () => {
   timeTot.textContent = fmt(audio.duration);
+  // ★ Now duration is known — push position state so scrubber appears
+  updateMediaSession(null);
 });
 
-audio.addEventListener('ended', () => loadPlay(cur + 1));
+audio.addEventListener('ended', () => {
+  savePlaybackState();
+  loadPlay(cur + 1);
+});
+
 audio.addEventListener('play', () => {
   if ('mediaSession' in navigator) {
-    navigator.mediaSession.playbackState = "playing";
+    navigator.mediaSession.playbackState = 'playing';
   }
 });
 
 audio.addEventListener('pause', () => {
   if ('mediaSession' in navigator) {
-    navigator.mediaSession.playbackState = "paused";
+    navigator.mediaSession.playbackState = 'paused';
   }
+  savePlaybackState();                      // ★ save on every pause
+  releaseWakeLock();                        // ★ release when paused
 });
 
 /* -------------------------------------------------------
    SEEK — click + drag + touch
 ------------------------------------------------------- */
 function seekTo(clientX, el) {
-  const r  = el.getBoundingClientRect();
+  const r   = el.getBoundingClientRect();
   const pct = Math.max(0, Math.min(1, (clientX - r.left) / r.width));
   if (audio.duration) audio.currentTime = pct * audio.duration;
 }
@@ -721,10 +821,12 @@ function fmt(s) {
 }
 
 /* -------------------------------------------------------
-   INIT — runs once on page load
+   INIT
 ------------------------------------------------------- */
-buildTrackList();   // build UI from playlist array
-buildStats();       // build about section stats
+buildTrackList();
+buildStats();
+restorePlaybackState();              // ★ auto-resume last track + position
+
 const vol = document.getElementById("volSlider");
 
 function updateVolumeUI() {
@@ -734,4 +836,3 @@ function updateVolumeUI() {
 
 vol.addEventListener("input", updateVolumeUI);
 updateVolumeUI();
-
