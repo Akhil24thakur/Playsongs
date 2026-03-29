@@ -55,8 +55,9 @@ const playlist = [
 /* ═══════════════════════════════════════════════════════════
    STATE
 ═══════════════════════════════════════════════════════════ */
-let cur     = -1;
-let playing = false;
+let cur          = -1;
+let playing      = false;
+let pendingTrack = null;   // track waiting for re-push inside 'play' event
 
 /* ═══════════════════════════════════════════════════════════
    DOM REFERENCES
@@ -91,7 +92,7 @@ audio.setAttribute('playsinline', '');
 audio.setAttribute('webkit-playsinline', '');
 
 /* ═══════════════════════════════════════════════════════════
-   WAKE LOCK — keeps audio alive when screen turns off
+   WAKE LOCK
 ═══════════════════════════════════════════════════════════ */
 let wakeLock = null;
 
@@ -110,7 +111,6 @@ async function releaseWakeLock() {
   wakeLock = null;
 }
 
-// Re-acquire wake lock if OS released it while tab was hidden
 document.addEventListener('visibilitychange', async () => {
   if (document.visibilityState === 'visible' && playing) {
     await acquireWakeLock();
@@ -118,7 +118,7 @@ document.addEventListener('visibilitychange', async () => {
 });
 
 /* ═══════════════════════════════════════════════════════════
-   AUTO-RESUME — persist & restore last track + position
+   AUTO-RESUME
 ═══════════════════════════════════════════════════════════ */
 const LS_IDX  = 'akhil_cur';
 const LS_TIME = 'akhil_time';
@@ -170,39 +170,40 @@ function restorePlaybackState() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   ANDROID NOTIFICATION BAR — Media Session API
+   MEDIA SESSION HELPERS
 ═══════════════════════════════════════════════════════════ */
-
-// Resolve relative image path to absolute URL.
-// Android Chrome REQUIRES absolute URLs for notification artwork.
 function absoluteURL(path) {
   try { return new URL(path, location.href).href; }
   catch (_) { return path; }
 }
 
-// Detect correct MIME type from file extension.
-// Sending the wrong type can cause Android to ignore the artwork update.
 function getImageType(path) {
   const ext = path.split('.').pop().toLowerCase().split('?')[0];
   if (ext === 'png')  return 'image/png';
   if (ext === 'webp') return 'image/webp';
-  return 'image/jpeg'; // covers jpg, jpeg, and unknown
+  return 'image/jpeg';
 }
 
-// Set track metadata on the OS notification.
-// Called every time a new song loads — updates cover, title, artist.
-// The ?t= cache-buster is critical: Android Chrome caches artwork by URL.
-// Without it, the same local path returns the first song's image every time.
+/* ─────────────────────────────────────────────────────────
+   setMediaMetadata — called TWICE per track change:
+
+   Call 1: inside loadPlay(), BEFORE audio.play().
+           Gives the OS the title/artist early so the
+           notification shell is ready to appear.
+
+   Call 2: inside the 'play' event, the moment the browser
+           confirms audio has started. Android Chrome only
+           fetches and renders the artwork when it knows
+           audio is live, so pushing a fresh ?t= URL right
+           here is what makes the image appear instantly
+           instead of 1-2 seconds late.
+───────────────────────────────────────────────────────── */
 function setMediaMetadata(track) {
   if (!('mediaSession' in navigator)) return;
 
-  // Append a unique timestamp so Android treats every track change
-  // as a brand-new image URL and actually fetches + displays it.
   const coverAbs = absoluteURL(track.cover) + '?t=' + Date.now();
   const type     = getImageType(track.cover);
 
-  // Provide multiple sizes — Android picks the best fit for
-  // notification shade, lock screen, and Wear OS
   navigator.mediaSession.metadata = new MediaMetadata({
     title:  track.title,
     artist: track.artist,
@@ -217,9 +218,6 @@ function setMediaMetadata(track) {
   });
 }
 
-// Push current playback position to the OS.
-// This is what makes the progress bar / scrubber appear and
-// move in real-time inside the Android notification.
 function pushPositionState() {
   if (!('mediaSession' in navigator)) return;
   if (!audio.duration || isNaN(audio.duration)) return;
@@ -232,14 +230,14 @@ function pushPositionState() {
   } catch (_) {}
 }
 
-// Register all notification button handlers.
-// Must be called once before any playback starts.
+/* ═══════════════════════════════════════════════════════════
+   INIT MEDIA SESSION — register all OS notification handlers
+═══════════════════════════════════════════════════════════ */
 function initMediaSession() {
   if (!('mediaSession' in navigator)) return;
 
   const ms = navigator.mediaSession;
 
-  // ▶ Play button in notification
   ms.setActionHandler('play', () => {
     audio.play().then(() => {
       acquireWakeLock();
@@ -248,7 +246,6 @@ function initMediaSession() {
     });
   });
 
-  // ⏸ Pause button in notification
   ms.setActionHandler('pause', () => {
     audio.pause();
     setPlayState(false);
@@ -257,29 +254,24 @@ function initMediaSession() {
     savePlaybackState();
   });
 
-  // ⏮ Previous button in notification
   ms.setActionHandler('previoustrack', () => {
     audio.currentTime > 3 ? (audio.currentTime = 0) : loadPlay(cur - 1);
   });
 
-  // ⏭ Next button in notification
   ms.setActionHandler('nexttrack', () => loadPlay(cur + 1));
 
-  // ⏪ Seek Backward (shown on Android 13+ as -10 s button)
   ms.setActionHandler('seekbackward', (details) => {
     const skip = details.seekOffset || 10;
     audio.currentTime = Math.max(0, audio.currentTime - skip);
     pushPositionState();
   });
 
-  // ⏩ Seek Forward (shown on Android 13+ as +10 s button)
   ms.setActionHandler('seekforward', (details) => {
     const skip = details.seekOffset || 10;
     audio.currentTime = Math.min(audio.duration || Infinity, audio.currentTime + skip);
     pushPositionState();
   });
 
-  // Scrubber drag from notification / lock screen
   ms.setActionHandler('seekto', (details) => {
     if (details.seekTime !== undefined && audio.duration) {
       audio.currentTime = details.seekTime;
@@ -287,7 +279,6 @@ function initMediaSession() {
     }
   });
 
-  // Stop / dismiss (some Android ROMs show a close button)
   try {
     ms.setActionHandler('stop', () => {
       audio.pause();
@@ -411,6 +402,24 @@ window.addEventListener('beforeinstallprompt', (e) => {
 
 /* ═══════════════════════════════════════════════════════════
    LOAD & PLAY
+   ─────────────────────────────────────────────────────────
+   Notification timing — two-phase metadata push:
+
+   Phase 1 (here, before play):
+     Set metadata immediately so the OS has title + artist
+     ready before audio starts. The notification shell
+     appears as soon as audio begins.
+
+   Phase 2 (inside 'play' event below):
+     Re-push metadata with a fresh ?t= timestamp the moment
+     the browser confirms audio is live. Android Chrome only
+     fetches and renders artwork when it knows audio is
+     actually playing — doing it here eliminates the 1-2s
+     delay before the cover image appears.
+
+   playbackState = 'playing' is also set in the 'play' event
+   AFTER the second metadata push, so the notification bar
+   renders fully formed in a single OS pass.
 ═══════════════════════════════════════════════════════════ */
 function loadPlay(index) {
   if (index < 0) index = playlist.length - 1;
@@ -419,10 +428,13 @@ function loadPlay(index) {
   cur = index;
   const t = playlist[cur];
 
+  // Store for re-push in the 'play' event
+  pendingTrack = t;
+
   audio.src    = t.src;
   audio.volume = parseFloat(volSlider.value);
 
-  /* Update in-app UI */
+  // Update in-app UI
   nowStrip.classList.add('visible');
   nowCoverImg.src       = t.cover;
   nowTitle.textContent  = t.title;
@@ -437,23 +449,14 @@ function loadPlay(index) {
     row.classList.toggle('active', i === cur)
   );
 
-  /* Update Android notification metadata IMMEDIATELY — cover
-     image and title change as soon as you tap a track, even
-     before audio starts buffering.
-     setMediaMetadata now appends ?t=Date.now() so Android
-     never shows a stale cached image from a previous track. */
+  // Phase 1: push metadata early
   setMediaMetadata(t);
-  if ('mediaSession' in navigator) {
-    navigator.mediaSession.playbackState = 'playing';
-  }
 
-  audio.play().then(() => {
-    setPlayState(true);
-    acquireWakeLock();
-    savePlaybackState();
-    /* pushPositionState() fires after loadedmetadata below  */
-  }).catch(() => {
+  // Start playback — UI state and phase 2 metadata push
+  // happen inside the 'play' event handler below
+  audio.play().catch(() => {
     setPlayState(false);
+    pendingTrack = null;
   });
 }
 
@@ -506,7 +509,31 @@ document.getElementById('playAllBtn').addEventListener('click', () => {
 
 /* ═══════════════════════════════════════════════════════════
    AUDIO EVENTS
+   ─────────────────────────────────────────────────────────
+   'play' fires the instant the browser starts audio output.
+   This is the critical moment for Phase 2 of the metadata
+   push — Android Chrome renders notification artwork here.
 ═══════════════════════════════════════════════════════════ */
+audio.addEventListener('play', () => {
+  if ('mediaSession' in navigator) {
+
+    // Phase 2: re-push with fresh ?t= so Android fetches and
+    // displays the correct artwork the moment it shows the bar
+    if (pendingTrack) {
+      setMediaMetadata(pendingTrack);
+      pendingTrack = null;
+    }
+
+    // Set playbackState AFTER artwork push — notification renders
+    // fully formed in one pass rather than showing a blank cover first
+    navigator.mediaSession.playbackState = 'playing';
+  }
+
+  setPlayState(true);
+  acquireWakeLock();
+  savePlaybackState();
+});
+
 audio.addEventListener('timeupdate', () => {
   if (!audio.duration) return;
   const pct = (audio.currentTime / audio.duration) * 100;
@@ -516,13 +543,11 @@ audio.addEventListener('timeupdate', () => {
   pbProgFill.style.width = pct + '%';
   timeCur.textContent    = fmt(audio.currentTime);
 
-  // Keep notification progress bar moving in real-time.
   pushPositionState();
 });
 
 audio.addEventListener('loadedmetadata', () => {
   timeTot.textContent = fmt(audio.duration);
-  // Duration now known — push so notification scrubber becomes interactive
   pushPositionState();
 });
 
@@ -531,18 +556,11 @@ audio.addEventListener('ended', () => {
   loadPlay(cur + 1);
 });
 
-audio.addEventListener('play', () => {
-  if ('mediaSession' in navigator) {
-    navigator.mediaSession.playbackState = 'playing';
-  }
-  setPlayState(true);
-});
-
 audio.addEventListener('pause', () => {
   if ('mediaSession' in navigator) {
     navigator.mediaSession.playbackState = 'paused';
   }
-  pushPositionState();      // freeze scrubber at current position in notification
+  pushPositionState();
   setPlayState(false);
   savePlaybackState();
   releaseWakeLock();
@@ -556,7 +574,7 @@ function seekTo(clientX, el) {
   const pct = Math.max(0, Math.min(1, (clientX - r.left) / r.width));
   if (audio.duration) {
     audio.currentTime = pct * audio.duration;
-    pushPositionState();    // update notification scrubber on manual seek
+    pushPositionState();
   }
 }
 
@@ -609,7 +627,7 @@ const vol = document.getElementById('volSlider');
 
 function updateVolumeUI() {
   const value = vol.value * 100;
-  vol.style.background = `linear-gradient(to right, var(--gold) ${value}%, rgba(255,255,255,0.15) ${value}%)`;
+  vol.style.background = `linear-gradient(to right, var(--a1) ${value}%, rgba(255,255,255,0.1) ${value}%)`;
 }
 
 vol.addEventListener('input', updateVolumeUI);
@@ -617,11 +635,11 @@ updateVolumeUI();
 
 /* ═══════════════════════════════════════════════════════════
    INIT — order matters:
-   1. Build DOM from playlist array
+   1. Build DOM
    2. Register Media Session handlers BEFORE any playback
-   3. Restore last session (track + seek position)
+   3. Restore last session
 ═══════════════════════════════════════════════════════════ */
 buildTrackList();
 buildStats();
-initMediaSession();       // registers all ⏮ ▶ ⏭ notification handlers
-restorePlaybackState();   // restores last track + position, paused
+initMediaSession();
+restorePlaybackState();
