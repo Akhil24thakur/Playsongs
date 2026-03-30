@@ -92,10 +92,7 @@ const pbPrev      = document.getElementById('pbPrev');
 const pbNext      = document.getElementById('pbNext');
 const tracksList  = document.getElementById('tracksList');
 const aboutStats  = document.getElementById('aboutStats');
-const SOCIAL = {
-  instagram: 'https://instagram.com/YOUR_USERNAME',
-  youtube:   'https://youtube.com/@YOUR_CHANNEL',
-};
+
 audio.setAttribute('playsinline', '');
 audio.setAttribute('webkit-playsinline', '');
 
