@@ -160,46 +160,27 @@ async function restorePlaybackState() {
       row.classList.toggle('active', i === cur)
     );
 
-    // ✅ FIXED: was setMediaMetadata(t.title, t.artist, null)
-    // null artwork lets Android fall back to its cached bitmap.
-    // Now we generate fresh canvas art just like loadPlay() does.
-    const dataURI = await getArtworkDataURI(t.cover);
-    setMediaMetadata(t.title, t.artist, dataURI);
+    // STEP 1: Instant metadata so notification shows immediately
+    setMediaMetadata(t.title, t.artist, t.cover + '?v=' + Date.now());
+
+    // STEP 2: Upgrade to canvas artwork in background (no gap)
+    getArtworkDataURI(t.cover).then(dataURI => {
+      if (cur === idx) setMediaMetadata(t.title, t.artist, dataURI);
+    });
 
     setPlayState(false);
   } catch (_) {}
 }
+
 /* ═══════════════════════════════════════════════════════════
    ARTWORK — Canvas-based data URI generator
    ─────────────────────────────────────────────────────────
-   THE ROOT CAUSE explained:
-   Android's Media Session caches artwork at the OS level
-   (in the SystemUI process), NOT in Chrome. It stores the
-   decoded bitmap and keys it by the image URL path. Because
-   this cache lives outside the browser, no amount of SW
-   bypassing, cache headers, or ?t= tricks can clear it.
-   The bitmap stays until Android decides to evict it.
-
-   THE ONLY GUARANTEED FIX:
-   Use an HTML Canvas to:
-     1. Draw the real cover image onto the canvas
-     2. Stamp a 1px invisible unique marker pixel onto it
-        (different position for every track + timestamp)
-     3. Export as a data URI via canvas.toDataURL()
-
-   The resulting data URI contains unique pixel data for
-   every single track play. Android has never seen these
-   exact bytes before, so it cannot cache-hit — it MUST
-   render the new bitmap. This breaks the cache at the
-   pixel level, not the URL level.
+   Android's Media Session caches artwork at the OS level.
+   We use a Canvas to stamp unique pixel data into every
+   bitmap so Android's cache can never get a hit.
 ═══════════════════════════════════════════════════════════ */
-const coverCache = new Map(); // coverPath → canvas data URI
+const coverCache = new Map();
 
-/**
- * Draws cover image onto a canvas, stamps a unique invisible
- * pixel marker, and returns the result as a PNG data URI.
- * The unique pixel guarantees Android never gets a cache hit.
- */
 function coverToCanvasDataURI(coverPath, uniqueSeed) {
   return new Promise((resolve) => {
     const SIZE   = 256;
@@ -209,27 +190,21 @@ function coverToCanvasDataURI(coverPath, uniqueSeed) {
     const ctx    = canvas.getContext('2d');
     const img    = new Image();
 
+    // No crossOrigin — images are same-origin, setting it causes
+    // canvas taint if server has no CORS headers, breaking toDataURL()
 
-
-img.onload = () => {
-      // Draw the actual cover art
+    img.onload = () => {
       ctx.drawImage(img, 0, 0, SIZE, SIZE);
 
-      // Stamp a unique 1×1 pixel using the seed value.
-      // Position and colour vary per track+timestamp so the
-      // pixel data is always unique — Android must treat it
-      // as a brand new bitmap every time.
       const px = uniqueSeed % (SIZE - 2) + 1;
       const py = Math.floor(uniqueSeed / SIZE) % (SIZE - 2) + 1;
       const r  = (uniqueSeed * 7)  & 0xFF;
       const g  = (uniqueSeed * 13) & 0xFF;
       const b  = (uniqueSeed * 17) & 0xFF;
-      ctx.fillStyle = `rgba(${r},${g},${b},0.004)`; // nearly invisible
+      ctx.fillStyle = `rgba(${r},${g},${b},0.004)`;
       ctx.fillRect(px, py, 1, 1);
 
-      // ✅ FIXED: toDataURL() throws SecurityError if canvas is tainted.
-      // Wrap in try/catch so it never silently hangs the Promise.
-      // If it fails, fall through to the onerror placeholder instead.
+      // Wrap in try/catch — tainted canvas throws SecurityError silently
       try {
         resolve(canvas.toDataURL('image/png'));
       } catch (e) {
@@ -238,46 +213,31 @@ img.onload = () => {
     };
 
     img.onerror = () => {
-      // Image failed to load — generate a solid-colour placeholder
-      // using the track's colour from the playlist array, with
-      // the song title initials drawn on it.
       const track = playlist[cur] || {};
       const bg    = track.color || '#1a1730';
       ctx.fillStyle = bg;
       ctx.fillRect(0, 0, SIZE, SIZE);
 
-      // Draw initials
       const initials = (track.title || '?')
         .split(' ').slice(0, 2)
         .map(w => w[0]).join('').toUpperCase();
-      ctx.fillStyle   = 'rgba(255,255,255,0.85)';
-      ctx.font        = `bold ${SIZE * 0.36}px sans-serif`;
-      ctx.textAlign   = 'center';
+      ctx.fillStyle    = 'rgba(255,255,255,0.85)';
+      ctx.font         = `bold ${SIZE * 0.36}px sans-serif`;
+      ctx.textAlign    = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(initials, SIZE / 2, SIZE / 2);
 
-      // Unique marker pixel
       ctx.fillStyle = `rgba(${uniqueSeed & 0xFF},${(uniqueSeed >> 8) & 0xFF},0,0.004)`;
       ctx.fillRect((uniqueSeed % SIZE), (uniqueSeed % 100) + 1, 1, 1);
 
       resolve(canvas.toDataURL('image/png'));
     };
 
-    // Add unique timestamp to URL to force a fresh load into
-    // the canvas (bypasses browser image cache for the canvas draw)
     img.src = coverPath + '?v=' + uniqueSeed;
   });
 }
 
-/**
- * Get artwork data URI for a track.
- * Every call generates a fresh canvas render with a unique seed,
- * guaranteeing Android's OS-level bitmap cache is always busted.
- * We do NOT memoize here — each play must produce unique bytes.
- */
 async function getArtworkDataURI(coverPath) {
-  // Unique seed: combination of timestamp + cover path hash
-  // so the same track played twice also gets different bytes
   const seed = (Date.now() + coverPath.split('').reduce(
     (a, c) => (a * 31 + c.charCodeAt(0)) | 0, 0
   )) & 0x7FFFFFFF;
@@ -288,16 +248,15 @@ async function getArtworkDataURI(coverPath) {
 /* ═══════════════════════════════════════════════════════════
    MEDIA SESSION
 ═══════════════════════════════════════════════════════════ */
-function setMediaMetadata(title, artist, dataURI) {
+function setMediaMetadata(title, artist, artSrc) {
   if (!('mediaSession' in navigator)) return;
 
   navigator.mediaSession.metadata = new MediaMetadata({
     title,
     artist,
     album:   'Akhil Music',
-    artwork: dataURI ? [
-      { src: dataURI, sizes: '512x512', type: 'image/png' },
-      { src: dataURI, sizes: '256x256', type: 'image/png' },
+    artwork: artSrc ? [
+      { src: artSrc, sizes: '256x256', type: 'image/png' },
     ] : [],
   });
 }
@@ -355,8 +314,6 @@ function initMediaSession() {
    PRE-WARM next covers
 ═══════════════════════════════════════════════════════════ */
 function prewarmCovers(fromIndex) {
-  // Just pre-load the images into browser cache so canvas
-  // draw is instant when the track is actually played
   for (let i = 1; i <= 3; i++) {
     const img = new Image();
     img.src   = playlist[(fromIndex + i) % playlist.length].cover;
@@ -453,10 +410,17 @@ window.addEventListener('beforeinstallprompt', (e) => {
 /* ═══════════════════════════════════════════════════════════
    LOAD & PLAY
    ─────────────────────────────────────────────────────────
-   We await getArtworkDataURI() BEFORE audio.play() so that
-   MediaMetadata is fully populated with unique pixel-stamped
-   artwork before the 'play' event fires and Android renders
-   the notification bar.
+   FIX: Notification was disappearing for 2-4 seconds because
+   we awaited canvas artwork BEFORE audio.play(). Canvas render
+   takes 1-3s, during which Android killed the notification.
+
+   New 3-step approach:
+   STEP 1 — Set metadata immediately with direct cover URL.
+            Notification appears instantly, zero gap.
+   STEP 2 — Start audio immediately. Notification stays alive.
+   STEP 3 — Generate canvas artwork in background. Silently
+            upgrades notification image with unique bitmap.
+            Guard: only applies if user hasn't skipped away.
 ═══════════════════════════════════════════════════════════ */
 async function loadPlay(index) {
   if (index < 0) index = playlist.length - 1;
@@ -483,14 +447,19 @@ async function loadPlay(index) {
     row.classList.toggle('active', i === cur)
   );
 
-  // Generate canvas artwork with unique pixel stamp — BEFORE play()
-  const dataURI = await getArtworkDataURI(t.cover);
-  setMediaMetadata(t.title, t.artist, dataURI);
+  // STEP 1: Instant metadata — notification appears immediately, no gap
+  setMediaMetadata(t.title, t.artist, t.cover + '?v=' + Date.now());
 
-  // Now start audio — 'play' event fires, notification shows with correct art
+  // STEP 2: Start audio right away — no waiting, notification stays alive
   audio.play().catch(() => setPlayState(false));
 
   prewarmCovers(cur);
+
+  // STEP 3: Canvas artwork in background — silently upgrades notification
+  // Only update if user hasn't already skipped to a different track
+  getArtworkDataURI(t.cover).then(dataURI => {
+    if (cur === index) setMediaMetadata(t.title, t.artist, dataURI);
+  });
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -540,7 +509,6 @@ document.getElementById('playAllBtn').addEventListener('click', () => {
 ═══════════════════════════════════════════════════════════ */
 audio.addEventListener('play', () => {
   if ('mediaSession' in navigator) {
-    // Artwork already set before play() — just signal playing state
     navigator.mediaSession.playbackState = 'playing';
   }
   setPlayState(true);
