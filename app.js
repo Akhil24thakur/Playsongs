@@ -59,6 +59,12 @@ let cur     = -1;
 let playing = false;
 
 /* ═══════════════════════════════════════════════════════════
+   SVG ICONS for track buttons
+═══════════════════════════════════════════════════════════ */
+const ICON_PLAY  = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
+const ICON_PAUSE = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
+
+/* ═══════════════════════════════════════════════════════════
    DOM REFERENCES
 ═══════════════════════════════════════════════════════════ */
 const audio       = document.getElementById('audio');
@@ -86,7 +92,10 @@ const pbPrev      = document.getElementById('pbPrev');
 const pbNext      = document.getElementById('pbNext');
 const tracksList  = document.getElementById('tracksList');
 const aboutStats  = document.getElementById('aboutStats');
-
+const SOCIAL = {
+  instagram: 'https://instagram.com/YOUR_USERNAME',
+  youtube:   'https://youtube.com/@YOUR_CHANNEL',
+};
 audio.setAttribute('playsinline', '');
 audio.setAttribute('webkit-playsinline', '');
 
@@ -156,14 +165,10 @@ async function restorePlaybackState() {
     pbTitle.textContent  = t.title;
     pbArtist.textContent = t.artist;
 
-    document.querySelectorAll('.track-item').forEach((row, i) =>
-      row.classList.toggle('active', i === cur)
-    );
+    // Sync track list active state (paused, so show play icons)
+    updateTrackButtons(cur, false);
 
-    // STEP 1: Instant metadata so notification shows immediately
     setMediaMetadata(t.title, t.artist, t.cover + '?v=' + Date.now());
-
-    // STEP 2: Upgrade to canvas artwork in background (no gap)
     getArtworkDataURI(t.cover).then(dataURI => {
       if (cur === idx) setMediaMetadata(t.title, t.artist, dataURI);
     });
@@ -173,63 +178,37 @@ async function restorePlaybackState() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   ARTWORK — Canvas-based data URI generator
-   ─────────────────────────────────────────────────────────
-   Android's Media Session caches artwork at the OS level.
-   We use a Canvas to stamp unique pixel data into every
-   bitmap so Android's cache can never get a hit.
+   ARTWORK — Canvas data URI (busts Android OS bitmap cache)
 ═══════════════════════════════════════════════════════════ */
-const coverCache = new Map();
-
 function coverToCanvasDataURI(coverPath, uniqueSeed) {
   return new Promise((resolve) => {
     const SIZE   = 256;
     const canvas = document.createElement('canvas');
-    canvas.width  = SIZE;
-    canvas.height = SIZE;
-    const ctx    = canvas.getContext('2d');
-    const img    = new Image();
-
-    // No crossOrigin — images are same-origin, setting it causes
-    // canvas taint if server has no CORS headers, breaking toDataURL()
+    canvas.width = canvas.height = SIZE;
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
 
     img.onload = () => {
       ctx.drawImage(img, 0, 0, SIZE, SIZE);
-
       const px = uniqueSeed % (SIZE - 2) + 1;
       const py = Math.floor(uniqueSeed / SIZE) % (SIZE - 2) + 1;
-      const r  = (uniqueSeed * 7)  & 0xFF;
-      const g  = (uniqueSeed * 13) & 0xFF;
-      const b  = (uniqueSeed * 17) & 0xFF;
-      ctx.fillStyle = `rgba(${r},${g},${b},0.004)`;
+      ctx.fillStyle = `rgba(${(uniqueSeed*7)&0xFF},${(uniqueSeed*13)&0xFF},${(uniqueSeed*17)&0xFF},0.004)`;
       ctx.fillRect(px, py, 1, 1);
-
-      // Wrap in try/catch — tainted canvas throws SecurityError silently
-      try {
-        resolve(canvas.toDataURL('image/png'));
-      } catch (e) {
-        img.onerror();
-      }
+      try { resolve(canvas.toDataURL('image/png')); } catch (_) { img.onerror(); }
     };
 
     img.onerror = () => {
       const track = playlist[cur] || {};
-      const bg    = track.color || '#1a1730';
-      ctx.fillStyle = bg;
+      ctx.fillStyle = track.color || '#1a1730';
       ctx.fillRect(0, 0, SIZE, SIZE);
-
-      const initials = (track.title || '?')
-        .split(' ').slice(0, 2)
-        .map(w => w[0]).join('').toUpperCase();
-      ctx.fillStyle    = 'rgba(255,255,255,0.85)';
-      ctx.font         = `bold ${SIZE * 0.36}px sans-serif`;
-      ctx.textAlign    = 'center';
+      const initials = (track.title || '?').split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+      ctx.fillStyle = 'rgba(255,255,255,0.85)';
+      ctx.font = `bold ${SIZE * 0.36}px sans-serif`;
+      ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(initials, SIZE / 2, SIZE / 2);
-
-      ctx.fillStyle = `rgba(${uniqueSeed & 0xFF},${(uniqueSeed >> 8) & 0xFF},0,0.004)`;
-      ctx.fillRect((uniqueSeed % SIZE), (uniqueSeed % 100) + 1, 1, 1);
-
+      ctx.fillStyle = `rgba(${uniqueSeed&0xFF},${(uniqueSeed>>8)&0xFF},0,0.004)`;
+      ctx.fillRect(uniqueSeed % SIZE, (uniqueSeed % 100) + 1, 1, 1);
       resolve(canvas.toDataURL('image/png'));
     };
 
@@ -241,7 +220,6 @@ async function getArtworkDataURI(coverPath) {
   const seed = (Date.now() + coverPath.split('').reduce(
     (a, c) => (a * 31 + c.charCodeAt(0)) | 0, 0
   )) & 0x7FFFFFFF;
-
   return coverToCanvasDataURI(coverPath, seed);
 }
 
@@ -250,14 +228,9 @@ async function getArtworkDataURI(coverPath) {
 ═══════════════════════════════════════════════════════════ */
 function setMediaMetadata(title, artist, artSrc) {
   if (!('mediaSession' in navigator)) return;
-
   navigator.mediaSession.metadata = new MediaMetadata({
-    title,
-    artist,
-    album:   'Akhil Music',
-    artwork: artSrc ? [
-      { src: artSrc, sizes: '256x256', type: 'image/png' },
-    ] : [],
+    title, artist, album: 'Akhil Music',
+    artwork: artSrc ? [{ src: artSrc, sizes: '256x256', type: 'image/png' }] : [],
   });
 }
 
@@ -276,7 +249,6 @@ function pushPositionState() {
 function initMediaSession() {
   if (!('mediaSession' in navigator)) return;
   const ms = navigator.mediaSession;
-
   ms.setActionHandler('play', () => {
     audio.play().then(() => { acquireWakeLock(); setPlayState(true); ms.playbackState = 'playing'; });
   });
@@ -287,19 +259,17 @@ function initMediaSession() {
   ms.setActionHandler('previoustrack', () => {
     audio.currentTime > 3 ? (audio.currentTime = 0) : loadPlay(cur - 1);
   });
-  ms.setActionHandler('nexttrack',     () => loadPlay(cur + 1));
-  ms.setActionHandler('seekbackward',  d  => {
+  ms.setActionHandler('nexttrack',    () => loadPlay(cur + 1));
+  ms.setActionHandler('seekbackward', d  => {
     audio.currentTime = Math.max(0, audio.currentTime - (d.seekOffset || 10));
     pushPositionState();
   });
-  ms.setActionHandler('seekforward',   d  => {
+  ms.setActionHandler('seekforward',  d  => {
     audio.currentTime = Math.min(audio.duration || Infinity, audio.currentTime + (d.seekOffset || 10));
     pushPositionState();
   });
   ms.setActionHandler('seekto', d => {
-    if (d.seekTime !== undefined && audio.duration) {
-      audio.currentTime = d.seekTime; pushPositionState();
-    }
+    if (d.seekTime !== undefined && audio.duration) { audio.currentTime = d.seekTime; pushPositionState(); }
   });
   try {
     ms.setActionHandler('stop', () => {
@@ -311,12 +281,38 @@ function initMediaSession() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   PRE-WARM next covers
+   UPDATE TRACK BUTTON ICONS
+   ─────────────────────────────────────────────────────────
+   Called every time play state changes.
+   Active + playing  → shows ⏸ pause icon
+   Everything else   → shows ▶ play icon
+═══════════════════════════════════════════════════════════ */
+function updateTrackButtons(activeIndex, isPlaying) {
+  document.querySelectorAll('.track-item').forEach((row, i) => {
+    const btn = row.querySelector('.t-play-btn');
+    if (!btn) return;
+
+    const isActive = i === activeIndex;
+
+    if (isActive && isPlaying) {
+      btn.innerHTML = ICON_PAUSE;
+      btn.setAttribute('aria-label', 'Pause ' + playlist[i].title);
+      btn.classList.add('is-playing');
+    } else {
+      btn.innerHTML = ICON_PLAY;
+      btn.setAttribute('aria-label', 'Play ' + playlist[i].title);
+      btn.classList.remove('is-playing');
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PRE-WARM
 ═══════════════════════════════════════════════════════════ */
 function prewarmCovers(fromIndex) {
   for (let i = 1; i <= 3; i++) {
     const img = new Image();
-    img.src   = playlist[(fromIndex + i) % playlist.length].cover;
+    img.src = playlist[(fromIndex + i) % playlist.length].cover;
   }
 }
 
@@ -345,10 +341,19 @@ function buildTrackList() {
       <div class="t-actions">
         <span class="t-dur" id="dur-${i}">—:——</span>
         <button class="t-play-btn" aria-label="Play ${track.title}">
-          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          ${ICON_PLAY}
         </button>
       </div>`;
-    row.addEventListener('click', () => loadPlay(i));
+
+    // Tap same track → toggle play/pause. Tap new track → load it.
+    row.addEventListener('click', () => {
+      if (i === cur) {
+        togglePlay();
+      } else {
+        loadPlay(i);
+      }
+    });
+
     tracksList.appendChild(row);
     prefetchDuration(track.src, i);
   });
@@ -409,18 +414,6 @@ window.addEventListener('beforeinstallprompt', (e) => {
 
 /* ═══════════════════════════════════════════════════════════
    LOAD & PLAY
-   ─────────────────────────────────────────────────────────
-   FIX: Notification was disappearing for 2-4 seconds because
-   we awaited canvas artwork BEFORE audio.play(). Canvas render
-   takes 1-3s, during which Android killed the notification.
-
-   New 3-step approach:
-   STEP 1 — Set metadata immediately with direct cover URL.
-            Notification appears instantly, zero gap.
-   STEP 2 — Start audio immediately. Notification stays alive.
-   STEP 3 — Generate canvas artwork in background. Silently
-            upgrades notification image with unique bitmap.
-            Guard: only applies if user hasn't skipped away.
 ═══════════════════════════════════════════════════════════ */
 async function loadPlay(index) {
   if (index < 0) index = playlist.length - 1;
@@ -432,7 +425,6 @@ async function loadPlay(index) {
   audio.src    = t.src;
   audio.volume = parseFloat(volSlider.value);
 
-  // Update in-app UI
   nowStrip.classList.add('visible');
   nowCoverImg.src       = t.cover;
   nowTitle.textContent  = t.title;
@@ -443,20 +435,12 @@ async function loadPlay(index) {
   pbTitle.textContent  = t.title;
   pbArtist.textContent = t.artist;
 
-  document.querySelectorAll('.track-item').forEach((row, i) =>
-    row.classList.toggle('active', i === cur)
-  );
-
-  // STEP 1: Instant metadata — notification appears immediately, no gap
   setMediaMetadata(t.title, t.artist, t.cover + '?v=' + Date.now());
 
-  // STEP 2: Start audio right away — no waiting, notification stays alive
   audio.play().catch(() => setPlayState(false));
 
   prewarmCovers(cur);
 
-  // STEP 3: Canvas artwork in background — silently upgrades notification
-  // Only update if user hasn't already skipped to a different track
   getArtworkDataURI(t.cover).then(dataURI => {
     if (cur === index) setMediaMetadata(t.title, t.artist, dataURI);
   });
@@ -464,12 +448,14 @@ async function loadPlay(index) {
 
 /* ═══════════════════════════════════════════════════════════
    SET PLAY STATE
+   — also syncs all track row buttons
 ═══════════════════════════════════════════════════════════ */
 function setPlayState(isPlaying) {
   playing = isPlaying;
   mainPlayBtn.classList.toggle('playing', isPlaying);
   pbPlay.classList.toggle('playing', isPlaying);
   heroVinyl.classList.toggle('spinning', isPlaying);
+  updateTrackButtons(cur, isPlaying);
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -508,9 +494,7 @@ document.getElementById('playAllBtn').addEventListener('click', () => {
    AUDIO EVENTS
 ═══════════════════════════════════════════════════════════ */
 audio.addEventListener('play', () => {
-  if ('mediaSession' in navigator) {
-    navigator.mediaSession.playbackState = 'playing';
-  }
+  if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
   setPlayState(true);
   acquireWakeLock();
   savePlaybackState();
