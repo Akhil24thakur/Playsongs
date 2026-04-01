@@ -59,16 +59,15 @@ let cur     = -1;
 let playing = false;
 
 /* ═══════════════════════════════════════════════════════════
-   SVG ICONS for track buttons
+   SVG ICONS
 ═══════════════════════════════════════════════════════════ */
 const ICON_PLAY  = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
 const ICON_PAUSE = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
 
 /* ═══════════════════════════════════════════════════════════
-   DOM REFERENCES
+   DOM REFS
 ═══════════════════════════════════════════════════════════ */
 const audio       = document.getElementById('audio');
-const heroVinyl   = document.getElementById('heroVinyl');
 const nowStrip    = document.getElementById('nowStrip');
 const nowCoverImg = document.getElementById('nowCoverImg');
 const nowTitle    = document.getElementById('nowTitle');
@@ -90,54 +89,54 @@ const pbArtist    = document.getElementById('pbArtist');
 const pbPlay      = document.getElementById('pbPlay');
 const pbPrev      = document.getElementById('pbPrev');
 const pbNext      = document.getElementById('pbNext');
+const pbVolSlider = document.getElementById('pbVolSlider');
 const tracksList  = document.getElementById('tracksList');
 const aboutStats  = document.getElementById('aboutStats');
+const heroWave    = document.getElementById('heroWave');
+const siteHeader  = document.getElementById('siteHeader');
+const chipTracks  = document.getElementById('chipTracks');
 
 audio.setAttribute('playsinline', '');
 audio.setAttribute('webkit-playsinline', '');
 
 /* ═══════════════════════════════════════════════════════════
+   HEADER SCROLL
+═══════════════════════════════════════════════════════════ */
+window.addEventListener('scroll', () => {
+  siteHeader.classList.toggle('scrolled', window.scrollY > 60);
+}, { passive: true });
+
+/* ═══════════════════════════════════════════════════════════
    WAKE LOCK
 ═══════════════════════════════════════════════════════════ */
 let wakeLock = null;
-
 async function acquireWakeLock() {
   if (!('wakeLock' in navigator)) return;
-  try {
-    if (!wakeLock || wakeLock.released) {
-      wakeLock = await navigator.wakeLock.request('screen');
-    }
-  } catch (_) {}
+  try { if (!wakeLock || wakeLock.released) wakeLock = await navigator.wakeLock.request('screen'); } catch (_) {}
 }
-
 async function releaseWakeLock() {
   if (!wakeLock || wakeLock.released) return;
   try { await wakeLock.release(); } catch (_) {}
   wakeLock = null;
 }
-
 document.addEventListener('visibilitychange', async () => {
   if (document.visibilityState === 'visible' && playing) await acquireWakeLock();
 });
 
 /* ═══════════════════════════════════════════════════════════
-   AUTO-RESUME
+   PERSIST PLAYBACK
 ═══════════════════════════════════════════════════════════ */
 const LS_IDX  = 'akhil_cur';
 const LS_TIME = 'akhil_time';
 
 function savePlaybackState() {
-  try {
-    localStorage.setItem(LS_IDX,  cur);
-    localStorage.setItem(LS_TIME, audio.currentTime);
-  } catch (_) {}
+  try { localStorage.setItem(LS_IDX, cur); localStorage.setItem(LS_TIME, audio.currentTime); } catch (_) {}
 }
-
 setInterval(savePlaybackState, 5000);
 
 async function restorePlaybackState() {
   try {
-    const idx  = parseInt(localStorage.getItem(LS_IDX),  10);
+    const idx  = parseInt(localStorage.getItem(LS_IDX), 10);
     const time = parseFloat(localStorage.getItem(LS_TIME));
     if (isNaN(idx) || idx < 0 || idx >= playlist.length) return;
 
@@ -145,6 +144,7 @@ async function restorePlaybackState() {
     const t = playlist[cur];
     audio.src    = t.src;
     audio.volume = parseFloat(volSlider.value);
+    if (pbVolSlider) pbVolSlider.value = volSlider.value;
 
     audio.addEventListener('loadedmetadata', () => {
       if (!isNaN(time) && time > 5) audio.currentTime = time;
@@ -162,61 +162,47 @@ async function restorePlaybackState() {
     pbTitle.textContent  = t.title;
     pbArtist.textContent = t.artist;
 
-    // Sync track list active state (paused, so show play icons)
-    updateTrackButtons(cur, false);
-
+    updateTrackActive(cur);
     setMediaMetadata(t.title, t.artist, t.cover + '?v=' + Date.now());
-    getArtworkDataURI(t.cover).then(dataURI => {
-      if (cur === idx) setMediaMetadata(t.title, t.artist, dataURI);
-    });
-
+    getArtworkDataURI(t.cover).then(d => { if (cur === idx) setMediaMetadata(t.title, t.artist, d); });
     setPlayState(false);
   } catch (_) {}
 }
 
 /* ═══════════════════════════════════════════════════════════
-   ARTWORK — Canvas data URI (busts Android OS bitmap cache)
+   ARTWORK
 ═══════════════════════════════════════════════════════════ */
 function coverToCanvasDataURI(coverPath, uniqueSeed) {
   return new Promise((resolve) => {
-    const SIZE   = 256;
-    const canvas = document.createElement('canvas');
+    const SIZE = 256, canvas = document.createElement('canvas');
     canvas.width = canvas.height = SIZE;
-    const ctx = canvas.getContext('2d');
-    const img = new Image();
-
+    const ctx = canvas.getContext('2d'), img = new Image();
     img.onload = () => {
       ctx.drawImage(img, 0, 0, SIZE, SIZE);
-      const px = uniqueSeed % (SIZE - 2) + 1;
-      const py = Math.floor(uniqueSeed / SIZE) % (SIZE - 2) + 1;
+      const px = uniqueSeed % (SIZE - 2) + 1, py = Math.floor(uniqueSeed / SIZE) % (SIZE - 2) + 1;
       ctx.fillStyle = `rgba(${(uniqueSeed*7)&0xFF},${(uniqueSeed*13)&0xFF},${(uniqueSeed*17)&0xFF},0.004)`;
       ctx.fillRect(px, py, 1, 1);
       try { resolve(canvas.toDataURL('image/png')); } catch (_) { img.onerror(); }
     };
-
     img.onerror = () => {
       const track = playlist[cur] || {};
-      ctx.fillStyle = track.color || '#1a1730';
+      ctx.fillStyle = track.color || '#1a1a1a';
       ctx.fillRect(0, 0, SIZE, SIZE);
       const initials = (track.title || '?').split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
       ctx.fillStyle = 'rgba(255,255,255,0.85)';
       ctx.font = `bold ${SIZE * 0.36}px sans-serif`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.fillText(initials, SIZE / 2, SIZE / 2);
       ctx.fillStyle = `rgba(${uniqueSeed&0xFF},${(uniqueSeed>>8)&0xFF},0,0.004)`;
       ctx.fillRect(uniqueSeed % SIZE, (uniqueSeed % 100) + 1, 1, 1);
       resolve(canvas.toDataURL('image/png'));
     };
-
     img.src = coverPath + '?v=' + uniqueSeed;
   });
 }
 
 async function getArtworkDataURI(coverPath) {
-  const seed = (Date.now() + coverPath.split('').reduce(
-    (a, c) => (a * 31 + c.charCodeAt(0)) | 0, 0
-  )) & 0x7FFFFFFF;
+  const seed = (Date.now() + coverPath.split('').reduce((a, c) => (a * 31 + c.charCodeAt(0)) | 0, 0)) & 0x7FFFFFFF;
   return coverToCanvasDataURI(coverPath, seed);
 }
 
@@ -232,13 +218,12 @@ function setMediaMetadata(title, artist, artSrc) {
 }
 
 function pushPositionState() {
-  if (!('mediaSession' in navigator)) return;
-  if (!audio.duration || isNaN(audio.duration)) return;
+  if (!('mediaSession' in navigator) || !audio.duration || isNaN(audio.duration)) return;
   try {
     navigator.mediaSession.setPositionState({
-      duration:     audio.duration,
+      duration: audio.duration,
       playbackRate: audio.playbackRate || 1,
-      position:     Math.max(0, Math.min(audio.currentTime, audio.duration))
+      position: Math.max(0, Math.min(audio.currentTime, audio.duration))
     });
   } catch (_) {}
 }
@@ -246,65 +231,49 @@ function pushPositionState() {
 function initMediaSession() {
   if (!('mediaSession' in navigator)) return;
   const ms = navigator.mediaSession;
-  ms.setActionHandler('play', () => {
-    audio.play().then(() => { acquireWakeLock(); setPlayState(true); ms.playbackState = 'playing'; });
-  });
-  ms.setActionHandler('pause', () => {
-    audio.pause(); setPlayState(false); ms.playbackState = 'paused';
-    releaseWakeLock(); savePlaybackState();
-  });
-  ms.setActionHandler('previoustrack', () => {
-    audio.currentTime > 3 ? (audio.currentTime = 0) : loadPlay(cur - 1);
-  });
-  ms.setActionHandler('nexttrack',    () => loadPlay(cur + 1));
-  ms.setActionHandler('seekbackward', d  => {
-    audio.currentTime = Math.max(0, audio.currentTime - (d.seekOffset || 10));
-    pushPositionState();
-  });
-  ms.setActionHandler('seekforward',  d  => {
-    audio.currentTime = Math.min(audio.duration || Infinity, audio.currentTime + (d.seekOffset || 10));
-    pushPositionState();
-  });
-  ms.setActionHandler('seekto', d => {
-    if (d.seekTime !== undefined && audio.duration) { audio.currentTime = d.seekTime; pushPositionState(); }
-  });
-  try {
-    ms.setActionHandler('stop', () => {
-      audio.pause(); audio.currentTime = 0;
-      setPlayState(false); ms.playbackState = 'none';
-      releaseWakeLock(); savePlaybackState();
-    });
-  } catch (_) {}
+  ms.setActionHandler('play',          () => { audio.play().then(() => { acquireWakeLock(); setPlayState(true); ms.playbackState = 'playing'; }); });
+  ms.setActionHandler('pause',         () => { audio.pause(); setPlayState(false); ms.playbackState = 'paused'; releaseWakeLock(); savePlaybackState(); });
+  ms.setActionHandler('previoustrack', () => { audio.currentTime > 3 ? (audio.currentTime = 0) : loadPlay(cur - 1); });
+  ms.setActionHandler('nexttrack',     () => loadPlay(cur + 1));
+  ms.setActionHandler('seekbackward',  d  => { audio.currentTime = Math.max(0, audio.currentTime - (d.seekOffset || 10)); pushPositionState(); });
+  ms.setActionHandler('seekforward',   d  => { audio.currentTime = Math.min(audio.duration || Infinity, audio.currentTime + (d.seekOffset || 10)); pushPositionState(); });
+  ms.setActionHandler('seekto',        d  => { if (d.seekTime !== undefined && audio.duration) { audio.currentTime = d.seekTime; pushPositionState(); } });
+  try { ms.setActionHandler('stop', () => { audio.pause(); audio.currentTime = 0; setPlayState(false); ms.playbackState = 'none'; releaseWakeLock(); savePlaybackState(); }); } catch (_) {}
 }
 
 /* ═══════════════════════════════════════════════════════════
-   UPDATE TRACK BUTTON ICONS
-   ─────────────────────────────────────────────────────────
-   Called every time play state changes.
-   Active + playing  → shows ⏸ pause icon
-   Everything else   → shows ▶ play icon
+   TRACK ACTIVE STATE
 ═══════════════════════════════════════════════════════════ */
-function updateTrackButtons(activeIndex, isPlaying) {
+function updateTrackActive(activeIndex) {
+  document.querySelectorAll('.track-item').forEach((row, i) => {
+    row.classList.toggle('active', i === activeIndex);
+  });
+}
+
+function updateTrackPlayBtn(activeIndex, isPlaying) {
   document.querySelectorAll('.track-item').forEach((row, i) => {
     const btn = row.querySelector('.t-play-btn');
     if (!btn) return;
-
     const isActive = i === activeIndex;
-
     if (isActive && isPlaying) {
       btn.innerHTML = ICON_PAUSE;
       btn.setAttribute('aria-label', 'Pause ' + playlist[i].title);
-      btn.classList.add('is-playing');
     } else {
       btn.innerHTML = ICON_PLAY;
       btn.setAttribute('aria-label', 'Play ' + playlist[i].title);
-      btn.classList.remove('is-playing');
     }
   });
 }
 
 /* ═══════════════════════════════════════════════════════════
-   PRE-WARM
+   WAVEFORM
+═══════════════════════════════════════════════════════════ */
+function setWaveState(isPlaying) {
+  if (heroWave) heroWave.classList.toggle('paused', !isPlaying);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PREWARM COVERS
 ═══════════════════════════════════════════════════════════ */
 function prewarmCovers(fromIndex) {
   for (let i = 1; i <= 3; i++) {
@@ -319,17 +288,17 @@ function prewarmCovers(fromIndex) {
 function buildTrackList() {
   tracksList.innerHTML = '';
   playlist.forEach((track, i) => {
-    const row       = document.createElement('div');
-    row.className   = 'track-item';
-    row.id          = `track-${i}`;
+    const row     = document.createElement('div');
+    row.className = 'track-item';
+    row.id        = `track-${i}`;
     row.dataset.idx = i;
-    row.innerHTML   = `
+    row.innerHTML = `
       <div class="t-num-wrap">
         <span class="t-num">${String(i + 1).padStart(2, '0')}</span>
         <div class="t-eq" aria-hidden="true"><span></span><span></span><span></span></div>
       </div>
       <div class="t-thumb">
-        <img src="${track.cover}" alt="${track.title} cover" onerror="this.style.display='none'" />
+        <img src="${track.cover}" alt="${track.title}" loading="lazy" onerror="this.style.display='none'"/>
       </div>
       <div class="t-info">
         <div class="t-title">${track.title}</div>
@@ -337,36 +306,21 @@ function buildTrackList() {
       </div>
       <div class="t-actions">
         <span class="t-dur" id="dur-${i}">—:——</span>
-        <button class="t-play-btn" aria-label="Play ${track.title}">
-          ${ICON_PLAY}
-        </button>
+        <button class="t-play-btn" aria-label="Play ${track.title}">${ICON_PLAY}</button>
       </div>`;
-
-    // Tap same track → toggle play/pause. Tap new track → load it.
-    row.addEventListener('click', () => {
-      if (i === cur) {
-        togglePlay();
-      } else {
-        loadPlay(i);
-      }
-    });
-
+    row.addEventListener('click', () => { i === cur ? togglePlay() : loadPlay(i); });
     tracksList.appendChild(row);
     prefetchDuration(track.src, i);
   });
 }
 
-function applyMarquee(el) {
-  el.classList.toggle('marquee', el.scrollWidth > el.clientWidth);
-}
-
 /* ═══════════════════════════════════════════════════════════
-   PRE-FETCH DURATION
+   PREFETCH DURATIONS
 ═══════════════════════════════════════════════════════════ */
 function prefetchDuration(src, index) {
-  const tmp   = new Audio();
+  const tmp = new Audio();
   tmp.preload = 'metadata';
-  tmp.src     = src;
+  tmp.src = src;
   tmp.addEventListener('loadedmetadata', () => {
     const el = document.getElementById(`dur-${index}`);
     if (el) el.textContent = fmt(tmp.duration);
@@ -382,17 +336,15 @@ function prefetchDuration(src, index) {
    BUILD STATS
 ═══════════════════════════════════════════════════════════ */
 function buildStats() {
-  aboutStats.innerHTML = `
-    <div><div class="stat-num">${playlist.length}</div><div class="stat-label">Tracks</div></div>
-    <div><div class="stat-num">∞</div><div class="stat-label">Feelings</div></div>
-    <div><div class="stat-num">1</div><div class="stat-label">Artist</div></div>`;
-}
-
-/* ═══════════════════════════════════════════════════════════
-   SERVICE WORKER
-═══════════════════════════════════════════════════════════ */
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js');
+  if (aboutStats) {
+    aboutStats.innerHTML = `
+      <div><div class="stat-num">${playlist.length}</div><div class="stat-label">Tracks</div></div>
+      <div><div class="stat-num">∞</div><div class="stat-label">Feelings</div></div>
+      <div><div class="stat-num">1</div><div class="stat-label">Artist</div></div>`;
+  }
+  if (chipTracks) chipTracks.textContent = playlist.length;
+  const tc = document.getElementById('trackCount');
+  if (tc) tc.textContent = `${playlist.length} tracks`;
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -410,59 +362,70 @@ window.addEventListener('beforeinstallprompt', (e) => {
 });
 
 /* ═══════════════════════════════════════════════════════════
+   SCROLL TO ACTIVE TRACK
+═══════════════════════════════════════════════════════════ */
+function scrollToActive(index) {
+  const el = document.getElementById(`track-${index}`);
+  if (el) {
+    setTimeout(() => {
+      el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 200);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
    LOAD & PLAY
 ═══════════════════════════════════════════════════════════ */
 async function loadPlay(index) {
   if (index < 0) index = playlist.length - 1;
   if (index >= playlist.length) index = 0;
 
-  cur     = index;
+  cur = index;
   const t = playlist[cur];
 
   audio.src    = t.src;
   audio.volume = parseFloat(volSlider.value);
 
+  // Now-playing card
   nowStrip.classList.add('visible');
   nowCoverImg.src       = t.cover;
   nowTitle.textContent  = t.title;
   nowArtist.textContent = t.artist;
 
+  // Player bar
   playerBar.classList.add('show');
   pbCoverImg.src       = t.cover;
   pbTitle.textContent  = t.title;
   pbArtist.textContent = t.artist;
 
+  // Active track highlight
+  updateTrackActive(cur);
+  scrollToActive(cur);
+
   setMediaMetadata(t.title, t.artist, t.cover + '?v=' + Date.now());
-
   audio.play().catch(() => setPlayState(false));
-
   prewarmCovers(cur);
-
-  getArtworkDataURI(t.cover).then(dataURI => {
-    if (cur === index) setMediaMetadata(t.title, t.artist, dataURI);
-  });
+  getArtworkDataURI(t.cover).then(d => { if (cur === index) setMediaMetadata(t.title, t.artist, d); });
 }
 
 /* ═══════════════════════════════════════════════════════════
    SET PLAY STATE
-   — also syncs all track row buttons
 ═══════════════════════════════════════════════════════════ */
 function setPlayState(isPlaying) {
   playing = isPlaying;
   mainPlayBtn.classList.toggle('playing', isPlaying);
   pbPlay.classList.toggle('playing', isPlaying);
-  heroVinyl.classList.toggle('spinning', isPlaying);
-  updateTrackButtons(cur, isPlaying);
+  setWaveState(isPlaying);
+  updateTrackPlayBtn(cur, isPlaying);
 }
 
 /* ═══════════════════════════════════════════════════════════
-   TOGGLE PLAY / PAUSE
+   TOGGLE
 ═══════════════════════════════════════════════════════════ */
 function togglePlay() {
   if (cur === -1) { loadPlay(0); return; }
   if (playing) {
-    audio.pause();
-    setPlayState(false);
+    audio.pause(); setPlayState(false);
   } else {
     audio.play().then(() => { acquireWakeLock(); setPlayState(true); });
   }
@@ -473,14 +436,11 @@ function togglePlay() {
 ═══════════════════════════════════════════════════════════ */
 mainPlayBtn.addEventListener('click', togglePlay);
 pbPlay.addEventListener('click',      togglePlay);
-prevBtn.addEventListener('click', () => {
-  audio.currentTime > 3 ? (audio.currentTime = 0) : loadPlay(cur - 1);
-});
-nextBtn.addEventListener('click',  () => loadPlay(cur + 1));
-pbPrev.addEventListener('click',   () => {
-  audio.currentTime > 3 ? (audio.currentTime = 0) : loadPlay(cur - 1);
-});
-pbNext.addEventListener('click',   () => loadPlay(cur + 1));
+
+prevBtn.addEventListener('click', () => { audio.currentTime > 3 ? (audio.currentTime = 0) : loadPlay(cur - 1); });
+nextBtn.addEventListener('click', () => loadPlay(cur + 1));
+pbPrev.addEventListener('click',  () => { audio.currentTime > 3 ? (audio.currentTime = 0) : loadPlay(cur - 1); });
+pbNext.addEventListener('click',  () => loadPlay(cur + 1));
 
 document.getElementById('playAllBtn').addEventListener('click', () => {
   loadPlay(0);
@@ -492,18 +452,16 @@ document.getElementById('playAllBtn').addEventListener('click', () => {
 ═══════════════════════════════════════════════════════════ */
 audio.addEventListener('play', () => {
   if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
-  setPlayState(true);
-  acquireWakeLock();
-  savePlaybackState();
+  setPlayState(true); acquireWakeLock(); savePlaybackState();
 });
 
 audio.addEventListener('timeupdate', () => {
   if (!audio.duration) return;
   const pct = (audio.currentTime / audio.duration) * 100;
-  progFill.style.width   = pct + '%';
-  progDot.style.left     = pct + '%';
-  pbProgFill.style.width = pct + '%';
-  timeCur.textContent    = fmt(audio.currentTime);
+  progFill.style.width       = pct + '%';
+  progDot.style.left         = pct + '%';
+  pbProgFill.style.width     = pct + '%';
+  timeCur.textContent        = fmt(audio.currentTime);
   pushPositionState();
 });
 
@@ -512,24 +470,18 @@ audio.addEventListener('loadedmetadata', () => {
   pushPositionState();
 });
 
-audio.addEventListener('ended', () => {
-  savePlaybackState();
-  loadPlay(cur + 1);
-});
+audio.addEventListener('ended', () => { savePlaybackState(); loadPlay(cur + 1); });
 
 audio.addEventListener('pause', () => {
   if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
-  pushPositionState();
-  setPlayState(false);
-  savePlaybackState();
-  releaseWakeLock();
+  pushPositionState(); setPlayState(false); savePlaybackState(); releaseWakeLock();
 });
 
 /* ═══════════════════════════════════════════════════════════
    SEEK
 ═══════════════════════════════════════════════════════════ */
 function seekTo(clientX, el) {
-  const r   = el.getBoundingClientRect();
+  const r = el.getBoundingClientRect();
   const pct = Math.max(0, Math.min(1, (clientX - r.left) / r.width));
   if (audio.duration) { audio.currentTime = pct * audio.duration; pushPositionState(); }
 }
@@ -537,27 +489,71 @@ function seekTo(clientX, el) {
 progTrack.addEventListener('click', e => seekTo(e.clientX, progTrack));
 let dragging = false;
 progTrack.addEventListener('mousedown', () => { dragging = true; });
-document.addEventListener('mousemove',  e => { if (dragging) seekTo(e.clientX, progTrack); });
-document.addEventListener('mouseup',    () => { dragging = false; });
+document.addEventListener('mousemove', e  => { if (dragging) seekTo(e.clientX, progTrack); });
+document.addEventListener('mouseup',   ()  => { dragging = false; });
 progTrack.addEventListener('touchstart', e => seekTo(e.touches[0].clientX, progTrack), { passive: true });
 progTrack.addEventListener('touchmove',  e => seekTo(e.touches[0].clientX, progTrack), { passive: true });
 
 /* ═══════════════════════════════════════════════════════════
-   VOLUME
+   VOLUME — synced
 ═══════════════════════════════════════════════════════════ */
-volSlider.addEventListener('input', () => { audio.volume = parseFloat(volSlider.value); });
+function setVolume(v) {
+  audio.volume    = v;
+  volSlider.value = v;
+  if (pbVolSlider) pbVolSlider.value = v;
+  updateVolUI(volSlider);
+  if (pbVolSlider) updateVolUI(pbVolSlider);
+}
+
+function updateVolUI(slider) {
+  const v = slider.value * 100;
+  slider.style.background =
+    `linear-gradient(to right, var(--rose) ${v}%, rgba(255,255,255,0.09) ${v}%)`;
+}
+
+volSlider.addEventListener('input', () => setVolume(parseFloat(volSlider.value)));
+if (pbVolSlider) pbVolSlider.addEventListener('input', () => setVolume(parseFloat(pbVolSlider.value)));
+updateVolUI(volSlider);
+if (pbVolSlider) updateVolUI(pbVolSlider);
 
 /* ═══════════════════════════════════════════════════════════
-   KEYBOARD SHORTCUTS
+   KEYBOARD
 ═══════════════════════════════════════════════════════════ */
 document.addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT') return;
   if (e.code === 'Space')      { e.preventDefault(); togglePlay(); }
   if (e.code === 'ArrowRight') loadPlay(cur + 1);
-  if (e.code === 'ArrowLeft')  {
-    audio.currentTime > 3 ? (audio.currentTime = 0) : loadPlay(cur - 1);
-  }
+  if (e.code === 'ArrowLeft')  { audio.currentTime > 3 ? (audio.currentTime = 0) : loadPlay(cur - 1); }
 });
+
+/* ═══════════════════════════════════════════════════════════
+   MOBILE NAV TOGGLE
+═══════════════════════════════════════════════════════════ */
+const navToggle = document.getElementById('navToggle');
+const nav       = document.querySelector('nav');
+if (navToggle && nav) {
+  navToggle.addEventListener('click', () => {
+    const open = nav.style.display === 'flex';
+    nav.style.display = open ? 'none' : 'flex';
+    nav.style.position = 'absolute';
+    nav.style.top = 'var(--hh)';
+    nav.style.left = '0'; nav.style.right = '0';
+    nav.style.flexDirection = 'column';
+    nav.style.background = 'rgba(8,8,8,0.98)';
+    nav.style.padding = '20px 24px';
+    nav.style.borderBottom = '1px solid rgba(201,149,108,0.12)';
+    nav.style.backdropFilter = 'blur(40px)';
+    nav.style.gap = '20px';
+    nav.style.zIndex = '499';
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SERVICE WORKER
+═══════════════════════════════════════════════════════════ */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+}
 
 /* ═══════════════════════════════════════════════════════════
    HELPER
@@ -566,17 +562,6 @@ function fmt(s) {
   if (isNaN(s) || s == null) return '0:00';
   return `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 }
-
-/* ═══════════════════════════════════════════════════════════
-   VOLUME SLIDER UI
-═══════════════════════════════════════════════════════════ */
-const vol = document.getElementById('volSlider');
-function updateVolumeUI() {
-  const v = vol.value * 100;
-  vol.style.background = `linear-gradient(to right, var(--a1) ${v}%, rgba(255,255,255,0.1) ${v}%)`;
-}
-vol.addEventListener('input', updateVolumeUI);
-updateVolumeUI();
 
 /* ═══════════════════════════════════════════════════════════
    INIT
