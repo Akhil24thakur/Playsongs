@@ -2,226 +2,336 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
   <title>Akhil — Music</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Instrument+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous"/>
-  <link rel="icon" type="image/png" href="/images/ak01.png"/>
+  <link rel="icon" type="image/png" href="images/ak01.png"/>
   <link rel="manifest" href="manifest.json"/>
-  <meta name="theme-color" content="#0a0a0a"/>
+  <meta name="theme-color" content="#0c0c0e"/>
   <link rel="stylesheet" href="styles.css"/>
 </head>
 <body>
 
-<!-- HEADER -->
-<header id="siteHeader">
-  <div class="header-inner">
-    <div class="logo-wrap">
-      <span class="logo-name">AKHIL</span>
-      <span class="logo-sep">·</span>
-      <span class="logo-sub">Music</span>
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 32 32" fill="none">
+        <circle cx="16" cy="16" r="14.5" stroke="url(#lg1)" stroke-width="1.5"/>
+        <path d="M11 10v12M16 7v18M21 12v8" stroke="url(#lg1)" stroke-width="2" stroke-linecap="round"/>
+        <defs>
+          <linearGradient id="lg1" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#f0a876"/><stop offset="1" stop-color="#c4623a"/>
+          </linearGradient>
+        </defs>
+      </svg>
     </div>
-    <nav>
-      <a href="#home">Home</a>
-      <a href="#songs">Songs</a>
-      <a href="#about">About</a>
-    </nav>
-    <button class="nav-toggle" id="navToggle" aria-label="Menu">
-      <span></span><span></span>
+    <div class="logo-text">
+      <span class="logo-name">AKHIL</span>
+      <span class="logo-tag">Music</span>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <p class="nav-section-label">Browse</p>
+    <a class="nav-item active" data-view="home" href="#"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Home</span></a>
+    <a class="nav-item" data-view="songs" href="#"><svg viewBox="0 0 24 24"><path d="M12 3v9.28a4 4 0 0 0-1-.28C8.69 12 7 13.69 7 16s1.69 4 4 4 4-1.69 4-4V7h4V3h-7z"/></svg><span>Songs</span></a>
+    <a class="nav-item" data-view="favorites" href="#"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg><span>Favourites</span><span class="nav-badge" id="favBadge" style="display:none">0</span></a>
+    <a class="nav-item" data-view="about" href="#"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Artist</span></a>
+
+    <p class="nav-section-label" style="margin-top:24px">Library</p>
+    <div class="sidebar-search-box">
+      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      <input type="text" id="sidebarSearch" placeholder="Search…"/>
+    </div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <button class="theme-toggle-btn" id="themeToggleBtn">
+      <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
+      <span id="themeLabel">Light Mode</span>
     </button>
   </div>
-</header>
+</aside>
 
-<!-- HERO -->
-<section class="hero" id="home">
-  <div class="hero-grain"></div>
-  <div class="hero-content">
-    <div class="hero-label">
-      <span class="live-dot"></span>
-      <span>Now Streaming</span>
-    </div>
-    <h1 class="hero-title">
-      Music That<br/><em>Moves</em> The Soul
-    </h1>
-    <p class="hero-sub">Original compositions by Akhil — where every note carries a story and silence speaks louder than words.</p>
-    <div class="hero-actions">
-      <button class="btn-play" id="playAllBtn">
-        <svg viewBox="0 0 24 24" width="14" height="14"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
-        Play All
-      </button>
-      <a href="#songs" class="btn-outline">Browse Tracks</a>
-    </div>
-    <div class="hero-stats">
-      <div class="hstat"><span class="hstat-n" id="chipTracks">48</span><span class="hstat-l">Tracks</span></div>
-      <div class="hstat-div"></div>
-      <div class="hstat"><span class="hstat-n">∞</span><span class="hstat-l">Feelings</span></div>
-      <div class="hstat-div"></div>
-      <div class="hstat"><span class="hstat-n">1</span><span class="hstat-l">Artist</span></div>
-    </div>
-  </div>
-  <div class="hero-visual">
-    <div class="wave-card">
-      <div class="wave-card-glow"></div>
-      <div class="wave-top-bar"></div>
-      <div class="wave-label-row">
-        <span class="live-dot"></span>
-        <span class="wave-label-text">Live Session</span>
-      </div>
-      <div class="waveform" id="heroWave">
-        <span></span><span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span><span></span>
-      </div>
-      <div class="wave-artist">Akhil Music</div>
-    </div>
-  </div>
-</section>
+<!-- MAIN -->
+<div class="main-wrap">
 
-<!-- SONGS -->
-<section class="songs-section" id="songs">
-  <div class="container">
-
-    <!-- NOW PLAYING -->
-    <div class="now-strip" id="nowStrip">
-      <div class="now-inner">
-        <div class="now-cover-wrap">
-          <img id="nowCoverImg" src="" alt="" class="now-cover-img"/>
-          <div class="now-cover-shine"></div>
-        </div>
-        <div class="now-body">
-          <div class="now-label">
-            <span class="live-dot sm"></span>
-            <span>Now Playing</span>
-          </div>
-          <div class="now-title" id="nowTitle">—</div>
-          <div class="now-artist" id="nowArtist">—</div>
-
-          <div class="now-progress">
-            <span class="now-time" id="timeCur">0:00</span>
-            <div class="prog-track" id="progTrack">
-              <div class="prog-fill" id="progFill"></div>
-              <div class="prog-thumb" id="progDot"></div>
-            </div>
-            <span class="now-time" id="timeTot">0:00</span>
-          </div>
-
-          <div class="now-controls">
-            <button class="nc-btn" id="prevBtn" aria-label="Previous">
-              <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
-            </button>
-            <button class="nc-play" id="mainPlayBtn" aria-label="Play/Pause">
-              <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-              <svg class="icon-pause" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-            </button>
-            <button class="nc-btn" id="nextBtn" aria-label="Next">
-              <svg viewBox="0 0 24 24"><path d="m6 18 8.5-6L6 6v12zm2-8.14 4.96 3.14L8 16.14V9.86zM16 6h2v12h-2z"/></svg>
-            </button>
-            <div class="now-vol">
-              <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
-              <input type="range" class="vol-slider" id="volSlider" min="0" max="1" step="0.01" value="0.85"/>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TRACKS HEADER -->
-    <div class="tracks-header">
-      <div class="tracks-header-left">
-        <h2 class="sec-title">All Tracks</h2>
-        <div class="sec-rule"></div>
-      </div>
-      <span class="track-count-badge" id="trackCount"></span>
-    </div>
-
-    <!-- TRACK LIST -->
-    <div class="tracks-list" id="tracksList"></div>
-
-  </div>
-</section>
-
-<!-- ABOUT -->
-<section class="about-section" id="about">
-  <div class="container">
-    <div class="about-grid">
-      <div class="about-text">
-        <p class="about-eyebrow">The Artist</p>
-        <h2 class="about-title">About Akhil</h2>
-        <p>Akhil is an artist whose songs carry emotions that words alone cannot express. Every track is a window into raw, honest feeling — crafted from real moments and real hearts.</p>
-        <p>His music explores love, heartbreak, and the quiet spaces of human connection — melodies that stay with you long after the song ends.</p>
-        <div class="about-stats" id="aboutStats"></div>
-        <div class="social-links">
-          <a class="slink yt" href="https://www.youtube.com/channel/UCiBVLANfeywV2lgRVuuw-0A" target="_blank" rel="noopener">
-            <i class="fa-brands fa-youtube"></i><span>YouTube</span>
-          </a>
-          <a class="slink ig" href="https://www.instagram.com/p/DS7WcHfEgPd/" target="_blank" rel="noopener">
-            <i class="fa-brands fa-instagram"></i><span>Instagram</span>
-          </a>
-        </div>
-      </div>
-      <div class="about-card-wrap">
-        <div class="artist-card">
-          <a href="https://www.youtube.com/channel/UCiBVLANfeywV2lgRVuuw-0A" target="_blank" class="artist-img-link">
-            <img src="images/ak01.png" alt="Akhil" class="artist-img"/>
-          </a>
-          <div class="artist-name">@A-SeriesLyrics</div>
-          <div class="artist-role">Songwriter · Producer</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-inner">
-    <div class="footer-logo">
+  <!-- TOP BAR -->
+  <header class="topbar" id="topbar">
+    <button class="menu-btn" id="mobileMenuBtn">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="topbar-logo">
       <span class="logo-name">AKHIL</span>
-      <span class="logo-sep">·</span>
-      <span class="logo-sub">Music</span>
+      <span class="logo-tag">Music</span>
     </div>
-    <p class="footer-copy">© 2026 Akhil. All rights reserved.</p>
-    <div class="footer-socials">
-      <a href="https://www.youtube.com/channel/UCiBVLANfeywV2lgRVuuw-0A" target="_blank"><i class="fa-brands fa-youtube"></i></a>
-      <a href="https://www.instagram.com/p/DS7WcHfEgPd/" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+    <div class="topbar-search-wrap">
+      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      <input type="text" id="topbarSearch" placeholder="Search songs, moods…"/>
     </div>
-  </div>
-</footer>
+    <div class="topbar-right">
+      <button class="topbar-icon-btn shuffle-active" id="topShuffleBtn" title="Shuffle">
+        <svg viewBox="0 0 24 24"><path d="M10.59 9.17 5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>
+      </button>
+      <button class="topbar-icon-btn" id="topRepeatBtn" title="Repeat">
+        <svg viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- VIEWS -->
+  <main class="content" id="content">
+
+    <!-- HOME -->
+    <section class="view active" id="view-home">
+      <div class="hero-band">
+        <div class="hero-band-bg" id="heroBg"></div>
+        <div class="hero-band-blur"></div>
+        <div class="hero-band-inner">
+          <div class="hero-text">
+            <div class="hero-label"><span class="pdot"></span>Now Streaming</div>
+            <h1 class="hero-h1">Music That <em>Moves</em><br/>The Soul</h1>
+            <p class="hero-p">Original compositions — where every note carries a story and silence speaks louder than words.</p>
+            <div class="hero-actions">
+              <button class="btn-primary" id="playAllBtn">
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Play All
+              </button>
+              <button class="btn-ghost" id="shufflePlayBtn">
+                <svg viewBox="0 0 24 24"><path d="M10.59 9.17 5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg> Shuffle
+              </button>
+            </div>
+            <div class="hero-counters">
+              <div class="hc"><b id="hcTracks">48</b><span>Tracks</span></div>
+              <div class="hc-sep"></div>
+              <div class="hc"><b>∞</b><span>Feelings</span></div>
+              <div class="hc-sep"></div>
+              <div class="hc"><b>1</b><span>Artist</span></div>
+            </div>
+          </div>
+          <div class="hero-visual">
+            <div class="artist-float-card">
+              <img src="images/ak01.png" id="heroArtistImg" alt="Akhil" onerror="this.src=''"/>
+              <div class="artist-float-info">
+                <span class="afc-label">Featured</span>
+                <span class="afc-name">Akhil</span>
+              </div>
+            </div>
+            <div class="mini-wave" id="heroWave">
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="home-sections">
+        <div class="home-section">
+          <div class="hs-head">
+            <h2>Recently Played</h2>
+            <button class="link-btn" data-view="songs">See all</button>
+          </div>
+          <div class="cards-row" id="recentCards"></div>
+        </div>
+
+        <div class="home-section">
+          <div class="hs-head">
+            <h2>Featured Picks</h2>
+            <button class="link-btn" data-view="songs">See all</button>
+          </div>
+          <div class="cards-row" id="featuredCards"></div>
+        </div>
+
+        <div class="home-section">
+          <div class="hs-head">
+            <h2>All Songs</h2>
+            <button class="link-btn" data-view="songs">See all</button>
+          </div>
+          <div id="homeTrackList" class="home-track-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SONGS -->
+    <section class="view" id="view-songs">
+      <div class="view-header">
+        <div>
+          <h2 class="page-title">All Songs</h2>
+          <p class="page-sub" id="songsSubtitle"></p>
+        </div>
+        <div class="view-header-tools">
+          <div class="sort-box">
+            <svg viewBox="0 0 24 24"><path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"/></svg>
+            <select id="sortSelect">
+              <option value="default">Default</option>
+              <option value="az">A → Z</option>
+              <option value="za">Z → A</option>
+            </select>
+          </div>
+          <div class="view-toggle-btns">
+            <button class="vtb active" id="listViewBtn" title="List">
+              <svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
+            </button>
+            <button class="vtb" id="gridViewBtn" title="Grid">
+              <svg viewBox="0 0 24 24"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-header-row">
+        <span class="tlh-num">#</span>
+        <span class="tlh-info">Title</span>
+        <span class="tlh-dur"><svg viewBox="0 0 24 24" width="13"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z" fill="currentColor"/></svg></span>
+        <span class="tlh-fav"></span>
+      </div>
+      <div id="tracksList"></div>
+    </section>
+
+    <!-- FAVOURITES -->
+    <section class="view" id="view-favorites">
+      <div class="view-header">
+        <div>
+          <h2 class="page-title">Favourites</h2>
+          <p class="page-sub" id="favSubtitle">0 songs liked</p>
+        </div>
+      </div>
+      <div class="empty-state" id="favEmpty">
+        <div class="empty-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        </div>
+        <p>No favourites yet</p>
+        <span>Tap ♥ on any track to save it here</span>
+      </div>
+      <div class="tl-header-row" id="favTlHead" style="display:none">
+        <span class="tlh-num">#</span>
+        <span class="tlh-info">Title</span>
+        <span class="tlh-dur"><svg viewBox="0 0 24 24" width="13"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z" fill="currentColor"/></svg></span>
+        <span class="tlh-fav"></span>
+      </div>
+      <div id="favList"></div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="view" id="view-about">
+      <div class="about-hero">
+        <div class="about-bg" id="aboutBg"></div>
+        <div class="about-bg-overlay"></div>
+        <div class="about-hero-inner">
+          <img src="images/ak01.png" alt="Akhil" class="about-avatar" onerror="this.style.opacity=0"/>
+          <div class="about-hero-text">
+            <p class="about-eyebrow">Verified Artist</p>
+            <h1 class="about-title">Akhil</h1>
+            <p class="about-handle">@A-SeriesLyrics · Songwriter · Producer</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="about-content">
+        <div class="about-stats-grid" id="aboutStats"></div>
+        <div class="about-cols">
+          <div class="about-bio-col">
+            <h3 class="about-h3">Biography</h3>
+            <p>Akhil is an artist whose songs carry emotions that words alone cannot express. Every track is a window into raw, honest feeling — crafted from real moments and real hearts.</p>
+            <p>His music explores love, heartbreak, and the quiet spaces of human connection — melodies that stay with you long after the song ends.</p>
+            <div class="about-socials">
+              <h3 class="about-h3" style="margin-top:28px">Connect</h3>
+              <div class="socials-row">
+                <a class="social-pill yt" href="https://www.youtube.com/channel/UCiBVLANfeywV2lgRVuuw-0A" target="_blank"><i class="fa-brands fa-youtube"></i> YouTube</a>
+                <a class="social-pill ig" href="https://www.instagram.com/p/DS7WcHfEgPd/" target="_blank"><i class="fa-brands fa-instagram"></i> Instagram</a>
+              </div>
+            </div>
+          </div>
+          <div class="about-popular-col">
+            <h3 class="about-h3">Popular Tracks</h3>
+            <div id="popularList"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
 
 <!-- PLAYER BAR -->
 <div class="player-bar" id="playerBar">
-  <div class="pb-prog-line"><div class="pb-prog-fill" id="pbProgFill"></div></div>
-  <div class="pb-thumb">
-    <img id="pbCoverImg" src="" alt=""/>
+  <div class="pb-prog-strip">
+    <div class="pb-prog-fill" id="pbProgFill"></div>
   </div>
-  <div class="pb-info">
-    <div class="pb-title" id="pbTitle">—</div>
-    <div class="pb-artist" id="pbArtist">—</div>
-  </div>
-  <div class="pb-controls">
-    <button class="pb-btn" id="pbPrev"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg></button>
-    <button class="pb-btn main" id="pbPlay">
-      <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-      <svg class="icon-pause" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+  <div class="pb-left">
+    <div class="pb-art" id="pbArt"><img id="pbCoverImg" src="" alt=""/></div>
+    <div class="pb-meta">
+      <div class="pb-title" id="pbTitle">Select a track</div>
+      <div class="pb-artist" id="pbArtist">Akhil</div>
+    </div>
+    <button class="pb-heart" id="playerFavBtn" title="Favourite">
+      <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
     </button>
-    <button class="pb-btn" id="pbNext"><svg viewBox="0 0 24 24"><path d="m6 18 8.5-6L6 6v12zm2-8.14 4.96 3.14L8 16.14V9.86zM16 6h2v12h-2z"/></svg></button>
   </div>
-  <div class="pb-vol">
-    <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
-    <input type="range" class="pb-vol-slider" id="pbVolSlider" min="0" max="1" step="0.01" value="0.85"/>
+
+  <div class="pb-center">
+    <div class="pb-controls">
+      <button class="pbc shuffle" id="shuffleBtn" title="Shuffle"><svg viewBox="0 0 24 24"><path d="M10.59 9.17 5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg></button>
+      <button class="pbc" id="prevBtn"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg></button>
+      <button class="pbc main" id="mainPlayBtn">
+        <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        <svg class="icon-pause" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+      </button>
+      <button class="pbc" id="nextBtn"><svg viewBox="0 0 24 24"><path d="m6 18 8.5-6L6 6v12zm2-8.14 4.96 3.14L8 16.14V9.86zM16 6h2v12h-2z"/></svg></button>
+      <button class="pbc repeat" id="repeatBtn" title="Repeat"><svg viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg></button>
+    </div>
+    <div class="pb-seek">
+      <span class="pb-time" id="timeCur">0:00</span>
+      <div class="pb-track" id="progTrack">
+        <div class="pb-fill" id="progFill"></div>
+        <div class="pb-dot" id="progDot"></div>
+      </div>
+      <span class="pb-time" id="timeTot">0:00</span>
+    </div>
+  </div>
+
+  <div class="pb-right">
+    <button class="pbc sm" id="queueBtn" title="Queue"><svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg></button>
+    <div class="pb-vol">
+      <button class="pbc sm" id="muteBtn" title="Mute">
+        <svg class="vi-high" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+        <svg class="vi-off" viewBox="0 0 24 24" style="display:none"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+      </button>
+      <input type="range" class="vol-range" id="volSlider" min="0" max="1" step="0.01" value="0.85"/>
+    </div>
   </div>
 </div>
 
+<!-- QUEUE PANEL -->
+<div class="queue-panel" id="queuePanel">
+  <div class="qp-header">
+    <h3>Up Next</h3>
+    <button id="queueClose">✕</button>
+  </div>
+  <div class="qp-list" id="queueList"></div>
+</div>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mobile-nav">
+  <a class="mn-item active" data-view="home"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Home</span></a>
+  <a class="mn-item" data-view="songs"><svg viewBox="0 0 24 24"><path d="M12 3v9.28a4 4 0 0 0-1-.28C8.69 12 7 13.69 7 16s1.69 4 4 4 4-1.69 4-4V7h4V3h-7z"/></svg><span>Songs</span></a>
+  <a class="mn-item" data-view="favorites"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg><span>Liked</span></a>
+  <a class="mn-item" data-view="about"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Artist</span></a>
+</nav>
+
+<!-- SIDEBAR MOBILE OVERLAY -->
+<div class="sb-overlay" id="sbOverlay"></div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
 <audio id="audio" playsinline webkit-playsinline></audio>
 <script src="app.js"></script>
-<script>
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/sw.js").catch(() => {});
-  }
-</script>
 </body>
 </html>
