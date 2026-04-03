@@ -40,7 +40,6 @@
     <a class="nav-item" data-view="songs" href="#"><svg viewBox="0 0 24 24"><path d="M12 3v9.28a4 4 0 0 0-1-.28C8.69 12 7 13.69 7 16s1.69 4 4 4 4-1.69 4-4V7h4V3h-7z"/></svg><span>Songs</span></a>
     <a class="nav-item" data-view="favorites" href="#"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg><span>Favourites</span><span class="nav-badge" id="favBadge" style="display:none">0</span></a>
     <a class="nav-item" data-view="about" href="#"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Artist</span></a>
-
     <p class="nav-section-label" style="margin-top:24px">Library</p>
     <div class="sidebar-search-box">
       <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
@@ -58,22 +57,15 @@
 
 <!-- MAIN -->
 <div class="main-wrap">
-
-  <!-- TOP BAR -->
   <header class="topbar" id="topbar">
-    <button class="menu-btn" id="mobileMenuBtn">
-      <span></span><span></span><span></span>
-    </button>
-    <div class="topbar-logo">
-      <span class="logo-name">AKHIL</span>
-      <span class="logo-tag">Music</span>
-    </div>
+    <button class="menu-btn" id="mobileMenuBtn"><span></span><span></span><span></span></button>
+    <div class="topbar-logo"><span class="logo-name">AKHIL</span><span class="logo-tag">Music</span></div>
     <div class="topbar-search-wrap">
       <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
       <input type="text" id="topbarSearch" placeholder="Search songs, moods…"/>
     </div>
     <div class="topbar-right">
-      <button class="topbar-icon-btn shuffle-active" id="topShuffleBtn" title="Shuffle">
+      <button class="topbar-icon-btn" id="topShuffleBtn" title="Shuffle">
         <svg viewBox="0 0 24 24"><path d="M10.59 9.17 5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>
       </button>
       <button class="topbar-icon-btn" id="topRepeatBtn" title="Repeat">
@@ -82,7 +74,6 @@
     </div>
   </header>
 
-  <!-- VIEWS -->
   <main class="content" id="content">
 
     <!-- HOME -->
@@ -96,12 +87,8 @@
             <h1 class="hero-h1">Music That <em>Moves</em><br/>The Soul</h1>
             <p class="hero-p">Original compositions — where every note carries a story and silence speaks louder than words.</p>
             <div class="hero-actions">
-              <button class="btn-primary" id="playAllBtn">
-                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Play All
-              </button>
-              <button class="btn-ghost" id="shufflePlayBtn">
-                <svg viewBox="0 0 24 24"><path d="M10.59 9.17 5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg> Shuffle
-              </button>
+              <button class="btn-primary" id="playAllBtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Play All</button>
+              <button class="btn-ghost" id="shufflePlayBtn"><svg viewBox="0 0 24 24"><path d="M10.59 9.17 5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg> Shuffle</button>
             </div>
             <div class="hero-counters">
               <div class="hc"><b id="hcTracks">48</b><span>Tracks</span></div>
@@ -114,10 +101,7 @@
           <div class="hero-visual">
             <div class="artist-float-card">
               <img src="images/ak01.png" id="heroArtistImg" alt="Akhil" onerror="this.src=''"/>
-              <div class="artist-float-info">
-                <span class="afc-label">Featured</span>
-                <span class="afc-name">Akhil</span>
-              </div>
+              <div class="artist-float-info"><span class="afc-label">Featured</span><span class="afc-name">Akhil</span></div>
             </div>
             <div class="mini-wave" id="heroWave">
               <span></span><span></span><span></span><span></span><span></span>
@@ -130,29 +114,17 @@
           </div>
         </div>
       </div>
-
       <div class="home-sections">
         <div class="home-section">
-          <div class="hs-head">
-            <h2>Recently Played</h2>
-            <button class="link-btn" data-view="songs">See all</button>
-          </div>
+          <div class="hs-head"><h2>Recently Played</h2><button class="link-btn" data-view="songs">See all</button></div>
           <div class="cards-row" id="recentCards"></div>
         </div>
-
         <div class="home-section">
-          <div class="hs-head">
-            <h2>Featured Picks</h2>
-            <button class="link-btn" data-view="songs">See all</button>
-          </div>
+          <div class="hs-head"><h2>Featured Picks</h2><button class="link-btn" data-view="songs">See all</button></div>
           <div class="cards-row" id="featuredCards"></div>
         </div>
-
         <div class="home-section">
-          <div class="hs-head">
-            <h2>All Songs</h2>
-            <button class="link-btn" data-view="songs">See all</button>
-          </div>
+          <div class="hs-head"><h2>All Songs</h2><button class="link-btn" data-view="songs">See all</button></div>
           <div id="homeTrackList" class="home-track-list"></div>
         </div>
       </div>
@@ -161,10 +133,7 @@
     <!-- SONGS -->
     <section class="view" id="view-songs">
       <div class="view-header">
-        <div>
-          <h2 class="page-title">All Songs</h2>
-          <p class="page-sub" id="songsSubtitle"></p>
-        </div>
+        <div><h2 class="page-title">All Songs</h2><p class="page-sub" id="songsSubtitle"></p></div>
         <div class="view-header-tools">
           <div class="sort-box">
             <svg viewBox="0 0 24 24"><path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"/></svg>
@@ -175,19 +144,13 @@
             </select>
           </div>
           <div class="view-toggle-btns">
-            <button class="vtb active" id="listViewBtn" title="List">
-              <svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
-            </button>
-            <button class="vtb" id="gridViewBtn" title="Grid">
-              <svg viewBox="0 0 24 24"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></svg>
-            </button>
+            <button class="vtb active" id="listViewBtn" title="List"><svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg></button>
+            <button class="vtb" id="gridViewBtn" title="Grid"><svg viewBox="0 0 24 24"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></svg></button>
           </div>
         </div>
       </div>
-
       <div class="tl-header-row">
-        <span class="tlh-num">#</span>
-        <span class="tlh-info">Title</span>
+        <span class="tlh-num">#</span><span class="tlh-info">Title</span>
         <span class="tlh-dur"><svg viewBox="0 0 24 24" width="13"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z" fill="currentColor"/></svg></span>
         <span class="tlh-fav"></span>
       </div>
@@ -197,21 +160,14 @@
     <!-- FAVOURITES -->
     <section class="view" id="view-favorites">
       <div class="view-header">
-        <div>
-          <h2 class="page-title">Favourites</h2>
-          <p class="page-sub" id="favSubtitle">0 songs liked</p>
-        </div>
+        <div><h2 class="page-title">Favourites</h2><p class="page-sub" id="favSubtitle">0 songs liked</p></div>
       </div>
       <div class="empty-state" id="favEmpty">
-        <div class="empty-icon">
-          <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-        </div>
-        <p>No favourites yet</p>
-        <span>Tap ♥ on any track to save it here</span>
+        <div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></div>
+        <p>No favourites yet</p><span>Tap ♥ on any track to save it here</span>
       </div>
       <div class="tl-header-row" id="favTlHead" style="display:none">
-        <span class="tlh-num">#</span>
-        <span class="tlh-info">Title</span>
+        <span class="tlh-num">#</span><span class="tlh-info">Title</span>
         <span class="tlh-dur"><svg viewBox="0 0 24 24" width="13"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z" fill="currentColor"/></svg></span>
         <span class="tlh-fav"></span>
       </div>
@@ -232,7 +188,6 @@
           </div>
         </div>
       </div>
-
       <div class="about-content">
         <div class="about-stats-grid" id="aboutStats"></div>
         <div class="about-cols">
@@ -248,10 +203,7 @@
               </div>
             </div>
           </div>
-          <div class="about-popular-col">
-            <h3 class="about-h3">Popular Tracks</h3>
-            <div id="popularList"></div>
-          </div>
+          <div class="about-popular-col"><h3 class="about-h3">Popular Tracks</h3><div id="popularList"></div></div>
         </div>
       </div>
     </section>
@@ -259,12 +211,15 @@
   </main>
 </div>
 
-<!-- PLAYER BAR -->
+<!-- ══════════════════════════════════════
+     MINI PLAYER BAR (bottom)
+══════════════════════════════════════ -->
 <div class="player-bar" id="playerBar">
-  <div class="pb-prog-strip">
-    <div class="pb-prog-fill" id="pbProgFill"></div>
-  </div>
-  <div class="pb-left">
+  <!-- thin top progress strip -->
+  <div class="pb-prog-strip"><div class="pb-prog-fill" id="pbProgFill"></div></div>
+
+  <!-- clickable left area opens fullscreen -->
+  <div class="pb-left" id="pbClickArea">
     <div class="pb-art" id="pbArt"><img id="pbCoverImg" src="" alt=""/></div>
     <div class="pb-meta">
       <div class="pb-title" id="pbTitle">Select a track</div>
@@ -277,15 +232,16 @@
 
   <div class="pb-center">
     <div class="pb-controls">
-      <button class="pbc shuffle" id="shuffleBtn" title="Shuffle"><svg viewBox="0 0 24 24"><path d="M10.59 9.17 5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg></button>
+      <button class="pbc shuffle" id="shuffleBtn"><svg viewBox="0 0 24 24"><path d="M10.59 9.17 5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg></button>
       <button class="pbc" id="prevBtn"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg></button>
       <button class="pbc main" id="mainPlayBtn">
         <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
         <svg class="icon-pause" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
       </button>
       <button class="pbc" id="nextBtn"><svg viewBox="0 0 24 24"><path d="m6 18 8.5-6L6 6v12zm2-8.14 4.96 3.14L8 16.14V9.86zM16 6h2v12h-2z"/></svg></button>
-      <button class="pbc repeat" id="repeatBtn" title="Repeat"><svg viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg></button>
+      <button class="pbc repeat" id="repeatBtn"><svg viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg></button>
     </div>
+    <!-- ENHANCED seek bar -->
     <div class="pb-seek">
       <span class="pb-time" id="timeCur">0:00</span>
       <div class="pb-track" id="progTrack">
@@ -297,9 +253,9 @@
   </div>
 
   <div class="pb-right">
-    <button class="pbc sm" id="queueBtn" title="Queue"><svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg></button>
+    <button class="pbc sm" id="queueBtn"><svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg></button>
     <div class="pb-vol">
-      <button class="pbc sm" id="muteBtn" title="Mute">
+      <button class="pbc sm" id="muteBtn">
         <svg class="vi-high" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
         <svg class="vi-off" viewBox="0 0 24 24" style="display:none"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
       </button>
@@ -308,12 +264,101 @@
   </div>
 </div>
 
+<!-- ══════════════════════════════════════
+     FULLSCREEN PLAYER (Spotify-style)
+══════════════════════════════════════ -->
+<div class="fs-overlay" id="fsOverlay">
+  <!-- Dynamic blurred background from album art -->
+  <div class="fs-bg" id="fsBg"></div>
+  <div class="fs-bg-shade"></div>
+
+  <div class="fs-wrap" id="fsWrap">
+    <!-- Drag handle + header -->
+    <div class="fs-topbar" id="fsDragHandle">
+      <div class="fs-handle-bar"></div>
+      <div class="fs-header">
+        <button class="fs-back-btn" id="fsCloseBtn" aria-label="Minimise">
+          <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+        </button>
+        <div class="fs-header-info">
+          <span class="fs-playing-from">Now Playing</span>
+          <span class="fs-playlist-name">Akhil Music</span>
+        </div>
+        <button class="fs-more-btn" aria-label="More options">
+          <svg viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Big album artwork -->
+    <div class="fs-artwork-wrap">
+      <div class="fs-artwork" id="fsArtwork">
+        <img id="fsArtworkImg" src="" alt="Album Art" onerror="this.src='images/ak01.png'"/>
+      </div>
+    </div>
+
+    <!-- Song info + heart -->
+    <div class="fs-info">
+      <div class="fs-song-text">
+        <div class="fs-song-title" id="fsSongTitle">Select a track</div>
+        <div class="fs-song-artist" id="fsSongArtist">Akhil</div>
+      </div>
+      <button class="fs-heart-btn" id="fsFavBtn">
+        <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      </button>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="fs-progress-wrap">
+      <div class="fs-progress-bar" id="fsProgressBar">
+        <div class="fs-progress-fill" id="fsProgressFill"></div>
+        <div class="fs-progress-thumb" id="fsProgressThumb"></div>
+      </div>
+      <div class="fs-times">
+        <span id="fsTimeCur">0:00</span>
+        <span id="fsTimeTot">0:00</span>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="fs-controls">
+      <button class="fs-ctrl-sm" id="fsShuffleBtn">
+        <svg viewBox="0 0 24 24"><path d="M10.59 9.17 5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>
+      </button>
+      <button class="fs-ctrl-prev" id="fsPrevBtn">
+        <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
+      </button>
+      <button class="fs-ctrl-play" id="fsPlayBtn">
+        <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        <svg class="icon-pause" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+      </button>
+      <button class="fs-ctrl-next" id="fsNextBtn">
+        <svg viewBox="0 0 24 24"><path d="m6 18 8.5-6L6 6v12zm2-8.14 4.96 3.14L8 16.14V9.86zM16 6h2v12h-2z"/></svg>
+      </button>
+      <button class="fs-ctrl-sm" id="fsRepeatBtn">
+        <svg viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg>
+      </button>
+    </div>
+
+    <!-- Volume row -->
+    <div class="fs-vol-row">
+      <svg class="fs-vol-icon" viewBox="0 0 24 24"><path d="M18.5 12c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.73 2.5-2.25 2.5-4.03zM5 9v6h4l5 5V4L9 9H5z"/></svg>
+      <input type="range" class="fs-vol-slider" id="fsVolSlider" min="0" max="1" step="0.01" value="0.85"/>
+      <svg class="fs-vol-icon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+    </div>
+
+    <!-- Up next / Queue -->
+    <div class="fs-queue-section">
+      <div class="fs-queue-label">Up Next</div>
+      <div class="fs-queue-list" id="fsQueueList"></div>
+    </div>
+
+  </div><!-- /fs-wrap -->
+</div><!-- /fs-overlay -->
+
 <!-- QUEUE PANEL -->
 <div class="queue-panel" id="queuePanel">
-  <div class="qp-header">
-    <h3>Up Next</h3>
-    <button id="queueClose">✕</button>
-  </div>
+  <div class="qp-header"><h3>Up Next</h3><button id="queueClose">✕</button></div>
   <div class="qp-list" id="queueList"></div>
 </div>
 
@@ -325,12 +370,8 @@
   <a class="mn-item" data-view="about"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Artist</span></a>
 </nav>
 
-<!-- SIDEBAR MOBILE OVERLAY -->
 <div class="sb-overlay" id="sbOverlay"></div>
-
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
-
 <audio id="audio" playsinline webkit-playsinline></audio>
 <script src="app.js"></script>
 </body>
