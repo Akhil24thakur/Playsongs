@@ -763,7 +763,7 @@ body.light .hero-band-blur { background: linear-gradient(to right, rgba(245,243,
   background: rgba(14,14,16,0.97);
   backdrop-filter: blur(48px) saturate(2);
   -webkit-backdrop-filter: blur(48px) saturate(2);
-  border-top: 1px solid var(--bd-2);
+  border-top: 0px solid var(--bd-2);
   display: flex; align-items: center; gap: 0;
   padding: 0 24px;
   z-index: 500;
