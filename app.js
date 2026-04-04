@@ -188,7 +188,7 @@ function syncFSToCurrentSong() {
     fsArtwork.classList.add('art-pop');
     setTimeout(() => fsArtwork && fsArtwork.classList.remove('art-pop'), 400);
     fsArtworkImg.src = t.cover;
-    fsArtworkImg.onerror = () => { fsArtworkImg.src = 'images/icon.png'; };
+    fsArtworkImg.onerror = () => { fsArtworkImg.src = 'images/ak01.png'; };
   }
 
   if (fsSongTitle)  fsSongTitle.textContent  = t.title;
