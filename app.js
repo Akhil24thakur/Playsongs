@@ -3,6 +3,16 @@
    Fullscreen Player + Better Seek + MediaSession
 ═══════════════════════════════════════════════ */
 
+/* ── SERVICE WORKER REGISTRATION ── */
+/* Must be at the very top so it registers as early as possible */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => console.log('[SW] Registered, scope:', reg.scope))
+      .catch(err => console.warn('[SW] Failed:', err));
+  });
+}
+
 /* ─── PLAYLIST ──────────────────────────────── */
 const playlist = [
   { title:'Tera Pyar',           artist:'Akhil', src:'songs/Tera Pyar.mp3',           cover:'images/Tera Pyar.png'          },
@@ -65,6 +75,43 @@ let shuffleQueue = [], shufflePos = 0;
 let isMuted = false, prevVol = 0.85, wakeLock = null;
 let displayedList = [...playlist.keys()];
 let fsIsOpen = false;
+
+/* ── PWA Install prompt — captured early ── */
+let _pwaPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  _pwaPrompt = e;
+  showInstallBtn();
+});
+window.addEventListener('appinstalled', () => {
+  _pwaPrompt = null;
+  hideInstallBtn();
+  console.log('[PWA] Installed!');
+});
+
+function showInstallBtn() {
+  let btn = document.getElementById('pwaInstallBtn');
+  if (!btn) {
+    btn = document.createElement('button');
+    btn.id        = 'pwaInstallBtn';
+    btn.className = 'install-btn';
+    btn.innerHTML = '⬇ Install App';
+    btn.addEventListener('click', async () => {
+      if (!_pwaPrompt) return;
+      _pwaPrompt.prompt();
+      const { outcome } = await _pwaPrompt.userChoice;
+      console.log('[PWA] Choice:', outcome);
+      _pwaPrompt = null;
+      hideInstallBtn();
+    });
+    document.body.appendChild(btn);
+  }
+  btn.style.display = 'flex';
+}
+function hideInstallBtn() {
+  const btn = document.getElementById('pwaInstallBtn');
+  if (btn) btn.style.display = 'none';
+}
 
 const I_PLAY  = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
 const I_PAUSE = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
@@ -179,11 +226,7 @@ function closeFullscreen() {
 function syncFSToCurrentSong() {
   if (cur < 0 || !playlist[cur]) return;
   const t = playlist[cur];
-
-  // background blur
   if (fsBg) fsBg.style.backgroundImage = `url(${t.cover})`;
-
-  // artwork with pop animation when song changes
   if (fsArtworkImg && fsArtworkImg.dataset.cur !== String(cur)) {
     fsArtworkImg.dataset.cur = cur;
     fsArtwork.classList.add('art-pop');
@@ -191,7 +234,6 @@ function syncFSToCurrentSong() {
     fsArtworkImg.src = t.cover;
     fsArtworkImg.onerror = () => { fsArtworkImg.src = 'images/ak01.png'; };
   }
-
   if (fsSongTitle)  fsSongTitle.textContent  = t.title;
   if (fsSongArtist) fsSongArtist.textContent = t.artist;
   if (fsFavBtn)     fsFavBtn.classList.toggle('faved', favourites.has(cur));
@@ -238,15 +280,13 @@ function updateFSVolUI() {
   fsVolSlider.style.background = `linear-gradient(to right,rgba(232,149,109,0.85) ${v}%,rgba(255,255,255,0.12) ${v}%)`;
 }
 
-/* ── Swipe-down to close ── */
+/* ── Swipe-down to close fullscreen ── */
 (function() {
   let sy = 0, cy = 0, dragging = false;
   if (!fsOverlay) return;
-
   fsOverlay.addEventListener('touchstart', e => {
     sy = cy = e.touches[0].clientY; dragging = false;
   }, { passive: true });
-
   fsOverlay.addEventListener('touchmove', e => {
     if (!fsIsOpen) return;
     if (e.target.closest('.fs-queue-list,.fs-progress-bar')) return;
@@ -258,7 +298,6 @@ function updateFSVolUI() {
       fsOverlay.style.transform = `translateY(${dy * 0.52}px)`;
     }
   }, { passive: true });
-
   fsOverlay.addEventListener('touchend', () => {
     if (!dragging) return;
     dragging = false;
@@ -278,33 +317,22 @@ function updateFSVolUI() {
 (function() {
   if (!fsProgressBar) return;
   let drag = false;
-
   function fsScrub(clientX) {
     const r = fsProgressBar.getBoundingClientRect();
     const pct = Math.max(0, Math.min(1, (clientX - r.left) / r.width));
     if (audio.duration) { audio.currentTime = pct * audio.duration; pushPositionState(); }
   }
-  function updateFSDot(pct) {
-    if (fsProgressFill)  fsProgressFill.style.width  = pct + '%';
-    if (fsProgressThumb) fsProgressThumb.style.left  = pct + '%';
-    if (fsTimeCur)       fsTimeCur.textContent        = fmt(audio.currentTime);
-  }
-
   fsProgressBar.addEventListener('click',     e => { fsScrub(e.clientX); });
   fsProgressBar.addEventListener('mousedown', e => { drag = true; fsProgressBar.classList.add('dragging'); fsScrub(e.clientX); });
   fsProgressBar.addEventListener('touchstart',e => { drag = true; fsProgressBar.classList.add('dragging'); fsScrub(e.touches[0].clientX); }, { passive: true });
-  fsProgressBar.addEventListener('touchmove', e => {
-    e.stopPropagation();
-    if (drag) fsScrub(e.touches[0].clientX);
-  }, { passive: true });
+  fsProgressBar.addEventListener('touchmove', e => { e.stopPropagation(); if (drag) fsScrub(e.touches[0].clientX); }, { passive: true });
   fsProgressBar.addEventListener('touchend',  () => { drag = false; fsProgressBar.classList.remove('dragging'); });
   document.addEventListener('mousemove', e => { if (drag) fsScrub(e.clientX); });
   document.addEventListener('mouseup',   () => { drag = false; fsProgressBar.classList.remove('dragging'); });
 })();
 
-/* ── Open FS when clicking pb-left (cover/title area) ── */
+/* ── Open FS on pb-left click ── */
 function onPBAreaClick(e) {
-  // Ignore if clicking controls
   if (e.target.closest('.pb-heart, .pbc, .pb-vol, .pb-track, .vol-range')) return;
   if (cur < 0) return;
   openFullscreen();
@@ -316,38 +344,22 @@ function onPBAreaClick(e) {
 (function() {
   if (!progTrack) return;
   let drag = false;
-
   function scrub(clientX) {
     const r = progTrack.getBoundingClientRect();
     const pct = Math.max(0, Math.min(1, (clientX - r.left) / r.width));
     if (audio.duration) { audio.currentTime = pct * audio.duration; pushPositionState(); }
   }
-
   progTrack.addEventListener('click',     e => scrub(e.clientX));
-  progTrack.addEventListener('mousedown', e => {
-    drag = true;
-    progTrack.classList.add('dragging');
-    scrub(e.clientX);
-    e.stopPropagation(); // don't bubble to pb-left (would open FS)
-  });
-  progTrack.addEventListener('touchstart', e => {
-    drag = true;
-    progTrack.classList.add('dragging');
-    scrub(e.touches[0].clientX);
-  }, { passive: true });
-  progTrack.addEventListener('touchmove', e => {
-    if (drag) scrub(e.touches[0].clientX);
-  }, { passive: true });
-  progTrack.addEventListener('touchend', () => {
-    drag = false;
-    progTrack.classList.remove('dragging');
-  });
+  progTrack.addEventListener('mousedown', e => { drag = true; progTrack.classList.add('dragging'); scrub(e.clientX); e.stopPropagation(); });
+  progTrack.addEventListener('touchstart', e => { drag = true; progTrack.classList.add('dragging'); scrub(e.touches[0].clientX); }, { passive: true });
+  progTrack.addEventListener('touchmove', e => { if (drag) scrub(e.touches[0].clientX); }, { passive: true });
+  progTrack.addEventListener('touchend', () => { drag = false; progTrack.classList.remove('dragging'); });
   document.addEventListener('mousemove', e => { if (drag) scrub(e.clientX); });
   document.addEventListener('mouseup',   () => { drag = false; progTrack.classList.remove('dragging'); });
 })();
 
 /* ══════════════════════════════════════════════
-   MEDIA SESSION (Android notification bar)
+   MEDIA SESSION
 ══════════════════════════════════════════════ */
 function setRichMediaMetadata(t) {
   if (!('mediaSession' in navigator) || !t) return;
@@ -358,7 +370,6 @@ function setRichMediaMetadata(t) {
     artwork: [
       { src: art, sizes: '96x96',   type: 'image/png' },
       { src: art, sizes: '192x192', type: 'image/png' },
-      { src: art, sizes: '256x256', type: 'image/png' },
       { src: art, sizes: '512x512', type: 'image/png' },
     ]
   });
@@ -682,11 +693,8 @@ async function loadPlay(idx) {
   if (idx < 0 || idx >= playlist.length) return;
   const prev = cur; cur = idx;
   const t = playlist[cur];
-
   audio.src    = t.src;
   audio.volume = parseFloat(volSlider ? volSlider.value : '0.85');
-
-  // update mini bar with cover pop animation
   pbTitle.textContent  = t.title;
   pbArtist.textContent = t.artist;
   if (pbCoverImg.src !== absURL(t.cover)) {
@@ -695,30 +703,20 @@ async function loadPlay(idx) {
     pbCoverImg.src     = t.cover;
     pbCoverImg.onerror = () => { pbCoverImg.src = 'images/ak01.png'; };
   }
-
   updateHeroBg(cur);
   updateAllActiveStates(prev);
-
   if (shuffleOn && shuffleQueue.length) {
     const pos = shuffleQueue.indexOf(cur);
     if (pos >= 0) shufflePos = pos; else buildShuffleQueue();
   }
-
   recentlyPlayed = [cur,...recentlyPlayed.filter(i => i!==cur)].slice(0,20);
   buildCardRow(recentCards, recentlyPlayed.slice(0,8));
-
   if (pb_heart) pb_heart.classList.toggle('faved', favourites.has(cur));
   buildQueueList();
-
-  // Android notification
   setRichMediaMetadata(t);
   registerMediaActions();
-
-  // sync fullscreen if open
   if (fsIsOpen) { syncFSToCurrentSong(); buildFSQueue(); }
-
   audio.play().catch(() => setPlayState(false));
-
   for (let i = 1; i <= 3; i++) { new Image().src = playlist[(cur+i)%playlist.length].cover; }
   try { localStorage.setItem('akhil_cur', cur); } catch(_) {}
   savePrefs();
@@ -890,7 +888,6 @@ async function restoreState() {
     setRichMediaMetadata(t);
     setPlayState(false);
   } catch(_) {}
-
   if (shuffleOn && cur >= 0) buildShuffleQueue();
   [shuffleBtn,topShuffleBtn,fsShuffleBtn].forEach(b => { if(b) b.classList.toggle('on',shuffleOn); });
   if (repeatBtn) { repeatBtn.classList.toggle('on',repeatMode>0); repeatBtn.classList.toggle('repeat-1',repeatMode===2); }
@@ -932,10 +929,7 @@ if (themeToggleBtn) {
 
 /* ─── BIND EVENTS ────────────────────────────── */
 function bindEvents() {
-  /* mini player bar: click left area = open fullscreen */
   if (pbClickArea) pbClickArea.addEventListener('click', onPBAreaClick);
-
-  /* controls (stop propagation so they don't also open FS) */
   if (mainPlayBtn) mainPlayBtn.addEventListener('click', e => { e.stopPropagation(); togglePlay(); });
   if (prevBtn)     prevBtn.addEventListener('click',     e => { e.stopPropagation(); audio.currentTime>3?(audio.currentTime=0):loadPlay(getPrevIdx()); });
   if (nextBtn)     nextBtn.addEventListener('click',     e => { e.stopPropagation(); const n=getNextIdx(); if(n>=0)loadPlay(n); });
@@ -946,8 +940,6 @@ function bindEvents() {
   if (pb_heart)    pb_heart.addEventListener('click',    e => { e.stopPropagation(); if(cur>=0) toggleFav(cur); });
   if (queueBtn)    queueBtn.addEventListener('click',    e => { e.stopPropagation(); queuePanel.classList.toggle('open'); buildQueueList(); });
   if (queueClose)  queueClose.addEventListener('click',  () => queuePanel.classList.remove('open'));
-
-  /* fullscreen controls */
   if (fsCloseBtn)   fsCloseBtn.addEventListener('click',   closeFullscreen);
   if (fsFavBtn)     fsFavBtn.addEventListener('click',     () => { if(cur>=0) toggleFav(cur); });
   if (fsPlayBtn)    fsPlayBtn.addEventListener('click',    togglePlay);
@@ -955,8 +947,6 @@ function bindEvents() {
   if (fsNextBtn)    fsNextBtn.addEventListener('click',    () => { const n=getNextIdx(); if(n>=0)loadPlay(n); });
   if (fsShuffleBtn) fsShuffleBtn.addEventListener('click', toggleShuffle);
   if (fsRepeatBtn)  fsRepeatBtn.addEventListener('click',  toggleRepeat);
-
-  /* play all / shuffle play */
   const playAllBtn = $('playAllBtn');
   if (playAllBtn) playAllBtn.addEventListener('click', () => { loadPlay(0); switchView('songs'); });
   const shufflePlayBtn = $('shufflePlayBtn');
@@ -965,12 +955,8 @@ function bindEvents() {
     loadPlay(Math.floor(Math.random()*playlist.length));
     switchView('songs');
   });
-
-  /* mobile menu */
   if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', () => { sidebar.classList.toggle('open'); sbOverlay.classList.toggle('show'); });
   if (sbOverlay)     sbOverlay.addEventListener('click',     () => { sidebar.classList.remove('open'); sbOverlay.classList.remove('show'); });
-
-  /* search */
   [sidebarSearch, topbarSearch].forEach(inp => {
     if (!inp) return;
     inp.addEventListener('input', e => {
@@ -980,12 +966,9 @@ function bindEvents() {
       switchView('songs');
     });
   });
-
   if (sortSelect) sortSelect.addEventListener('change', () => applySort(sortSelect.value));
-
   if (listViewBtn) listViewBtn.addEventListener('click', () => { isGridView=false; tracksList.classList.remove('grid-view'); listViewBtn.classList.add('active'); if(gridViewBtn)gridViewBtn.classList.remove('active'); });
   if (gridViewBtn) gridViewBtn.addEventListener('click', () => { isGridView=true; tracksList.classList.add('grid-view'); gridViewBtn.classList.add('active'); if(listViewBtn)listViewBtn.classList.remove('active'); });
-
   document.querySelectorAll('.nav-item[data-view]').forEach(el => {
     el.addEventListener('click', e => { e.preventDefault(); switchView(el.dataset.view); sidebar.classList.remove('open'); sbOverlay.classList.remove('show'); });
   });
@@ -994,16 +977,6 @@ function bindEvents() {
   });
   document.querySelectorAll('.link-btn[data-view]').forEach(el => {
     el.addEventListener('click', () => switchView(el.dataset.view));
-  });
-
-  /* PWA */
-  let deferredPrompt;
-  window.addEventListener('beforeinstallprompt', e => {
-    e.preventDefault(); deferredPrompt = e;
-    const btn = document.createElement('button');
-    btn.innerText = 'Install App'; btn.className = 'install-btn';
-    btn.onclick = async () => { deferredPrompt.prompt(); await deferredPrompt.userChoice; btn.remove(); };
-    document.body.appendChild(btn);
   });
 }
 
