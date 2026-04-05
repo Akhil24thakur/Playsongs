@@ -5,6 +5,7 @@
 
 /* ─── PLAYLIST ──────────────────────────────── */
 const playlist = [
+  { title:'Tera Pyar',           artist:'Akhil', src:'songs/Tera Pyar.mp3',           cover:'images/Tera Pyar.png'          },
   { title:'Kitab Likhunga',           artist:'Akhil', src:'songs/Kitab Likhunga.mp3',           cover:'images/Kitab Likhunga.png'          },
   { title:'Ek Baat Reh Gayi Thi',     artist:'Akhil', src:'songs/Ek Baat Reh Gayi Thi.mp3',     cover:'images/Ek Baat Reh Gayi Thi.png'    },
   { title:'Jhanjron Ka Joda',          artist:'Akhil', src:'songs/Jhanjron Ka Joda.mp3',          cover:'images/Jhanjron Ka Joda.png'        },
@@ -188,7 +189,7 @@ function syncFSToCurrentSong() {
     fsArtwork.classList.add('art-pop');
     setTimeout(() => fsArtwork && fsArtwork.classList.remove('art-pop'), 400);
     fsArtworkImg.src = t.cover;
-    fsArtworkImg.onerror = () => { fsArtworkImg.src = 'images/icon.png'; };
+    fsArtworkImg.onerror = () => { fsArtworkImg.src = 'images/ak01.png'; };
   }
 
   if (fsSongTitle)  fsSongTitle.textContent  = t.title;
@@ -217,7 +218,7 @@ function buildFSQueue() {
     const el = document.createElement('div');
     el.className = 'fs-queue-item';
     el.innerHTML = `
-      <img src="${t.cover}" alt="${t.title}" loading="lazy" onerror="this.src='images/icon.png'"/>
+      <img src="${t.cover}" alt="${t.title}" loading="lazy" onerror="this.src='images/ak01.png'"/>
       <div class="fs-queue-info">
         <div class="fs-q-title">${t.title}</div>
         <div class="fs-q-artist">${t.artist}</div>
@@ -616,7 +617,7 @@ function switchView(name) {
 
 function updateAboutBg() {
   if (!aboutBg) return;
-  const cover = cur >= 0 ? playlist[cur].cover : 'images/icon.png';
+  const cover = cur >= 0 ? playlist[cur].cover : 'images/ak01.png';
   aboutBg.style.cssText = `background-image:url(${cover});background-size:cover;background-position:center;filter:blur(40px) saturate(1.2) brightness(0.3)`;
 }
 
@@ -692,7 +693,7 @@ async function loadPlay(idx) {
     pbCoverImg.classList.add('swapping');
     setTimeout(() => pbCoverImg.classList.remove('swapping'), 360);
     pbCoverImg.src     = t.cover;
-    pbCoverImg.onerror = () => { pbCoverImg.src = 'images/icon.png'; };
+    pbCoverImg.onerror = () => { pbCoverImg.src = 'images/ak01.png'; };
   }
 
   updateHeroBg(cur);
