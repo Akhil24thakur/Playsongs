@@ -13,7 +13,7 @@ html{font-size:16px;scroll-behavior:smooth;-webkit-text-size-adjust:100%}
   --acc-glow:rgba(232,149,109,0.22);--acc-subtle:rgba(232,149,109,0.08);
   --grad:linear-gradient(135deg,#f0b48a 0%,#e8956d 50%,#c4623a 100%);
   --grad-text:linear-gradient(90deg,#f0b48a,#e8956d 55%,#c4623a);
-  --bg-base:#0c0c0e;--bg-1:#111114;--bg-2:#17171b;--bg-3:#1e1e23;
+  --bg-base:#0b0b0b;--bg-1:#111114;--bg-2:#17171b;--bg-3:#1e1e23;
   --bg-4:#252529;--bg-5:#2e2e33;
   --tx-1:#f2ede8;--tx-2:#9a938d;--tx-3:#5c5650;--tx-4:#38342f;
   --bd-1:rgba(255,255,255,0.04);--bd-2:rgba(255,255,255,0.08);
