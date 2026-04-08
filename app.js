@@ -604,7 +604,7 @@ function applyFilter() {
 
 /* ─── DURATION ───────────────────────────────── */
 function prefetchDuration(src, idx, container) {
-  const tmp = new Audio(); tmp.preload = 'metadata'; tmp.src = src;
+  const tmp = new Audio(); tmp.preload = 'none'; tmp.src = src;
   tmp.addEventListener('loadedmetadata', () => {
     const el = document.getElementById(`dur-${container}-${idx}`);
     if (el) el.textContent = fmt(tmp.duration);
