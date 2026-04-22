@@ -15,8 +15,8 @@ if ('serviceWorker' in navigator) {
 
 /* ─── PLAYLIST ──────────────────────────────── */
 const playlist = [
+  { title:'Lets Talk',           artist:'Akhil', src:'songs/Lets Talk.mp3',           cover:'images/Lets Talk.png'          },
   { title:'Juda hua',           artist:'Akhil', src:'songs/Juda hua.mp3',           cover:'images/Juda hua.png'          },
-
   { title:'Tera Pyar',           artist:'Akhil', src:'songs/Tera Pyar.mp3',           cover:'images/Tera Pyar.png'          },
   { title:'Kitab Likhunga',           artist:'Akhil', src:'songs/Kitab Likhunga.mp3',           cover:'images/Kitab Likhunga.png'          },
   { title:'Ek Baat Reh Gayi Thi',     artist:'Akhil', src:'songs/Ek Baat Reh Gayi Thi.mp3',     cover:'images/Ek Baat Reh Gayi Thi.png'    },
