@@ -7,7 +7,7 @@ const CACHE_NAME  = 'akhil-v1';
 const AUDIO_CACHE = 'akhil-audio-v1';
 
 const SHELL = [
-  './',
+  './', 
   './index.html',
   './styles.css',
   './app.js',
