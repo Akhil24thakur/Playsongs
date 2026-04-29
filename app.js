@@ -15,6 +15,7 @@ if ('serviceWorker' in navigator) {
 
 /* ─── PLAYLIST ──────────────────────────────── */
 const playlist = [
+  { title:'T-Shirt',           artist:'Akhil', src:'songs/tshirt.mp3',           cover:'images/tshirt.png'          },
   { title:'Lets Talk',           artist:'Akhil', src:'songs/Lets Talk.mp3',           cover:'images/Lets Talk.png'          },
   { title:'Juda hua',           artist:'Akhil', src:'songs/Juda hua.mp3',           cover:'images/Juda hua.png'          },
   { title:'Tera Pyar',           artist:'Akhil', src:'songs/Tera Pyar.mp3',           cover:'images/Tera Pyar.png'          },
