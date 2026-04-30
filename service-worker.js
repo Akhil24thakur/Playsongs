@@ -1,8 +1,3 @@
-/* ═══════════════════════════════════════════════
-   AKHIL MUSIC — Service Worker  (sw.js)
-   Place in ROOT folder next to index.html
-═══════════════════════════════════════════════ */
-
 const CACHE_NAME  = 'akhil-v1';
 const AUDIO_CACHE = 'akhil-audio-v1';
 
