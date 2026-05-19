@@ -1,8 +1,3 @@
-/* ═══════════════════════════════════════════════
-   AKHIL MUSIC — APP v5
-   Fullscreen Player + Better Seek + MediaSession
-═══════════════════════════════════════════════ */
-
 /* ── SERVICE WORKER REGISTRATION ── */
 /* Must be at the very top so it registers as early as possible */
 if ('serviceWorker' in navigator) {
