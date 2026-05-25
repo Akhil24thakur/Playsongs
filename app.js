@@ -15,6 +15,7 @@ if ('serviceWorker' in navigator) {
 
 /* ─── PLAYLIST ──────────────────────────────── */
 const playlist = [
+  { title:'Silent Goodbye',           artist:'Akhil', src:'songs/Silent Goodbye.mp3',           cover:'images/Silent Goodbye.png'          },
   { title:'Tanha',           artist:'Akhil', src:'songs/tanha.mp3',           cover:'images/Tanha.png'          },
   { title:'For You',           artist:'Akhil', src:'songs/for you.mp3',           cover:'images/for you.png'          },
   { title:'Chhod De Narazgi',           artist:'Akhil', src:'songs/nara.mp3',           cover:'images/nara.png'          },
