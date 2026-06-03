@@ -10,6 +10,7 @@ if ('serviceWorker' in navigator) {
 
 /* ─── PLAYLIST ──────────────────────────────── */
 const playlist = [
+  { title:'Khamoshi',           artist:'Akhil', src:'songs/Khamoshi.mp3',           cover:'images/Khamoshi.png'          },
   { title:'Silent Goodbye',           artist:'Akhil', src:'songs/Silent Goodbye.mp3',           cover:'images/Silent Goodbye.png'          },
   { title:'Tanha',           artist:'Akhil', src:'songs/tanha.mp3',           cover:'images/Tanha.png'          },
   { title:'For You',           artist:'Akhil', src:'songs/for you.mp3',           cover:'images/for you.png'          },
@@ -314,7 +315,7 @@ function updateFSVolUI() {
     }
   }, { passive: true });
 })();
-
+ 
 /* ── FS progress bar seek ── */
 (function() {
   if (!fsProgressBar) return;
