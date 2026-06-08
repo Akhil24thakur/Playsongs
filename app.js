@@ -10,6 +10,7 @@ if ('serviceWorker' in navigator) {
 
 /* ─── PLAYLIST ──────────────────────────────── */
 const playlist = [
+  { title:'Jesi Tum Ho',           artist:'Akhil', src:'songs/Jesi Tum Ho.mp3',           cover:'images/Jesi Tum Ho.png'          },
   { title:'Khamoshi',           artist:'Akhil', src:'songs/Khamoshi.mp3',           cover:'images/Khamoshi.png'          },
   { title:'Silent Goodbye',           artist:'Akhil', src:'songs/Silent Goodbye.mp3',           cover:'images/Silent Goodbye.png'          },
   { title:'Tanha',           artist:'Akhil', src:'songs/tanha.mp3',           cover:'images/Tanha.png'          },
@@ -377,7 +378,7 @@ function setRichMediaMetadata(t) {
     ]
   });
 }
-
+ 
 function registerMediaActions() {
   if (!('mediaSession' in navigator)) return;
   const ms = navigator.mediaSession;
