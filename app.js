@@ -10,6 +10,7 @@ if ('serviceWorker' in navigator) {
 
 /* ─── PLAYLIST ──────────────────────────────── */
 const playlist = [
+  { title:'Intzaar',           artist:'Akhil', src:'songs/Intzaar.mp3',           cover:'images/Intzaar.png'          },
   { title:'Jesi Tum Ho',           artist:'Akhil', src:'songs/Jesi Tum Ho.mp3',           cover:'images/Jesi Tum Ho.png'          },
   { title:'Khamoshi',           artist:'Akhil', src:'songs/Khamoshi.mp3',           cover:'images/Khamoshi.png'          },
   { title:'Silent Goodbye',           artist:'Akhil', src:'songs/Silent Goodbye.mp3',           cover:'images/Silent Goodbye.png'          },
