@@ -2,74 +2,14 @@
 /* Must be at the very top so it registers as early as possible */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js')
+    navigator.serviceWorker.register('./service-worker.js')
       .then(reg => console.log('[SW] Registered, scope:', reg.scope))
       .catch(err => console.warn('[SW] Failed:', err));
   });
 }
 
-/* ─── PLAYLIST ──────────────────────────────── */
-const playlist = [
-  { title:'Intzaar',           artist:'Akhil', src:'songs/Intzaar.mp3',           cover:'images/Intzaar.png'          },
-  { title:'Jesi Tum Ho',           artist:'Akhil', src:'songs/Jesi Tum Ho.mp3',           cover:'images/Jesi Tum Ho.png'          },
-  { title:'Khamoshi',           artist:'Akhil', src:'songs/Khamoshi.mp3',           cover:'images/Khamoshi.png'          },
-  { title:'Silent Goodbye',           artist:'Akhil', src:'songs/Silent Goodbye.mp3',           cover:'images/Silent Goodbye.png'          },
-  { title:'Tanha',           artist:'Akhil', src:'songs/tanha.mp3',           cover:'images/Tanha.png'          },
-  { title:'For You',           artist:'Akhil', src:'songs/for you.mp3',           cover:'images/for you.png'          },
-  { title:'Chhod De Narazgi',           artist:'Akhil', src:'songs/nara.mp3',           cover:'images/nara.png'          },
-  { title:'T-Shirt',           artist:'Akhil', src:'songs/tshirt.mp3',           cover:'images/tshirt.png'          },
-  { title:'Lets Talk',           artist:'Akhil', src:'songs/Lets Talk.mp3',           cover:'images/Lets Talk.png'          },
-  { title:'Juda hua',           artist:'Akhil', src:'songs/Juda hua.mp3',           cover:'images/Juda hua.png'          },
-  { title:'Tera Pyar',           artist:'Akhil', src:'songs/Tera Pyar.mp3',           cover:'images/Tera Pyar.png'          },
-  { title:'Kitab Likhunga',           artist:'Akhil', src:'songs/Kitab Likhunga.mp3',           cover:'images/Kitab Likhunga.png'          },
-  { title:'Ek Baat Reh Gayi Thi',     artist:'Akhil', src:'songs/Ek Baat Reh Gayi Thi.mp3',     cover:'images/Ek Baat Reh Gayi Thi.png'    },
-  { title:'Jhanjron Ka Joda',          artist:'Akhil', src:'songs/Jhanjron Ka Joda.mp3',          cover:'images/Jhanjron Ka Joda.png'        },
-  { title:'Ek Nazar',                  artist:'Akhil', src:'songs/Ek Nazar.mp3',                  cover:'images/Ek Nazar.png'                },
-  { title:'Before Death',              artist:'Akhil', src:'songs/Before Death.mp3',               cover:'images/Before Death.png'            },
-  { title:'You Are The Reason',        artist:'Akhil', src:'songs/You Are The Reason.mp3',         cover:'images/You Are The Reason.png'      },
-  { title:'Love Song | इतना गहरा',    artist:'Akhil', src:'songs/Love Song  इतना गहरा.mp3',     cover:'images/Love Song  इतना गहरा.png'   },
-  { title:'Coffee Talks',              artist:'Akhil', src:'songs/Coffee Talks.mp3',               cover:'images/Coffee Talks.png'            },
-  { title:'Beenaam Sa Ishq',           artist:'Akhil', src:'songs/Beenaam Sa Ishq.mp3',            cover:'images/Beenaam Sa Ishq.png'         },
-  { title:'Tum Hi Toh Ho',            artist:'Akhil', src:'songs/Tum Hi Toh Ho.mp3',              cover:'images/Tum Hi Toh Ho.png'           },
-  { title:'Tu Hi Hai Wajah',          artist:'Akhil', src:'songs/Tu Hi Hai Wajah.mp3',            cover:'images/Tu Hi Hai Wajah.png'         },
-  { title:'Silent Love',              artist:'Akhil', src:'songs/Silent Love.mp3',                 cover:'images/Silent Love.png'             },
-  { title:'Summer Evening',           artist:'Akhil', src:'songs/summer.mp3',                      cover:'images/summer.png'                  },
-  { title:'Lost Love',                artist:'Akhil', src:'songs/Lost Love.mp3',                   cover:'images/Lost Love.png'               },
-  { title:'Phela Batein',             artist:'Akhil', src:'songs/batan.mp3',                       cover:'images/batan.png'                   },
-  { title:'Stay Away',                artist:'Akhil', src:'songs/Stay away.mp3',                   cover:'images/stay away.png'               },
-  { title:'Choti Choti Batan',        artist:'Akhil', src:'songs/batan.mp3',                       cover:'images/batan.png'                   },
-  { title:'Karma',                    artist:'Akhil', src:'songs/karma.mp3',                       cover:'images/karma.png'                   },
-  { title:'Tere Bina',                artist:'Akhil', src:'songs/Tere Bina.mp3',                   cover:'images/Tere Bina.png'               },
-  { title:'Divided Hearts',           artist:'Akhil', src:'songs/div.mp3',                         cover:'images/div.png'                     },
-  { title:'Rah Main Kanta',           artist:'Akhil', src:'songs/rah.mp3',                         cover:'images/rah.png'                     },
-  { title:'Soul in Simplicity',       artist:'Akhil', src:'songs/Soul in Simplicity.mp3',          cover:'images/simple.png'                  },
-  { title:'Tera Sath [Lofi]',         artist:'Akhil', src:'songs/Tera sath lofi.mp3',              cover:'images/TeraSath.jpeg'               },
-  { title:'New City',                 artist:'Akhil', src:'songs/new city.mp3',                    cover:'images/ak.png'                      },
-  { title:'Vibes with you',           artist:'Akhil', src:'songs/Vibes With You.mp3',              cover:'images/Vibes with you.png'          },
-  { title:'Mann Ka Akrosh',           artist:'Akhil', src:'songs/Mann Ka Akrosh.mp3',              cover:'images/Mann Ka Akrosh.png'          },
-  { title:'With You',                 artist:'Akhil', src:'songs/WithYou.mp3',                     cover:'images/WithYou.jpeg'                },
-  { title:'She Comes In',             artist:'Akhil', src:'songs/She comes in.mp3',                cover:'images/she comes In.png'            },
-  { title:'Without You',              artist:'Akhil', src:'songs/WithOut you.mp3',                 cover:'images/WithOut YOU.jpg'             },
-  { title:'Because Of You',           artist:'Akhil', src:'songs/Because of You.mp3',              cover:'images/OF you.png'                  },
-  { title:'Dont Fight',               artist:'Akhil', src:'songs/Dont Fight.mp3',                  cover:'images/fight.png'                   },
-  { title:'Dream With You',           artist:'Akhil', src:'songs/My Dreams.mp3',                   cover:'images/MY Dreams.png'               },
-  { title:'Kahani Suno',              artist:'Akhil', src:'songs/kahani.mp3',                      cover:'images/Kahani.png'                  },
-  { title:'Dooriyan',                 artist:'Akhil', src:'songs/Dooriyan.mp3',                    cover:'images/Dooriyan.png'                },
-  { title:'Samjho Na',                artist:'Akhil', src:'songs/Samjho.mp3',                      cover:'images/Samjho.png'                  },
-  { title:'Tera Sath',                artist:'Akhil', src:'songs/TeraSath.mp3',                    cover:'images/TeraSath.jpeg'               },
-  { title:'One Sided Love',           artist:'Akhil', src:'songs/One Sided Love.mp3',              cover:'images/One Sided Love.png'          },
-  { title:'Majestic',                 artist:'Akhil', src:'songs/Majestic.mp3',                    cover:'images/Majestic.png'                },
-  { title:'My Queen',                 artist:'Akhil', src:'songs/My Queen.mp3',                    cover:'images/My Queen.jpeg'               },
-  { title:'Winters In Shimla',        artist:'Akhil', src:'songs/Winters In Shimla.mp3',           cover:'images/Shimla.jpg'                  },
-  { title:'Meri Dua',                 artist:'Akhil', src:'songs/Meri Dua.mp3',                    cover:'images/meri-dua.jpg'                },
-  { title:'Bittersweet Memories',     artist:'Akhil', src:'songs/Bittersweet Memories.mp3',        cover:'images/Bittersweet Memories.jpeg'   },
-  { title:'Dil Di Kahani',            artist:'Akhil', src:'songs/Dil Di Kahani.mp3',               cover:'images/Dil Di Kahani.jpeg'          },
-  { title:'First Meet',               artist:'Akhil', src:'songs/First Meet.mp3',                  cover:'images/First Meet.jpeg'             },
-  { title:'Nature Touch',             artist:'Akhil', src:'songs/Nature Touch.mp3',                cover:'images/Nature Touch.jpeg'           },
-  { title:'Pyar Ka Safar',            artist:'Akhil', src:'songs/Pyar Ka Safar.mp3',               cover:'images/pyar ka safat.jpeg'          },
-  { title:'Sari Sari Raat',           artist:'Akhil', src:'songs/Sari Sari Raat.mp3',              cover:'images/meri-dua.jpg'                },
-  { title:'Tere Bin',                 artist:'Akhil', src:'songs/Tere Bin.mp3',                    cover:'images/tera bina.jpeg'              }
-];
+/* ─── PLAYLIST (loaded from songs.json) ──────── */
+let playlist = [];
 
 /* ─── STATE ─────────────────────────────────── */
 let cur = -1, playing = false, shuffleOn = false, repeatMode = 0;
@@ -282,7 +222,7 @@ function buildFSQueue() {
 function updateFSVolUI() {
   if (!fsVolSlider) return;
   const v = parseFloat(fsVolSlider.value) * 100;
-  fsVolSlider.style.background = `linear-gradient(to right,rgba(232,149,109,0.85) ${v}%,rgba(255,255,255,0.12) ${v}%)`;
+  fsVolSlider.style.background = `linear-gradient(to right,rgba(16,185,129,0.85) ${v}%,rgba(255,255,255,0.12) ${v}%)`;
 }
 
 /* ── Swipe-down to close fullscreen ── */
@@ -329,8 +269,8 @@ function updateFSVolUI() {
   }
   fsProgressBar.addEventListener('click',     e => { fsScrub(e.clientX); });
   fsProgressBar.addEventListener('mousedown', e => { drag = true; fsProgressBar.classList.add('dragging'); fsScrub(e.clientX); });
-  fsProgressBar.addEventListener('touchstart',e => { drag = true; fsProgressBar.classList.add('dragging'); fsScrub(e.touches[0].clientX); }, { passive: true });
-  fsProgressBar.addEventListener('touchmove', e => { e.stopPropagation(); if (drag) fsScrub(e.touches[0].clientX); }, { passive: true });
+  fsProgressBar.addEventListener('touchstart', e => { drag = true; fsProgressBar.classList.add('dragging'); fsScrub(e.touches[0].clientX); e.preventDefault(); }, { passive: false });
+  fsProgressBar.addEventListener('touchmove', e => { if (drag) { e.preventDefault(); fsScrub(e.touches[0].clientX); } }, { passive: false });
   fsProgressBar.addEventListener('touchend',  () => { drag = false; fsProgressBar.classList.remove('dragging'); });
   document.addEventListener('mousemove', e => { if (drag) fsScrub(e.clientX); });
   document.addEventListener('mouseup',   () => { drag = false; fsProgressBar.classList.remove('dragging'); });
@@ -356,8 +296,8 @@ function onPBAreaClick(e) {
   }
   progTrack.addEventListener('click',     e => scrub(e.clientX));
   progTrack.addEventListener('mousedown', e => { drag = true; progTrack.classList.add('dragging'); scrub(e.clientX); e.stopPropagation(); });
-  progTrack.addEventListener('touchstart', e => { drag = true; progTrack.classList.add('dragging'); scrub(e.touches[0].clientX); }, { passive: true });
-  progTrack.addEventListener('touchmove', e => { if (drag) scrub(e.touches[0].clientX); }, { passive: true });
+  progTrack.addEventListener('touchstart', e => { drag = true; progTrack.classList.add('dragging'); scrub(e.touches[0].clientX); e.preventDefault(); }, { passive: false });
+  progTrack.addEventListener('touchmove', e => { if (drag) { e.preventDefault(); scrub(e.touches[0].clientX); } }, { passive: false });
   progTrack.addEventListener('touchend', () => { drag = false; progTrack.classList.remove('dragging'); });
   document.addEventListener('mousemove', e => { if (drag) scrub(e.clientX); });
   document.addEventListener('mouseup',   () => { drag = false; progTrack.classList.remove('dragging'); });
@@ -396,6 +336,7 @@ function registerMediaActions() {
 /* ─── INIT ───────────────────────────────────── */
 function init() {
   loadPrefs();
+  displayedList = [...playlist.keys()];
   buildTrackList(tracksList, displayedList);
   buildHomeTrackList();
   buildCards();
@@ -602,21 +543,37 @@ function applyFilter() {
   displayedList = indices;
   buildTrackList(tracksList, indices);
   if (isGridView) tracksList.classList.add('grid-view');
-  if (songsSubtitle) songsSubtitle.textContent = `${indices.length} of ${playlist.length} tracks · By Akhil`;
+  if (songsSubtitle) {
+    let label = `${indices.length} of ${playlist.length} tracks · By Akhil`;
+    if (sortMode === 'az') label += ' · Sorted A→Z';
+    else if (sortMode === 'za') label += ' · Sorted Z→A';
+    songsSubtitle.textContent = label;
+  }
 }
 
 /* ─── DURATION ───────────────────────────────── */
+const durationCache = new Map();
+
 function prefetchDuration(src, idx, container) {
+  const cached = durationCache.get(src);
+  if (cached !== undefined) {
+    const el = document.getElementById(`dur-${container}-${idx}`);
+    if (el) el.textContent = cached;
+    return;
+  }
   const tmp = new Audio(); tmp.preload = 'none'; tmp.src = src;
   tmp.addEventListener('loadedmetadata', () => {
+    const d = fmt(tmp.duration);
+    durationCache.set(src, d);
     const el = document.getElementById(`dur-${container}-${idx}`);
-    if (el) el.textContent = fmt(tmp.duration);
-    tmp.src = '';
-  });
+    if (el) el.textContent = d;
+    tmp.remove();
+  }, { once: true });
   tmp.addEventListener('error', () => {
     const el = document.getElementById(`dur-${container}-${idx}`);
     if (el) el.textContent = '—:——';
-  });
+    tmp.remove();
+  }, { once: true });
 }
 
 /* ─── VIEWS ──────────────────────────────────── */
@@ -722,7 +679,7 @@ async function loadPlay(idx) {
   registerMediaActions();
   if (fsIsOpen) { syncFSToCurrentSong(); buildFSQueue(); }
   audio.play().catch(() => setPlayState(false));
-  for (let i = 1; i <= 3; i++) { new Image().src = playlist[(cur+i)%playlist.length].cover; }
+  preloadNextCovers(cur);
   try { localStorage.setItem('akhil_cur', cur); } catch(_) {}
   savePrefs();
 }
@@ -769,8 +726,10 @@ function togglePlay() {
 }
 
 /* ─── AUDIO EVENTS ──────────────────────────── */
-audio.addEventListener('play',  () => { setPlayState(true); acquireWakeLock(); });
-audio.addEventListener('pause', () => { setPlayState(false); releaseWakeLock(); saveState(); });
+audio.addEventListener('play',    () => { setPlayState(true); acquireWakeLock(); });
+audio.addEventListener('pause',   () => { setPlayState(false); releaseWakeLock(); saveState(); });
+audio.addEventListener('waiting', () => { mainPlayBtn.style.opacity = '0.6'; });
+audio.addEventListener('canplay', () => { mainPlayBtn.style.opacity = '1'; });
 audio.addEventListener('ended', () => {
   saveState();
   const n = getNextIdx();
@@ -876,14 +835,14 @@ async function restoreState() {
     if (isNaN(idx) || idx < 0 || idx >= playlist.length) return;
     cur = idx;
     const t = playlist[cur];
-    audio.src    = t.src;
     audio.volume = volSlider ? parseFloat(volSlider.value) : 0.85;
-    audio.addEventListener('loadedmetadata', () => {
+    audio.addEventListener('loadedmetadata', function onMeta() {
       if (!isNaN(time) && time > 5) audio.currentTime = time;
       if (timeTot)   timeTot.textContent   = fmt(audio.duration);
       if (fsTimeTot) fsTimeTot.textContent = fmt(audio.duration);
       pushPositionState();
     }, { once: true });
+    audio.src = t.src;
     pbTitle.textContent  = t.title;
     pbArtist.textContent = t.artist;
     pbCoverImg.src       = t.cover;
@@ -892,7 +851,7 @@ async function restoreState() {
     updateHeroBg(cur);
     setRichMediaMetadata(t);
     setPlayState(false);
-  } catch(_) {}
+  } catch(e) { console.warn('[Restore]', e); }
   if (shuffleOn && cur >= 0) buildShuffleQueue();
   [shuffleBtn,topShuffleBtn,fsShuffleBtn].forEach(b => { if(b) b.classList.toggle('on',shuffleOn); });
   if (repeatBtn) { repeatBtn.classList.toggle('on',repeatMode>0); repeatBtn.classList.toggle('repeat-1',repeatMode===2); }
@@ -991,5 +950,536 @@ function fmt(s) {
   return `${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`;
 }
 
-/* ─── GO ─────────────────────────────────────── */
-init();
+/* ══════════════════════════════════════════════
+   ENHANCED PROFESSIONAL UI v2
+══════════════════════════════════════════════ */
+
+/* ── Image Load Handler ── */
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('img').forEach(img => {
+    if (img.complete && img.src) img.classList.add('loaded');
+    else img.addEventListener('load', () => img.classList.add('loaded'));
+    img.addEventListener('error', () => img.classList.add('loaded'));
+  });
+});
+const observeNewImages = () => {
+  document.querySelectorAll('img:not(.observed)').forEach(img => {
+    img.classList.add('observed');
+    if (img.complete && img.src) img.classList.add('loaded');
+    else img.addEventListener('load', () => img.classList.add('loaded'));
+    img.addEventListener('error', () => img.classList.add('loaded'));
+  });
+};
+
+/* ── Skeleton Loading ── */
+function showSkeleton(container, count, type = 'track') {
+  if (!container) return;
+  container.innerHTML = '';
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('div');
+    if (type === 'track') {
+      el.className = 'skeleton-track';
+      el.innerHTML = `
+        <div class="skeleton sk-num"></div>
+        <div class="skeleton sk-thumb"></div>
+        <div class="skeleton sk-title"></div>
+        <div class="skeleton sk-dur"></div>
+        <div></div>`;
+    } else if (type === 'card') {
+      el.className = 'skeleton-card';
+      el.innerHTML = `
+        <div class="skeleton sk-img"></div>
+        <div class="skeleton sk-text"></div>`;
+    }
+    container.appendChild(el);
+  }
+}
+
+/* ── Ripple Effect ── */
+function addRipple(e) {
+  const btn = e.currentTarget;
+  const ripple = document.createElement('span');
+  ripple.className = 'ripple-effect';
+  const rect = btn.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  ripple.style.width = ripple.style.height = size + 'px';
+  ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+  ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+  ripple.style.position = 'absolute';
+  ripple.style.borderRadius = '50%';
+  ripple.style.background = 'rgba(255,255,255,0.3)';
+  ripple.style.transform = 'scale(0)';
+  ripple.style.animation = 'rippleAnim 0.6s ease-out';
+  ripple.style.pointerEvents = 'none';
+  btn.style.position = 'relative';
+  btn.style.overflow = 'hidden';
+  btn.appendChild(ripple);
+  ripple.addEventListener('animationend', () => ripple.remove());
+}
+document.addEventListener('click', e => {
+  const btn = e.target.closest('.btn-primary, .btn-ghost, .pbc.main, .fs-ctrl-play, .nav-item, .topbar-icon-btn, .theme-toggle-btn');
+  if (btn) addRipple(e);
+});
+
+/* ── Image Preload Helper ── */
+function preloadNextCovers(idx) {
+  for (let i = 1; i <= 4; i++) {
+    const nextIdx = (idx + i) % playlist.length;
+    const img = new Image();
+    img.src = playlist[nextIdx].cover;
+    img.addEventListener('load', () => img.classList.add('loaded'));
+  }
+}
+
+/* ── Override switchView to refresh images + playlist ── */
+const origSwitchView = switchView;
+switchView = function(name) {
+  origSwitchView(name);
+  setTimeout(observeNewImages, 50);
+  if (name === 'playlists') {
+    currentPlaylistView = null;
+    buildPlView();
+  }
+};
+
+/* ── Skeleton-first loading for initial render only ── */
+let _initialBuild = true;
+
+const origBuildTrackList = buildTrackList;
+buildTrackList = function(container, indices) {
+  if (!container) return;
+  if (!_initialBuild) { origBuildTrackList(container, indices); observeNewImages(); return; }
+  showSkeleton(container, Math.min(indices.length, 10), 'track');
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      origBuildTrackList(container, indices);
+      observeNewImages();
+    }, 300);
+  });
+};
+
+const origBuildCardRow = buildCardRow;
+buildCardRow = function(container, indices) {
+  if (!container) return;
+  if (!_initialBuild) { origBuildCardRow(container, indices); observeNewImages(); return; }
+  showSkeleton(container, Math.min(indices.length, 6), 'card');
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      origBuildCardRow(container, indices);
+      observeNewImages();
+    }, 350);
+  });
+};
+
+const origBuildHomeTrackList = buildHomeTrackList;
+buildHomeTrackList = function() {
+  if (!homeTrackList) return;
+  if (!_initialBuild) { origBuildHomeTrackList(); observeNewImages(); return; }
+  showSkeleton(homeTrackList, 6, 'track');
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      origBuildHomeTrackList();
+      observeNewImages();
+    }, 300);
+  });
+};
+
+/* ── Enhanced now-playing sync with artwork state ── */
+const origSyncFS = syncFSToCurrentSong;
+syncFSToCurrentSong = function() {
+  origSyncFS();
+  if (cur >= 0) preloadNextCovers(cur);
+};
+
+/* ══════════════════════════════════════════════
+   FULLY-FLEDGED FEATURES
+══════════════════════════════════════════════ */
+
+/* ── Play Count Tracking ── */
+let playCounts = {};
+try { playCounts = JSON.parse(localStorage.getItem('akhil_plays') || '{}'); } catch(_) {}
+
+function recordPlay(idx) {
+  playCounts[idx] = (playCounts[idx] || 0) + 1;
+  try { localStorage.setItem('akhil_plays', JSON.stringify(playCounts)); } catch(_) {}
+}
+
+const origLoadPlay = loadPlay;
+loadPlay = async function(idx) {
+  await origLoadPlay(idx);
+  recordPlay(idx);
+};
+
+/* ── Audio Error Handling ── */
+audio.addEventListener('error', () => {
+  const errMsg = audio.error ? 
+    ['', 'Playback aborted', 'Network error — file may be missing', 'Decode error — unsupported format', 'No supported source'] 
+    [audio.error.code] || 'Unknown error' : 'Failed to load';
+  showToast(`⚠ ${errMsg}`);
+  setPlayState(false);
+  if (mainPlayBtn) mainPlayBtn.style.opacity = '1';
+});
+
+/* ── Search Empty State ── */
+const origApplyFilter = applyFilter;
+applyFilter = function() {
+  origApplyFilter();
+  if (!tracksList) return;
+  const hasItems = tracksList.querySelector('.track-item');
+  if (!hasItems && searchQuery) {
+    tracksList.innerHTML = `
+      <div class="empty-state" style="padding:60px 32px">
+        <div class="empty-icon"><svg viewBox="0 0 24 24" style="width:40px;height:40px"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></div>
+        <p style="font-size:0.9rem;color:var(--tx-2)">No results for "<strong>${searchQuery}</strong>"</p>
+        <span style="font-size:0.75rem;color:var(--tx-3)">Try a different search term</span>
+      </div>`;
+  }
+};
+
+/* ── PLAYLIST MANAGEMENT ── */
+let playlists = [];
+let currentPlaylistView = null; // which playlist we're viewing details of
+let pendingAddIdx = -1; // track index waiting to be added
+
+function loadPlaylists() {
+  try {
+    playlists = JSON.parse(localStorage.getItem('akhil_playlists') || '[]');
+  } catch(_) { playlists = []; }
+  updatePlBadge();
+}
+
+function savePlaylists() {
+  try { localStorage.setItem('akhil_playlists', JSON.stringify(playlists)); } catch(_) {}
+  updatePlBadge();
+  buildPlView();
+}
+
+function updatePlBadge() {
+  const badge = $('plBadge');
+  if (badge) { badge.textContent = playlists.length; badge.style.display = playlists.length ? 'flex' : 'none'; }
+  const sub = $('plSubtitle');
+  if (sub) sub.textContent = playlists.length ? `${playlists.length} playlist${playlists.length>1?'s':''}` : 'Create and manage your custom playlists';
+}
+
+function createPlaylist(name) {
+  if (!name || !name.trim()) return false;
+  if (playlists.some(p => p.name.toLowerCase() === name.trim().toLowerCase())) {
+    showToast('A playlist with that name already exists');
+    return false;
+  }
+  playlists.push({ name: name.trim(), songs: [], created: Date.now() });
+  savePlaylists();
+  showToast(`Playlist "${name.trim()}" created`);
+  return true;
+}
+
+function deletePlaylist(idx) {
+  if (idx < 0 || idx >= playlists.length) return;
+  const name = playlists[idx].name;
+  playlists.splice(idx, 1);
+  savePlaylists();
+  if (currentPlaylistView === idx) currentPlaylistView = null;
+  showToast(`Playlist "${name}" deleted`);
+}
+
+function renamePlaylist(idx, newName) {
+  if (idx < 0 || idx >= playlists.length || !newName || !newName.trim()) return;
+  playlists[idx].name = newName.trim();
+  savePlaylists();
+}
+
+function addToPlaylist(plIdx, songIdx) {
+  if (plIdx < 0 || plIdx >= playlists.length) return;
+  if (playlists[plIdx].songs.includes(songIdx)) {
+    showToast('Already in this playlist');
+    return;
+  }
+  playlists[plIdx].songs.push(songIdx);
+  savePlaylists();
+  showToast(`Added to "${playlists[plIdx].name}"`);
+}
+
+function removeFromPlaylist(plIdx, songIdx) {
+  if (plIdx < 0 || plIdx >= playlists.length) return;
+  playlists[plIdx].songs = playlists[plIdx].songs.filter(s => s !== songIdx);
+  savePlaylists();
+}
+
+/* ── Build Playlists View ── */
+function buildPlView() {
+  const container = $('plList');
+  const empty = $('plEmpty');
+  if (!container) return;
+  container.innerHTML = '';
+  if (playlists.length === 0) {
+    if (empty) empty.style.display = 'flex';
+    return;
+  }
+  if (empty) empty.style.display = 'none';
+  playlists.forEach((pl, i) => {
+    const card = document.createElement('div');
+    card.className = 'pl-card';
+    card.innerHTML = `
+      <div class="pl-card-icon"><svg viewBox="0 0 24 24"><path d="M15 6H3v2h12V6zm0 4H3v2h12v-2zM3 16h8v-2H3v2zM17 6v8.18c-.31-.11-.65-.18-1-.18-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3V8h3V6h-5z"/></svg></div>
+      <div class="pl-card-name">${pl.name}</div>
+      <div class="pl-card-count">${pl.songs.length} song${pl.songs.length!==1?'s':''}</div>
+      <div class="pl-card-actions">
+        <button class="pl-card-action rename-pl" data-idx="${i}" title="Rename">✎</button>
+        <button class="pl-card-action del" data-idx="${i}" title="Delete">✕</button>
+      </div>`;
+    card.addEventListener('click', e => {
+      if (e.target.closest('.pl-card-action')) return;
+      currentPlaylistView = i;
+      buildPlDetailView(i);
+    });
+    container.appendChild(card);
+  });
+  container.querySelectorAll('.rename-pl').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const idx = parseInt(btn.dataset.idx);
+      const old = playlists[idx].name;
+      const newName = prompt('Rename playlist:', old);
+      if (newName && newName.trim() && newName.trim() !== old) {
+        renamePlaylist(idx, newName);
+      }
+    });
+  });
+  container.querySelectorAll('.pl-card-action.del').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const idx = parseInt(btn.dataset.idx);
+      if (confirm(`Delete playlist "${playlists[idx].name}"?`)) {
+        deletePlaylist(idx);
+      }
+    });
+  });
+}
+
+/* ── Build Playlist Detail View ── */
+function buildPlDetailView(plIdx) {
+  if (plIdx < 0 || plIdx >= playlists.length) return;
+  const pl = playlists[plIdx];
+  const container = $('plList');
+  const empty = $('plEmpty');
+  const viewHeader = document.querySelector('#view-playlists .view-header');
+  if (!container) return;
+  if (empty) empty.style.display = 'none';
+  container.innerHTML = `
+    <div class="pl-detail-header">
+      <div class="pl-detail-icon"><svg viewBox="0 0 24 24"><path d="M15 6H3v2h12V6zm0 4H3v2h12v-2zM3 16h8v-2H3v2zM17 6v8.18c-.31-.11-.65-.18-1-.18-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3V8h3V6h-5z"/></svg></div>
+      <div class="pl-detail-info">
+        <div class="pl-detail-name">${pl.name}</div>
+        <div class="pl-detail-meta">${pl.songs.length} song${pl.songs.length!==1?'s':''}</div>
+      </div>
+    </div>
+    <button class="pl-back-btn"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg> Back to Playlists</button>
+    <div class="tl-header-row" id="plTlHead" style="display:${pl.songs.length?'grid':'none'}">
+      <span class="tlh-num">#</span><span class="tlh-info">Title</span>
+      <span class="tlh-dur"><svg viewBox="0 0 24 24" width="13"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg></span>
+      <span class="tlh-fav"></span>
+    </div>
+    <div id="plTracksList"></div>`;
+  const backBtn = container.querySelector('.pl-back-btn');
+  if (backBtn) backBtn.addEventListener('click', () => { currentPlaylistView = null; buildPlView(); });
+  const tContainer = $('plTracksList');
+  if (tContainer) {
+    if (pl.songs.length === 0) {
+      tContainer.innerHTML = `<div class="empty-state" style="padding:40px 16px"><p style="font-size:0.85rem;color:var(--tx-3)">No songs in this playlist yet</p><span style="font-size:0.72rem;color:var(--tx-4)">Add songs from the Songs view</span></div>`;
+    } else {
+      pl.songs.forEach((idx, pos) => {
+        if (idx >= playlist.length) return;
+        const row = makeTrackItem(idx, pos + 1, 'pl');
+        row.addEventListener('contextmenu', e => {
+          e.preventDefault();
+          if (confirm(`Remove "${playlist[idx].title}" from this playlist?`)) {
+            removeFromPlaylist(plIdx, idx);
+            buildPlDetailView(plIdx);
+            showToast('Removed from playlist');
+          }
+        });
+        tContainer.appendChild(row);
+      });
+    }
+  }
+}
+
+/* ── Show Add to Playlist Modal ── */
+function showAddToPlaylist(songIdx) {
+  pendingAddIdx = songIdx;
+  const modal = $('atpModal');
+  const list = $('atpList');
+  const nameEl = $('atpSongName');
+  if (!modal || !list) return;
+  nameEl.textContent = `Add "${playlist[songIdx]?.title || 'track'}" to:`;
+  list.innerHTML = '';
+  if (playlists.length === 0) {
+    list.innerHTML = '<p style="font-size:0.78rem;color:var(--tx-3);padding:12px;text-align:center">No playlists yet. Create one below.</p>';
+  } else {
+    playlists.forEach((pl, i) => {
+      const item = document.createElement('div');
+      item.className = 'atp-item';
+      const added = pl.songs.includes(songIdx);
+      item.innerHTML = `<svg viewBox="0 0 24 24"><path d="M15 6H3v2h12V6zm0 4H3v2h12v-2zM3 16h8v-2H3v2zM17 6v8.18c-.31-.11-.65-.18-1-.18-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3V8h3V6h-5z"/></svg><span>${pl.name} ${added ? '(added)' : ''}</span>`;
+      if (added) item.style.opacity = '0.5';
+      else item.addEventListener('click', () => { addToPlaylist(i, songIdx); modal.classList.remove('open'); });
+      list.appendChild(item);
+    });
+  }
+  modal.classList.add('open');
+  modal.addEventListener('click', function atpOutClick(e) {
+    if (e.target === modal) { modal.classList.remove('open'); modal.removeEventListener('click', atpOutClick); }
+  });
+}
+
+/* ── Bind Playlist UI ── */
+function bindPlaylistUI() {
+  const createBtn = $('createPlBtn');
+  if (createBtn) createBtn.addEventListener('click', () => {
+    const name = prompt('Enter playlist name:');
+    if (name && createPlaylist(name) && currentPlaylistView === null) buildPlView();
+  });
+  const atpClose = $('atpClose');
+  if (atpClose) atpClose.addEventListener('click', () => { $('atpModal')?.classList.remove('open'); });
+  const atpNew = $('atpNew');
+  if (atpNew) atpNew.addEventListener('click', () => {
+    const modal = $('atpModal');
+    modal?.classList.remove('open');
+    setTimeout(() => {
+      const name = prompt('Enter new playlist name:');
+      if (name && createPlaylist(name) && pendingAddIdx >= 0) {
+        const newIdx = playlists.length - 1;
+        addToPlaylist(newIdx, pendingAddIdx);
+        pendingAddIdx = -1;
+        buildPlView();
+      }
+    }, 300);
+  });
+}
+
+/* ── Override init to add new features ── */
+const origInit = init;
+init = function() {
+  loadPlaylists();
+  bindPlaylistUI();
+  origInit();
+  buildPlView();
+  // Add to playlist option on track right-click
+  document.addEventListener('contextmenu', e => {
+    const track = e.target.closest('.track-item');
+    if (track && track.dataset.idx !== undefined) {
+      e.preventDefault();
+      showAddToPlaylist(parseInt(track.dataset.idx));
+    }
+  });
+  // Long-press for mobile add to playlist
+  let lpTimer = null;
+  document.addEventListener('touchstart', e => {
+    const track = e.target.closest('.track-item');
+    if (track && track.dataset.idx !== undefined) {
+      lpTimer = setTimeout(() => {
+        navigator.vibrate?.(50);
+        showAddToPlaylist(parseInt(track.dataset.idx));
+      }, 600);
+    }
+  }, { passive: true });
+  document.addEventListener('touchend', () => { clearTimeout(lpTimer); }, { passive: true });
+  document.addEventListener('touchmove', () => { clearTimeout(lpTimer); }, { passive: true });
+};
+
+/* ── SLEEP TIMER ── */
+let sleepTimerId = null;
+let sleepTimerEnd = null;
+
+function startSleepTimer(minutes) {
+  cancelSleepTimer();
+  sleepTimerEnd = Date.now() + minutes * 60000;
+  sleepTimerId = setTimeout(() => {
+    audio.pause();
+    setPlayState(false);
+    showToast('Sleep timer: playback stopped');
+    cancelSleepTimer();
+  }, minutes * 60000);
+  showToast(`Sleep timer set for ${minutes} min`);
+  updateStIndicator();
+}
+
+function cancelSleepTimer() {
+  if (sleepTimerId) { clearTimeout(sleepTimerId); sleepTimerId = null; }
+  sleepTimerEnd = null;
+  updateStIndicator();
+}
+
+function updateStIndicator() {
+  const ind = $('stIndicator');
+  if (!ind) return;
+  if (sleepTimerEnd) {
+    ind.classList.add('active');
+    ind.title = formatStTime();
+  } else {
+    ind.classList.remove('active');
+    ind.title = '';
+  }
+}
+
+function formatStTime() {
+  if (!sleepTimerEnd) return '';
+  const remaining = Math.max(0, Math.floor((sleepTimerEnd - Date.now()) / 60000));
+  return `${remaining} min remaining`;
+}
+
+// Update sleep timer display every 30s
+setInterval(() => {
+  if (sleepTimerEnd) {
+    if (Date.now() >= sleepTimerEnd) {
+      cancelSleepTimer();
+    } else {
+      updateStIndicator();
+    }
+  }
+}, 30000);
+
+/* ── Bind Sleep Timer UI ── */
+function bindSleepTimerUI() {
+  const btn = $('sleepTimerBtn');
+  const modal = $('stModal');
+  const close = $('stClose');
+  const cancel = $('stCancel');
+  if (!btn || !modal) return;
+  btn.addEventListener('click', () => {
+    if (sleepTimerEnd) {
+      if (confirm('Cancel sleep timer?')) cancelSleepTimer();
+      return;
+    }
+    modal.classList.add('open');
+  });
+  if (close) close.addEventListener('click', () => modal.classList.remove('open'));
+  modal.querySelectorAll('.st-opt').forEach(opt => {
+    opt.addEventListener('click', () => {
+      const min = parseInt(opt.dataset.min);
+      startSleepTimer(min);
+      modal.classList.remove('open');
+    });
+  });
+  if (cancel) cancel.addEventListener('click', () => { cancelSleepTimer(); modal.classList.remove('open'); });
+  modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
+}
+bindSleepTimerUI();
+
+/* ── Mark initial build complete after all load ── */
+setTimeout(() => { _initialBuild = false; }, 2000);
+
+/* ── Load playlist from songs.json then boot ── */
+(async function boot() {
+  try {
+    const res = await fetch('songs.json');
+    if (res.ok) {
+      playlist = await res.json();
+    } else {
+      console.warn('[Boot] Failed to fetch songs.json, using empty playlist');
+    }
+  } catch (e) {
+    console.warn('[Boot] Could not load songs.json:', e);
+  }
+  init();
+})();

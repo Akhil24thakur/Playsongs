@@ -37,18 +37,19 @@ self.addEventListener('fetch', e => {
   const { request } = e;
   const url = new URL(request.url);
 
-  /* Audio — cache on first play, serve from cache after */
+  /* Audio — network-first, cache for offline fallback */
   if (url.pathname.startsWith('/songs/') || request.destination === 'audio') {
     e.respondWith(
       caches.open(AUDIO_CACHE).then(async cache => {
-        const cached = await cache.match(request);
-        if (cached) return cached;
         try {
           const res = await fetch(request);
-          if (res && res.status === 200) cache.put(request, res.clone());
+          if (res && res.status === 200) {
+            cache.put(request, res.clone());
+          }
           return res;
         } catch {
-          return new Response('Offline', { status: 503 });
+          const cached = await cache.match(request);
+          return cached || new Response('Offline', { status: 503 });
         }
       })
     );

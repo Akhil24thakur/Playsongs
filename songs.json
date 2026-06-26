@@ -80,7 +80,7 @@
     "title": "Kitab Likhunga",
     "artist": "Akhil",
     "src": "songs/Kitab Likhunga.mp3",
-    "cover": "images/Kitab Likhunga1.png",
+    "cover": "images/Kitab Likhunga.png",
     "color": "#8B4513"
   },
   {
@@ -191,7 +191,7 @@
   {
     "title": "Choti Choti Batan",
     "artist": "Akhil",
-    "src": "songs/batan.mp3",
+    "src": "songs/Zamana Ki Batan.mp3",
     "cover": "images/batan.png",
     "color": "#6A5ACD"
   },
@@ -261,7 +261,7 @@
 {
   "title": "With You",
   "artist": "Akhil",
-  "src": "songs/WithYou.mp3",
+  "src": "songs/WithYou .mp3",
   "cover": "images/WithYou.jpeg",
   "color": "#F39C12"
 },
@@ -289,7 +289,7 @@
 {
   "title": "Dont Fight",
   "artist": "Akhil",
-  "src": "songs/Dont Fight.mp3",
+  "src": "songs/Dont  Fight.mp3",
   "cover": "images/fight.png",
   "color": "#34495E"
 },
@@ -352,7 +352,7 @@
 {
   "title": "Winters In Shimla",
   "artist": "Akhil",
-  "src": "songs/Winters In Shimla.mp3",
+  "src": "songs/Winters  In Shimla.mp3",
   "cover": "images/Shimla.jpg",
   "color": "#00CEC9"
 },
@@ -395,7 +395,7 @@
   "title": "Pyar Ka Safar",
   "artist": "Akhil",
   "src": "songs/Pyar Ka Safar.mp3",
-  "cover": "images/pyar ka safat.jpeg",
+  "cover": "images/pyar ka safat .jpeg",
   "color": "#FAB1A0"
 },
 {
