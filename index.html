@@ -3,398 +3,347 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data:; media-src 'self'; connect-src 'self' https://fonts.googleapis.com; manifest-src 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data:; media-src 'self'; connect-src 'self'; manifest-src 'self'">
   <title>Akhil Music</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Instrument+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <link rel="icon" type="image/png" href="images/icon.png"/>
   <link rel="apple-touch-icon" href="images/icon.png"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
   <link rel="manifest" href="manifest.json"/>
-  <meta name="theme-color" content="#0c0c0e"/>
+  <meta name="theme-color" content="#0f0f12"/>
   <link rel="stylesheet" href="styles.css"/>
 </head>
 <body>
 
-<!-- SIDEBAR NAVIGATION -->
-<aside class="sidebar" id="sidebar" aria-label="Main navigation">
+<aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
-    <div class="logo-icon">
-      <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
-        <circle cx="16" cy="16" r="14.5" stroke="url(#lg1)" stroke-width="1.5"/>
-        <path d="M11 10v12M16 7v18M21 12v8" stroke="url(#lg1)" stroke-width="2" stroke-linecap="round"/>
-        <defs>
-          <linearGradient id="lg1" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#60a5fa"/><stop offset="1" stop-color="#2563eb"/>
-          </linearGradient>
-        </defs>
+    <div class="logo-mark">
+      <svg viewBox="0 0 32 32" fill="none">
+        <circle cx="16" cy="16" r="14" stroke="url(#lg)" stroke-width="1.2"/>
+        <path d="M12 8v16M16 6v20M20 12v8" stroke="url(#lg)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <defs><linearGradient id="lg" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#f59e0b"/><stop offset="1" stop-color="#d97706"/></linearGradient></defs>
       </svg>
     </div>
-    <div class="logo-text">
-      <span class="logo-name">AKHIL</span>
-      <span class="logo-tag">Music</span>
-    </div>
+    <div class="logo-text"><span class="logo-name">Akhil</span><span class="logo-tag">Music</span></div>
   </div>
-
   <nav class="sidebar-nav">
-    <p class="nav-section-label">Browse</p>
-    <a class="nav-item active" data-view="home" href="#" role="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Home</span></a>
-    <a class="nav-item" data-view="songs" href="#" role="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v9.28a4 4 0 0 0-1-.28C8.69 12 7 13.69 7 16s1.69 4 4 4 4-1.69 4-4V7h4V3h-7z"/></svg><span>Songs</span></a>
-    <a class="nav-item" data-view="favorites" href="#" role="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg><span>Favourites</span><span class="nav-badge" id="favBadge" style="display:none">0</span></a>
-    <a class="nav-item" data-view="about" href="#" role="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Artist</span></a>
-    <p class="nav-section-label" style="margin-top:24px">Library</p>
-    <a class="nav-item" data-view="playlists" href="#" role="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6H3v2h12V6zm0 4H3v2h12v-2zM3 16h8v-2H3v2zM17 6v8.18c-.31-.11-.65-.18-1-.18-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3V8h3V6h-5z"/></svg><span>Playlists</span><span class="nav-badge" id="plBadge" style="display:none">0</span></a>
-    <div class="sidebar-search-box">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-      <input type="text" id="sidebarSearch" placeholder="Search…" aria-label="Search songs"/>
+    <p class="nav-label">Browse</p>
+    <a class="nav-item active" data-view="home" href="#"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Home</span></a>
+    <a class="nav-item" data-view="songs" href="#"><svg viewBox="0 0 24 24"><path d="M12 3v9.28a4 4 0 0 0-1-.28C8.69 12 7 13.69 7 16s1.69 4 4 4 4-1.69 4-4V7h4V3h-7z"/></svg><span>Songs</span></a>
+    <a class="nav-item" data-view="favorites" href="#"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg><span>Favourites</span><span class="nav-badge" id="favBadge" style="display:none">0</span></a>
+    <p class="nav-label" style="margin-top:24px">Library</p>
+    <a class="nav-item" data-view="playlists" href="#"><svg viewBox="0 0 24 24"><path d="M15 6H3v2h12V6zm0 4H3v2h12v-2zM3 16h8v-2H3v2zM17 6v8.18c-.31-.11-.65-.18-1-.18-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3V8h3V6h-5z"/></svg><span>Playlists</span><span class="nav-badge" id="plBadge" style="display:none">0</span></a>
+    <a class="nav-item" data-view="about" href="#"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Artist</span></a>
+    <div class="sidebar-search">
+      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      <input type="text" id="sidebarSearch" placeholder="Search songs…"/>
     </div>
   </nav>
-
   <div class="sidebar-footer">
-    <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle theme">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
-      <span id="themeLabel">Light Mode</span>
+    <button class="theme-btn" id="themeToggleBtn">
+      <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
+      <span id="themeLabel">Dark</span>
     </button>
   </div>
 </aside>
 
-<!-- MOBILE SIDEBAR OVERLAY -->
-<div class="sb-overlay" id="sbOverlay" aria-hidden="true"></div>
+<div class="sidebar-overlay" id="sbOverlay"></div>
 
-<!-- MAIN APPLICATION -->
-<div class="main-wrap">
+<div class="main-area">
   <header class="topbar" id="topbar">
-    <button class="menu-btn" id="mobileMenuBtn" aria-label="Toggle sidebar menu"><span></span><span></span><span></span></button>
-    <div class="topbar-logo"><span class="logo-name">AKHIL</span><span class="logo-tag">Music</span></div>
-    <div class="topbar-search-wrap">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-      <input type="text" id="topbarSearch" placeholder="Search songs, moods…" aria-label="Search songs"/>
+    <button class="topbar-menu" id="mobileMenuBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+    <div class="topbar-brand"><span class="logo-name">Akhil</span><span class="logo-tag">Music</span></div>
+    <div class="topbar-search">
+      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      <input type="text" id="topbarSearch" placeholder="Search songs…"/>
     </div>
-    <div class="topbar-right">
-      <button class="topbar-icon-btn" id="topShuffleBtn" title="Shuffle" aria-label="Toggle shuffle">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.59 9.17 5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>
-      </button>
-      <button class="topbar-icon-btn" id="topRepeatBtn" title="Repeat" aria-label="Toggle repeat">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg>
-      </button>
+    <div class="topbar-actions">
+      <button class="topbar-icon" id="topShuffleBtn" title="Shuffle"><svg viewBox="0 0 24 24"><path d="M10.59 9.17 5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg></button>
+      <button class="topbar-icon" id="topRepeatBtn" title="Repeat"><svg viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg></button>
     </div>
   </header>
 
-  <main class="content" id="content" role="main">
-    <!-- HOME VIEW -->
-    <section class="view active" id="view-home" aria-label="Home">
-      <div class="hero-band">
-        <div class="hero-band-bg" id="heroBg"></div>
-        <div class="hero-band-blur"></div>
-        <div class="hero-band-inner">
+  <main class="content" id="content">
+    <section class="view active" id="view-home">
+      <div class="hero" id="heroArea">
+        <div class="hero-bg" id="heroBg"></div>
+        <div class="hero-glow"></div>
+        <div class="hero-particles"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        <div class="hero-inner">
           <div class="hero-text">
-            <div class="hero-label"><span class="pdot"></span>Now Streaming</div>
-            <h1 class="hero-h1">Music That <em>Moves</em><br/>The Soul</h1>
-            <p class="hero-p">Original compositions — where every note carries a story and silence speaks louder than words.</p>
+            <div class="hero-tag"><span class="live-dot"></span> Now Playing</div>
+            <h1 class="hero-title">Music That <em>Moves</em></h1>
+            <p class="hero-desc">Original compositions by Akhil — where every note carries a story.</p>
             <div class="hero-actions">
-              <button class="btn-primary" id="playAllBtn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg> Play All</button>
-              <button class="btn-ghost" id="shufflePlayBtn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.59 9.17 5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg> Shuffle</button>
+              <button class="btn-primary" id="playAllBtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Play All</button>
+              <button class="btn-outline" id="shufflePlayBtn"><svg viewBox="0 0 24 24"><path d="M10.59 9.17 5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg> Shuffle</button>
             </div>
-            <div class="hero-counters">
-              <div class="hc"><b id="hcTracks">48</b><span>Tracks</span></div>
-              <div class="hc-sep"></div>
-              <div class="hc"><b>∞</b><span>Feelings</span></div>
-              <div class="hc-sep"></div>
-              <div class="hc"><b>1</b><span>Artist</span></div>
+            <div class="hero-stats">
+              <div class="stat"><b id="hcTracks">48</b><span>Tracks</span></div>
+              <div class="stat-div"></div>
+              <div class="stat"><b>&infin;</b><span>Moments</span></div>
+              <div class="stat-div"></div>
+              <div class="stat"><b>1</b><span>Artist</span></div>
             </div>
           </div>
           <div class="hero-visual">
-            <div class="artist-float-card">
-              <img src="images/ak01.png" id="heroArtistImg" alt="Akhil" onerror="this.src=''"/>
-              <div class="artist-float-info"><span class="afc-label">Featured</span><span class="afc-name">Akhil</span></div>
+            <div class="hero-frame">
+              <div class="hero-frame-inner">
+                <img src="images/ak01.png" id="heroArtistImg" alt="" onerror="this.src=''"/>
+              </div>
+              <div class="hero-ring"></div>
             </div>
-            <div class="mini-wave" id="heroWave">
-              <span></span><span></span><span></span><span></span><span></span>
-              <span></span><span></span><span></span><span></span><span></span>
-              <span></span><span></span><span></span><span></span><span></span>
-              <span></span><span></span><span></span><span></span><span></span>
-              <span></span><span></span><span></span><span></span><span></span>
-              <span></span><span></span><span></span><span></span><span></span>
-            </div>
+            <div class="hero-wave" id="heroWave"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
           </div>
         </div>
       </div>
       <div class="home-sections">
         <section class="home-section">
-          <div class="hs-head"><h2>Recently Played</h2><button class="link-btn" data-view="songs">See all</button></div>
-          <div class="cards-row" id="recentCards"></div>
+          <div class="section-header"><h2>Recent</h2><button class="link-btn" data-view="songs">See all</button></div>
+          <div class="card-row" id="recentCards"></div>
         </section>
         <section class="home-section">
-          <div class="hs-head"><h2>Featured Picks</h2><button class="link-btn" data-view="songs">See all</button></div>
-          <div class="cards-row" id="featuredCards"></div>
+          <div class="section-header"><h2>Featured</h2><button class="link-btn" data-view="songs">See all</button></div>
+          <div class="card-row" id="featuredCards"></div>
         </section>
         <section class="home-section">
-          <div class="hs-head"><h2>All Songs</h2><button class="link-btn" data-view="songs">See all</button></div>
+          <div class="section-header"><h2>Songs</h2><button class="link-btn" data-view="songs">See all</button></div>
           <div id="homeTrackList" class="home-track-list"></div>
         </section>
       </div>
     </section>
 
-    <!-- SONGS VIEW -->
-    <section class="view" id="view-songs" aria-label="All songs">
-      <div class="view-header">
+    <section class="view" id="view-songs">
+      <div class="view-top">
         <div><h2 class="page-title">All Songs</h2><p class="page-sub" id="songsSubtitle"></p></div>
-        <div class="view-header-tools">
-          <div class="sort-box">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"/></svg>
-            <select id="sortSelect" aria-label="Sort songs">
+        <div class="view-tools">
+          <div class="sort-control">
+            <svg viewBox="0 0 24 24"><path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"/></svg>
+            <select id="sortSelect">
               <option value="default">Default</option>
-              <option value="az">A → Z</option>
-              <option value="za">Z → A</option>
+              <option value="az">A-Z</option>
+              <option value="za">Z-A</option>
             </select>
           </div>
-          <div class="view-toggle-btns" role="radiogroup" aria-label="View mode">
-            <button class="vtb active" id="listViewBtn" title="List" role="radio" aria-checked="true" aria-label="List view"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg></button>
-            <button class="vtb" id="gridViewBtn" title="Grid" role="radio" aria-checked="false" aria-label="Grid view"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></svg></button>
+          <div class="view-toggle">
+            <button class="vt-btn active" id="listViewBtn" title="List"><svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg></button>
+            <button class="vt-btn" id="gridViewBtn" title="Grid"><svg viewBox="0 0 24 24"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></svg></button>
           </div>
         </div>
       </div>
-      <div class="tl-header-row">
-        <span class="tlh-num">#</span><span class="tlh-info">Title</span>
-        <span class="tlh-dur"><svg viewBox="0 0 24 24" width="13" aria-hidden="true"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z" fill="currentColor"/></svg></span>
-        <span class="tlh-fav"></span>
+      <div class="track-header">
+        <span class="th-num">#</span><span class="th-info">Title</span>
+        <span class="th-dur"><svg viewBox="0 0 24 24" width="13"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg></span>
+        <span class="th-act"></span>
       </div>
       <div id="tracksList"></div>
     </section>
 
-    <!-- FAVOURITES VIEW -->
-    <section class="view" id="view-favorites" aria-label="Favourites">
-      <div class="view-header">
+    <section class="view" id="view-favorites">
+      <div class="view-top">
         <div><h2 class="page-title">Favourites</h2><p class="page-sub" id="favSubtitle">0 songs liked</p></div>
       </div>
-      <div class="empty-state" id="favEmpty">
-        <div class="empty-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></div>
-        <p>No favourites yet</p><span>Tap ♥ on any track to save it here</span>
+      <div class="empty" id="favEmpty">
+        <div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></div>
+        <p>No favourites yet</p><span>Tap the heart on a track to save it here</span>
       </div>
-      <div class="tl-header-row" id="favTlHead" style="display:none">
-        <span class="tlh-num">#</span><span class="tlh-info">Title</span>
-        <span class="tlh-dur"><svg viewBox="0 0 24 24" width="13" aria-hidden="true"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z" fill="currentColor"/></svg></span>
-        <span class="tlh-fav"></span>
+      <div class="track-header" id="favTlHead" style="display:none">
+        <span class="th-num">#</span><span class="th-info">Title</span>
+        <span class="th-dur"><svg viewBox="0 0 24 24" width="13"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg></span>
+        <span class="th-act"></span>
       </div>
       <div id="favList"></div>
     </section>
 
-    <!-- PLAYLISTS VIEW -->
-    <section class="view" id="view-playlists" aria-label="Playlists">
-      <div class="view-header">
+    <section class="view" id="view-playlists">
+      <div class="view-top">
         <div><h2 class="page-title">Playlists</h2><p class="page-sub" id="plSubtitle">Create and manage your custom playlists</p></div>
-        <div class="view-header-tools">
-          <button class="btn-primary" id="createPlBtn" style="padding:8px 18px;font-size:0.72rem"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="currentColor"/></svg> New Playlist</button>
-        </div>
+        <button class="btn-primary" id="createPlBtn" style="padding:6px 14px;font-size:.72rem"><svg viewBox="0 0 24 24" width="13"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg> New</button>
       </div>
-      <div class="empty-state" id="plEmpty">
-        <div class="empty-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6H3v2h12V6zm0 4H3v2h12v-2zM3 16h8v-2H3v2zM17 6v8.18c-.31-.11-.65-.18-1-.18-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3V8h3V6h-5z"/></svg></div>
-        <p>No playlists yet</p><span>Create your first playlist to organise your favourite tracks</span>
+      <div class="empty" id="plEmpty">
+        <div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M15 6H3v2h12V6zm0 4H3v2h12v-2zM3 16h8v-2H3v2zM17 6v8.18c-.31-.11-.65-.18-1-.18-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3V8h3V6h-5z"/></svg></div>
+        <p>No playlists yet</p><span>Create your first playlist to organise your tracks</span>
       </div>
       <div id="plList" class="pl-grid"></div>
     </section>
 
-    <!-- ABOUT VIEW -->
-    <section class="view" id="view-about" aria-label="About the artist">
-      <div class="about-hero">
+    <section class="view" id="view-about">
+      <div class="about-header">
         <div class="about-bg" id="aboutBg"></div>
-        <div class="about-bg-overlay"></div>
-        <div class="about-hero-inner">
-          <img src="images/ak01.png" alt="Akhil" class="about-avatar" onerror="this.style.opacity=0"/>
-          <div class="about-hero-text">
-            <p class="about-eyebrow">Verified Artist</p>
-            <h1 class="about-title">Akhil</h1>
-            <p class="about-handle">@A-SeriesLyrics · Songwriter · Producer</p>
+        <div class="about-shade"></div>
+        <div class="about-intro">
+          <img src="images/ak01.png" alt="" class="about-avatar" onerror="this.style.opacity=0"/>
+          <div class="about-info">
+            <span class="about-badge">Verified Artist</span>
+            <h1 class="about-name">Akhil</h1>
+            <p class="about-handle">@A-SeriesLyrics &middot; Songwriter &middot; Producer</p>
           </div>
         </div>
       </div>
-      <div class="about-content">
-        <div class="about-stats-grid" id="aboutStats"></div>
-        <div class="about-cols">
-          <div class="about-bio-col">
-            <h3 class="about-h3">Biography</h3>
+      <div class="about-body">
+        <div class="about-stats" id="aboutStats"></div>
+        <div class="about-layout">
+          <div class="about-bio">
+            <h3>Biography</h3>
             <p>Akhil is an artist whose songs carry emotions that words alone cannot express. Every track is a window into raw, honest feeling — crafted from real moments and real hearts.</p>
             <p>His music explores love, heartbreak, and the quiet spaces of human connection — melodies that stay with you long after the song ends.</p>
-            <div class="about-socials">
-              <h3 class="about-h3" style="margin-top:28px">Connect</h3>
-              <div class="socials-row">
-                <a class="social-pill yt" href="https://www.youtube.com/channel/UCiBVLANfeywV2lgRVuuw-0A" target="_blank" rel="noopener"><i class="fa-brands fa-youtube" aria-hidden="true"></i> YouTube</a>
-                <a class="social-pill ig" href="https://www.instagram.com/p/DS7WcHfEgPd/" target="_blank" rel="noopener"><i class="fa-brands fa-instagram" aria-hidden="true"></i> Instagram</a>
+            <div class="about-social">
+              <h3 style="margin-top:28px">Connect</h3>
+              <div class="social-row">
+                <a class="social-link yt" href="https://www.youtube.com/channel/UCiBVLANfeywV2lgRVuuw-0A" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> YouTube</a>
+                <a class="social-link ig" href="https://www.instagram.com/p/DS7WcHfEgPd/" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg> Instagram</a>
               </div>
             </div>
           </div>
-          <div class="about-popular-col"><h3 class="about-h3">Popular Tracks</h3><div id="popularList"></div></div>
+          <div class="about-popular"><h3>Popular Tracks</h3><div id="popularList"></div></div>
         </div>
       </div>
     </section>
   </main>
 </div>
 
-<!-- MINI PLAYER BAR -->
-<footer class="player-bar" id="playerBar" role="region" aria-label="Music player">
-  <div class="pb-prog-strip"><div class="pb-prog-fill" id="pbProgFill"></div></div>
-  <div class="pb-left" id="pbClickArea" role="button" tabindex="0" aria-label="Open fullscreen player">
-    <div class="pb-art" id="pbArt"><img id="pbCoverImg" src="" alt=""/></div>
-    <div class="pb-meta">
-      <div class="pb-title" id="pbTitle">Select a track</div>
-      <div class="pb-artist" id="pbArtist">Akhil</div>
+<footer class="player" id="playerBar">
+  <div class="player-progress-track"><div class="player-progress-fill" id="pbProgFill"></div></div>
+  <div class="player-left" id="pbClickArea">
+    <div class="player-art" id="pbArt"><img id="pbCoverImg" src="" alt=""/></div>
+    <div class="player-meta">
+      <div class="player-title" id="pbTitle">Select a track</div>
+      <div class="player-artist" id="pbArtist">Akhil</div>
     </div>
-    <button class="pb-heart" id="playerFavBtn" title="Favourite" aria-label="Favourite track">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-    </button>
+    <button class="player-heart" id="playerFavBtn" title="Favourite"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
   </div>
-  <div class="pb-center">
-    <div class="pb-controls">
-      <button class="pbc shuffle" id="shuffleBtn" aria-label="Toggle shuffle"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.59 9.17 5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg></button>
-      <button class="pbc" id="prevBtn" aria-label="Previous track"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg></button>
-      <button class="pbc main" id="mainPlayBtn" aria-label="Play">
-        <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
-        <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+  <div class="player-center">
+    <div class="player-controls">
+      <button class="pc shuffle" id="shuffleBtn"><svg viewBox="0 0 24 24"><path d="M10.59 9.17 5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg></button>
+      <button class="pc" id="prevBtn"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg></button>
+      <button class="pc primary" id="mainPlayBtn">
+        <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        <svg class="icon-pause" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
       </button>
-      <button class="pbc" id="nextBtn" aria-label="Next track"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 18 8.5-6L6 6v12zm2-8.14 4.96 3.14L8 16.14V9.86zM16 6h2v12h-2z"/></svg></button>
-      <button class="pbc repeat" id="repeatBtn" aria-label="Toggle repeat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg></button>
+      <button class="pc" id="nextBtn"><svg viewBox="0 0 24 24"><path d="m6 18 8.5-6L6 6v12zm2-8.14 4.96 3.14L8 16.14V9.86zM16 6h2v12h-2z"/></svg></button>
+      <button class="pc repeat" id="repeatBtn"><svg viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg></button>
     </div>
-    <div class="pb-seek">
-      <span class="pb-time" id="timeCur">0:00</span>
-      <div class="pb-track" id="progTrack" role="slider" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" tabindex="0">
-        <div class="pb-fill" id="progFill"></div>
-        <div class="pb-dot" id="progDot"></div>
+    <div class="player-seek">
+      <span class="player-time" id="timeCur">0:00</span>
+      <div class="player-bar-track" id="progTrack">
+        <div class="player-bar-fill" id="progFill"></div>
+        <div class="player-bar-thumb" id="progDot"></div>
       </div>
-      <span class="pb-time" id="timeTot">0:00</span>
+      <span class="player-time" id="timeTot">0:00</span>
     </div>
   </div>
-  <div class="pb-right">
-    <button class="pbc sm" id="sleepTimerBtn" title="Sleep Timer" aria-label="Sleep timer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.4 0-8-3.6-8-8s3.6-8 8-8 8 3.6 8 8-3.6 8-8 8zm.5-13H11v6l4.75 2.85.75-1.23-4-2.37V7z"/></svg><span class="st-indicator" id="stIndicator"></span></button>
-    <button class="pbc sm" id="queueBtn" aria-label="Queue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg></button>
-    <div class="pb-vol">
-      <button class="pbc sm" id="muteBtn" aria-label="Toggle mute">
-        <svg class="vi-high" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
-        <svg class="vi-off" viewBox="0 0 24 24" style="display:none" aria-hidden="true"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+  <div class="player-right">
+    <button class="pc sm" id="sleepTimerBtn" title="Sleep Timer"><svg viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.4 0-8-3.6-8-8s3.6-8 8-8 8 3.6 8 8-3.6 8-8 8zm.5-13H11v6l4.75 2.85.75-1.23-4-2.37V7z"/></svg><span class="st-badge" id="stIndicator"></span></button>
+    <button class="pc sm" id="queueBtn"><svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg></button>
+    <div class="player-volume">
+      <button class="pc sm" id="muteBtn">
+        <svg class="vi-high" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+        <svg class="vi-off" viewBox="0 0 24 24" style="display:none"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
       </button>
-      <input type="range" class="vol-range" id="volSlider" min="0" max="1" step="0.01" value="0.85" aria-label="Volume"/>
+      <input type="range" class="vol-slider" id="volSlider" min="0" max="1" step="0.01" value="0.85"/>
     </div>
   </div>
 </footer>
 
-<!-- MOBILE BOTTOM NAV -->
-<nav class="mobile-nav" aria-label="Mobile navigation">
-  <a class="mn-item active" data-view="home" role="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Home</span></a>
-  <a class="mn-item" data-view="songs" role="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v9.28a4 4 0 0 0-1-.28C8.69 12 7 13.69 7 16s1.69 4 4 4 4-1.69 4-4V7h4V3h-7z"/></svg><span>Songs</span></a>
-  <a class="mn-item" data-view="favorites" role="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg><span>Liked</span></a>
-  <a class="mn-item" data-view="playlists" role="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6H3v2h12V6zm0 4H3v2h12v-2zM3 16h8v-2H3v2zM17 6v8.18c-.31-.11-.65-.18-1-.18-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3V8h3V6h-5z"/></svg><span>Playlists</span></a>
-  <a class="mn-item" data-view="about" role="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Artist</span></a>
+<nav class="mobile-nav">
+  <a class="mn-item active" data-view="home"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Home</span></a>
+  <a class="mn-item" data-view="songs"><svg viewBox="0 0 24 24"><path d="M12 3v9.28a4 4 0 0 0-1-.28C8.69 12 7 13.69 7 16s1.69 4 4 4 4-1.69 4-4V7h4V3h-7z"/></svg><span>Songs</span></a>
+  <a class="mn-item" data-view="favorites"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg><span>Liked</span></a>
+  <a class="mn-item" data-view="playlists"><svg viewBox="0 0 24 24"><path d="M15 6H3v2h12V6zm0 4H3v2h12v-2zM3 16h8v-2H3v2zM17 6v8.18c-.31-.11-.65-.18-1-.18-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3V8h3V6h-5z"/></svg><span>Playlists</span></a>
+  <a class="mn-item" data-view="about"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Artist</span></a>
 </nav>
 
-<!-- FULLSCREEN PLAYER OVERLAY -->
-<div class="fs-overlay" id="fsOverlay" role="dialog" aria-label="Fullscreen player" aria-modal="true">
+<div class="fullscreen" id="fsOverlay">
   <div class="fs-bg" id="fsBg"></div>
-  <div class="fs-bg-shade"></div>
-  <div class="fs-wrap" id="fsWrap">
-    <div class="fs-topbar" id="fsDragHandle">
-      <div class="fs-handle-bar"></div>
+  <div class="fs-shade"></div>
+  <div class="fs-container" id="fsWrap">
+    <div class="fs-top" id="fsDragHandle">
+      <div class="fs-handle"></div>
       <div class="fs-header">
-        <button class="fs-back-btn" id="fsCloseBtn" aria-label="Minimise">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+        <button class="fs-back" id="fsCloseBtn" aria-label="Minimise">
+          <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
         </button>
-        <div class="fs-header-info">
-          <span class="fs-playing-from">Now Playing</span>
-          <span class="fs-playlist-name">Akhil Music</span>
+        <div class="fs-info-bar">
+          <span>Now Playing</span>
+          <span>Akhil Music</span>
         </div>
-        <button class="fs-more-btn" id="fsMoreBtn" aria-label="More options">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
-        </button>
+        <button class="fs-more"><svg viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg></button>
       </div>
     </div>
-    <div class="fs-artwork-wrap">
-      <div class="fs-artwork" id="fsArtwork">
-        <img id="fsArtworkImg" src="" alt="Album Art" onerror="this.src='images/ak01.png'"/>
+    <div class="fs-art-area">
+      <div class="fs-art" id="fsArtwork">
+        <img id="fsArtworkImg" src="" alt="" onerror="this.src='images/ak01.png'"/>
+        <div class="fs-art-ring"></div>
       </div>
     </div>
-    <div class="fs-info">
-      <div class="fs-song-text">
-        <div class="fs-song-title" id="fsSongTitle">Select a track</div>
-        <div class="fs-song-artist" id="fsSongArtist">Akhil</div>
+    <div class="fs-meta">
+      <div class="fs-text">
+        <div class="fs-title" id="fsSongTitle">Select a track</div>
+        <div class="fs-artist" id="fsSongArtist">Akhil</div>
       </div>
-      <button class="fs-heart-btn" id="fsFavBtn" aria-label="Favourite">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-      </button>
+      <button class="fs-like" id="fsFavBtn"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
     </div>
-    <div class="fs-progress-wrap">
-      <div class="fs-progress-bar" id="fsProgressBar" role="slider" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" tabindex="0">
-        <div class="fs-progress-fill" id="fsProgressFill"></div>
-        <div class="fs-progress-thumb" id="fsProgressThumb"></div>
+    <div class="fs-progress">
+      <div class="fs-prog-bar" id="fsProgressBar">
+        <div class="fs-prog-fill" id="fsProgressFill"></div>
+        <div class="fs-prog-thumb" id="fsProgressThumb"></div>
       </div>
-      <div class="fs-times">
-        <span id="fsTimeCur">0:00</span>
-        <span id="fsTimeTot">0:00</span>
-      </div>
+      <div class="fs-times"><span id="fsTimeCur">0:00</span><span id="fsTimeTot">0:00</span></div>
     </div>
     <div class="fs-controls">
-      <button class="fs-ctrl-sm" id="fsShuffleBtn" aria-label="Toggle shuffle">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.59 9.17 5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>
+      <button class="fs-btn sm" id="fsShuffleBtn"><svg viewBox="0 0 24 24"><path d="M10.59 9.17 5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg></button>
+      <button class="fs-btn prev" id="fsPrevBtn"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg></button>
+      <button class="fs-btn play" id="fsPlayBtn">
+        <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        <svg class="icon-pause" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
       </button>
-      <button class="fs-ctrl-prev" id="fsPrevBtn" aria-label="Previous track">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
-      </button>
-      <button class="fs-ctrl-play" id="fsPlayBtn" aria-label="Play">
-        <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
-        <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-      </button>
-      <button class="fs-ctrl-next" id="fsNextBtn" aria-label="Next track">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 18 8.5-6L6 6v12zm2-8.14 4.96 3.14L8 16.14V9.86zM16 6h2v12h-2z"/></svg>
-      </button>
-      <button class="fs-ctrl-sm" id="fsRepeatBtn" aria-label="Toggle repeat">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg>
-      </button>
+      <button class="fs-btn next" id="fsNextBtn"><svg viewBox="0 0 24 24"><path d="m6 18 8.5-6L6 6v12zm2-8.14 4.96 3.14L8 16.14V9.86zM16 6h2v12h-2z"/></svg></button>
+      <button class="fs-btn sm" id="fsRepeatBtn"><svg viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg></button>
     </div>
-    <div class="fs-vol-row">
-      <svg class="fs-vol-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.5 12c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.73 2.5-2.25 2.5-4.03zM5 9v6h4l5 5V4L9 9H5z"/></svg>
-      <input type="range" class="fs-vol-slider" id="fsVolSlider" min="0" max="1" step="0.01" value="0.85" aria-label="Volume"/>
-      <svg class="fs-vol-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+    <div class="fs-volume">
+      <svg class="fs-vol-icon" viewBox="0 0 24 24"><path d="M18.5 12c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.73 2.5-2.25 2.5-4.03zM5 9v6h4l5 5V4L9 9H5z"/></svg>
+      <input type="range" class="fs-vol-slider" id="fsVolSlider" min="0" max="1" step="0.01" value="0.85"/>
+      <svg class="fs-vol-icon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
     </div>
-    <div class="fs-queue-section">
+    <div class="fs-queue-area">
       <div class="fs-queue-label">Up Next</div>
       <div class="fs-queue-list" id="fsQueueList"></div>
     </div>
   </div>
 </div>
 
-<!-- QUEUE PANEL -->
-<aside class="queue-panel" id="queuePanel" aria-label="Queue">
-  <div class="qp-header"><h3>Up Next</h3><button id="queueClose" aria-label="Close queue">✕</button></div>
-  <div class="qp-list" id="queueList"></div>
+<aside class="queue" id="queuePanel">
+  <div class="queue-header"><h3>Up Next</h3><button id="queueClose">&times;</button></div>
+  <div class="queue-list" id="queueList"></div>
 </aside>
 
-<!-- TOAST NOTIFICATION -->
-<div class="toast" id="toast" role="alert" aria-live="polite"></div>
+<div class="toast" id="toast"></div>
 
-<!-- SLEEP TIMER MODAL -->
-<div class="modal-overlay" id="stModal" role="dialog" aria-label="Sleep timer">
+<div class="modal" id="stModal">
   <div class="modal-box">
-    <div class="modal-header"><h3>Sleep Timer</h3><button class="modal-close" id="stClose" aria-label="Close sleep timer">✕</button></div>
+    <div class="modal-head"><h3>Sleep Timer</h3><button class="modal-x" id="stClose">&times;</button></div>
     <div class="modal-body">
       <p class="modal-desc">Stop playback after:</p>
-      <div class="st-options">
-        <button class="st-opt" data-min="15">15 min</button>
-        <button class="st-opt" data-min="30">30 min</button>
-        <button class="st-opt" data-min="45">45 min</button>
-        <button class="st-opt" data-min="60">60 min</button>
+      <div class="timer-options">
+        <button class="tmr-opt" data-min="15">15 min</button>
+        <button class="tmr-opt" data-min="30">30 min</button>
+        <button class="tmr-opt" data-min="45">45 min</button>
+        <button class="tmr-opt" data-min="60">60 min</button>
       </div>
-      <button class="st-cancel" id="stCancel" style="display:none">Cancel Timer</button>
+      <button class="tmr-cancel" id="stCancel" style="display:none">Cancel Timer</button>
     </div>
   </div>
 </div>
 
-<!-- ADD TO PLAYLIST MODAL -->
-<div class="modal-overlay" id="atpModal" role="dialog" aria-label="Add to playlist">
+<div class="modal" id="atpModal">
   <div class="modal-box">
-    <div class="modal-header"><h3>Add to Playlist</h3><button class="modal-close" id="atpClose" aria-label="Close add to playlist">✕</button></div>
+    <div class="modal-head"><h3>Add to Playlist</h3><button class="modal-x" id="atpClose">&times;</button></div>
     <div class="modal-body">
       <p class="modal-desc" id="atpSongName"></p>
       <div class="atp-list" id="atpList"></div>
-      <button class="atp-new" id="atpNew"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="currentColor"/></svg> New Playlist</button>
+      <button class="atp-new" id="atpNew"><svg viewBox="0 0 24 24" width="14"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg> New Playlist</button>
     </div>
   </div>
 </div>

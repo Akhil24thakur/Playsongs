@@ -527,7 +527,7 @@ function buildFavView() {
     return;
   }
   if (favEmpty)  favEmpty.style.display  = 'none';
-  if (favTlHead) favTlHead.style.display = 'grid';
+  if (favTlHead) favTlHead.style.display = 'flex';
   ids.forEach((idx,pos) => favList.appendChild(makeTrackItem(idx,pos+1,'fav')));
   if (favSubtitle) favSubtitle.textContent = `${ids.length} song${ids.length!==1?'s':''} liked`;
 }
