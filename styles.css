@@ -87,7 +87,8 @@ a{color:var(--gold);text-decoration:none}
   padding:18px 8px 20px;
   border-bottom:1px solid var(--border);
 }
-.logo-mark svg{width:30px;height:30px}
+.logo-mark svg{width:36px;height:36px;filter:drop-shadow(0 0 16px rgba(255,42,127,.3));transition:.3s;border-radius:50%}
+.sidebar-logo:hover .logo-mark svg{filter:drop-shadow(0 0 28px rgba(255,42,127,.5));transform:scale(1.08)}
 .logo-text{display:flex;flex-direction:column;line-height:1.2}
 .logo-name{font-size:1rem;font-weight:700;letter-spacing:-.02em;color:var(--text)}
 .logo-tag{font-size:.55rem;text-transform:uppercase;letter-spacing:.15em;color:var(--text-muted);font-weight:500}
@@ -211,7 +212,7 @@ a{color:var(--gold);text-decoration:none}
 
 /* ─── HERO ─── */
 .hero{
-  position:relative;overflow:hidden;min-height:340px;
+  position:relative;overflow:hidden;min-height:280px;
   display:flex;align-items:center;
 }
 .hero-bg{
@@ -240,7 +241,7 @@ a{color:var(--gold);text-decoration:none}
 .hero-inner{
   position:relative;z-index:3;
   display:flex;align-items:center;gap:48px;
-  padding:48px 28px;width:100%;
+  padding:32px 28px;width:100%;
 }
 .hero-text{flex:1;min-width:0}
 .hero-tag{
@@ -283,11 +284,11 @@ a{color:var(--gold);text-decoration:none}
 .stat-div{width:3px;height:3px;border-radius:50%;background:var(--text-muted)}
 .hero-visual{flex-shrink:0;position:relative;display:flex;align-items:center;justify-content:center}
 .hero-frame{
-  position:relative;width:180px;height:180px;
+  position:relative;width:220px;height:220px;
   display:flex;align-items:center;justify-content:center;
 }
 .hero-frame-inner{
-  width:160px;height:160px;border-radius:50%;overflow:hidden;
+  width:200px;height:200px;border-radius:50%;overflow:hidden;
   border:2px solid var(--border-strong);z-index:1;
   box-shadow:var(--shadow-lg);
 }
@@ -748,8 +749,8 @@ body.light .btn-primary{color:#fff}
   .hero-desc{margin:0 auto 20px}
   .hero-actions,.hero-stats{justify-content:center}
   .hero-visual{order:-1}
-  .hero-frame{width:150px;height:150px}
-  .hero-frame-inner{width:130px;height:130px}
+  .hero-frame{width:180px;height:180px}
+  .hero-frame-inner{width:160px;height:160px}
   .about-layout{flex-direction:column}
 }
 @media(max-width:1024px){
@@ -797,8 +798,8 @@ body.light .btn-primary{color:#fff}
   .topbar-search svg{left:7px;width:13px;height:13px}
   .hero-title{font-size:1.1rem}
   .hero{min-height:280px}
-  .hero-frame{width:100px;height:100px}
-  .hero-frame-inner{width:88px;height:88px}
+  .hero-frame{width:120px;height:120px}
+  .hero-frame-inner{width:108px;height:108px}
   .hero-tag{font-size:.54rem;padding:3px 8px}
   .hero-actions{gap:6px;flex-direction:column;align-items:stretch}
   .btn-primary,.btn-outline{font-size:.68rem;padding:8px 14px;justify-content:center}
@@ -885,8 +886,8 @@ body.light .btn-primary{color:#fff}
 }
 @media(max-width:380px){
   .hero-title{font-size:.95rem}
-  .hero-frame{width:80px;height:80px}
-  .hero-frame-inner{width:72px;height:72px}
+  .hero-frame{width:100px;height:100px}
+  .hero-frame-inner{width:88px;height:88px}
   .music-card{min-width:75px;max-width:90px}
   #tracksList.grid-view{grid-template-columns:repeat(2,1fr)}
   .player-center{max-width:130px}

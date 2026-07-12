@@ -51,7 +51,7 @@ function showInstallBtn() {
     });
     document.body.appendChild(btn);
   }
-  btn.style.display = 'flex';
+  btn.style.display = 'fix';
 }
 function hideInstallBtn() {
   const btn = document.getElementById('pwaInstallBtn');
