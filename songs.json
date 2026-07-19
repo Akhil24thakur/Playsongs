@@ -1,4 +1,11 @@
-[ 
+[
+   {
+  "title": "Ruuh",
+  "artist": "Akhil",
+  "src": "songs/Ruuh.mp3",
+  "cover": "images/Ruuh.png",
+  "color": "#4682B4"
+}, 
   {
   "title": "Intzaar",
   "artist": "Akhil",
