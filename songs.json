@@ -1,4 +1,12 @@
 [
+
+   {
+  "title": "Fariyaad",
+  "artist": "Akhil",
+  "src": "songs/Fariyaad.mp3",
+  "cover": "images/Fariyaad.png",
+  "color": "#4682B4"
+},  
    {
   "title": "Ruuh",
   "artist": "Akhil",
