@@ -26,7 +26,7 @@ function toAbsUrl(rel) {
 
 function loadSongs() {
   const raw = JSON.parse(
-    fs.readFileSync(path.join(__dirname, "songs.json"), "utf8")
+    fs.readFileSync(path.join(__dirname, "..", "songs.json"), "utf8")
   );
   const used = new Set();
   const out = [];
