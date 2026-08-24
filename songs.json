@@ -1,5 +1,11 @@
 [
-
+  {
+  "title": "Unspoken",
+  "artist": "Akhil",
+  "src": "songs/Unspoken.mp3",
+  "cover": "images/Unspoken.png",
+  "color": "#4682B4"
+}, 
    {
   "title": "Fariyaad",
   "artist": "Akhil",
