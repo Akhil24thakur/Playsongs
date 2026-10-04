@@ -1,5 +1,12 @@
 [
   {
+  "title": "In Your Smile",
+  "artist": "Akhil",
+  "src": "songs/In Your Smile.mp3",
+  "cover": "images/In Your Smile.png",
+  "color": "#4682B4"   
+  },
+  {
   "title": "Unspoken",
   "artist": "Akhil",
   "src": "songs/Unspoken.mp3",
